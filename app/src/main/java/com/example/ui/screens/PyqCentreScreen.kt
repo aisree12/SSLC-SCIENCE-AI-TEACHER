@@ -134,6 +134,7 @@ fun PyqCentreScreen(
                         }
                         OutlinedButton(
                             onClick = onRefreshPyqDiscovery,
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
                             modifier = Modifier.minimumInteractiveComponentSize()
                         ) {
                             Icon(Icons.Default.Refresh, contentDescription = "Refresh paper archive check", modifier = Modifier.size(18.dp))
@@ -293,14 +294,16 @@ fun PyqCentreScreen(
                             Button(
                                 onClick = {
                                     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(entry.paperArchiveUrl)))
-                                },
+                                },,
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                                 modifier = Modifier.weight(1f)
                             ) { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಪ್ರಶ್ನೆಪತ್ರಿಕೆ ತೆರೆಯಿರಿ" else "Open Papers") }
                             if (entry.answerKeyArchiveUrl != null) {
                                 OutlinedButton(
                                     onClick = {
                                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(entry.answerKeyArchiveUrl)))
-                                    },
+                                    },,
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                                     modifier = Modifier.weight(1f)
                                 ) { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಉತ್ತರ ಕೀ ತೆರೆಯಿರಿ" else "Open Keys") }
                             }
