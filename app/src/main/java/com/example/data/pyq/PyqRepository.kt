@@ -381,7 +381,7 @@ object PyqRepository {
 
         return PyqAnalyticsSummary(
             totalQuestions = questions.size,
-            verifiedOfficialKeyCount = questions.count { it.hasOfficialKey },
+            verifiedOfficialKeyCount = questions.count { it.hasOfficialKey && !it.flaggedForReview },
             divisionCounts = divisionCounts,
             topRepeatedChapters = chapterFreq,
             topMarksDistribution = marksDist,
