@@ -119,7 +119,7 @@ fun KtbsCatalogueDialog(
                                 }
                             }
                             setDownloadListener { url, _, _, mimeType, _ ->
-                                if (TextbookUrlPolicy.isTrustedPdfUrl(url) && mimeType.equals("application/pdf", true)) {
+                                if (TextbookUrlPolicy.isTrustedPdfUrl(url)) {
                                     capturedPdfUrl = url
                                 } else {
                                     blockedExternal = true
