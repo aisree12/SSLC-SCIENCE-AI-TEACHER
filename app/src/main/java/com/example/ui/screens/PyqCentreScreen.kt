@@ -256,7 +256,7 @@ fun PyqCentreScreen(
                     ) {
                         Text("PYQ Trends & Study Focus", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Text(
-                            text = "Indexed: ${analytics.totalQuestions} questions • Verified Official Keys: ${analytics.verifiedOfficialKeyCount}",
+                            text = "Starter bank: ${analytics.totalQuestions} practice questions • Source-verified official keys: ${analytics.verifiedOfficialKeyCount}",
                             style = MaterialTheme.typography.bodySmall
                         )
                         Text("Top Repeated Diagrams:", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
@@ -313,7 +313,7 @@ fun PyqCentreScreen(
                         )
                     },
                     onOpenOfficialSource = {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(pyq.officialPdfUrl)))
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(pyq.paperReferenceUrl ?: pyq.officialPdfUrl.ifBlank { "https://kseab.karnataka.gov.in/" })))
                     }
                 )
             }
@@ -347,6 +347,7 @@ private fun PyqCardItem(
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     AssistChip(onClick = {}, label = { Text("${pyq.year} • ${pyq.examType.label}") })
                     AssistChip(onClick = {}, label = { Text("${pyq.marks}M") })
+                    if (pyq.flaggedForReview) AssistChip(onClick = {}, label = { Text("Practice • Source pending") })
                 }
             }
 
@@ -361,6 +362,14 @@ private fun PyqCardItem(
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold
             )
+
+            if (pyq.paperReferenceUrl != null) {
+                Text(
+                    "Paper reference: third-party mirror; original KSEAB PDF verification pending.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
 
             if (language == StudyLanguage.BILINGUAL) {
                 Text(
@@ -380,7 +389,7 @@ private fun PyqCardItem(
                             Icon(Icons.Default.Verified, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.secondary)
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Verified Official KSEAB Key Available",
+                                text = if (pyq.flaggedForReview) "Practice answer — official source verification pending" else "Verified Official KSEAB Key Available",
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -388,7 +397,7 @@ private fun PyqCardItem(
                         if (showOfficialKey) {
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(pyq.officialKeyAnswer, style = MaterialTheme.typography.bodySmall)
-                            Text("Source: ${pyq.officialSource}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(if (pyq.flaggedForReview) "Reference label (not yet verified): ${pyq.officialSource}" else "Source: ${pyq.officialSource}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
@@ -398,7 +407,7 @@ private fun PyqCardItem(
                     color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Text(
-                        text = "Official Key not published (${pyq.officialSource}). Use AI Teacher Solution for practice.",
+                        text = if (pyq.flaggedForReview) "Practice solution not yet matched to an official source. Use AI Teacher Solution for further practice." else "Official Key not published (${pyq.officialSource}). Use AI Teacher Solution for practice.",
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.fillMaxWidth().padding(10.dp)
                     )
@@ -417,7 +426,7 @@ private fun PyqCardItem(
                             .minimumInteractiveComponentSize()
                             .testTag("toggle_official_key_${pyq.id}")
                     ) {
-                        Text(if (showOfficialKey) "Hide Official Key" else "Official Key")
+                        Text(if (showOfficialKey) "Hide Answer" else if (pyq.flaggedForReview) "Practice Answer" else "Official Key")
                     }
                 }
                 Button(
@@ -435,7 +444,8 @@ private fun PyqCardItem(
                     onClick = onOpenOfficialSource,
                     modifier = Modifier.minimumInteractiveComponentSize()
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open KSEAB portal", modifier = Modifier.size(18.dp))
+                    Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open source paper reference", modifier = Modifier.size(18.dp))
+                    Text("KSEAB")
                 }
             }
         }
