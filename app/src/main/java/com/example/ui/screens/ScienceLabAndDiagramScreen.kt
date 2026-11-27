@@ -311,8 +311,8 @@ private fun DiagramStudioCard(
             ) {
                 DivisionBadge(division = diagram.division)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    FilterChip(selected = !practiceQuizMode, onClick = { practiceQuizMode = false }, label = { Text("Labelled") })
-                    FilterChip(selected = practiceQuizMode, onClick = { practiceQuizMode = true }, label = { Text("Label Quiz") })
+                    FilterChip(selected = !practiceQuizMode, onClick = { practiceQuizMode = false }, label = { Text(if (isKannada) "ಗುರುತುಗಳೊಂದಿಗೆ" else "Labelled") })
+                    FilterChip(selected = practiceQuizMode, onClick = { practiceQuizMode = true }, label = { Text(if (isKannada) "ಗುರುತು ಪರೀಕ್ಷೆ" else "Label Quiz") })
                 }
             }
 
@@ -434,7 +434,7 @@ private fun DiagramStudioCard(
                     val labelText = when {
                         !practiceQuizMode -> if (isKannada) spot.labelKn else spot.labelEn
                         guessedLabels[spot.id] != null -> guessedLabels[spot.id]!!
-                        else -> "Tap Pin #${idx + 1}"
+                        else -> if (isKannada) "ಗುರುತು ${idx + 1} ಒತ್ತಿ" else "Tap Pin #${idx + 1}"
                     }
                     Surface(
                         modifier = Modifier
@@ -466,12 +466,12 @@ private fun DiagramStudioCard(
                         color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f)
                     ) {
                         Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
-                            Text("${activeSpot.labelEn} (${activeSpot.labelKn})", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-                            Text(activeSpot.functionDesc, style = MaterialTheme.typography.bodySmall)
+                            Text(if (isKannada) activeSpot.labelKn else activeSpot.labelEn, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                            if (!isKannada) Text(activeSpot.functionDesc, style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 } else {
-                    Text("Select correct label for selected pin:", style = MaterialTheme.typography.labelLarge)
+                    Text(if (isKannada) "ಆಯ್ದ ಗುರುತಿಗೆ ಸರಿಯಾದ ಹೆಸರನ್ನು ಆಯ್ಕೆಮಾಡಿ:" else "Select correct label for selected pin:", style = MaterialTheme.typography.labelLarge)
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -492,7 +492,7 @@ private fun DiagramStudioCard(
                         guessedLabels[spot.id] == expected
                     }
                     Text(
-                        text = "Label Quiz Score: $correctCount / ${diagram.hotspots.size}",
+                        text = if (isKannada) "ಗುರುತು ಪರೀಕ್ಷೆ ಅಂಕ: $correctCount / ${diagram.hotspots.size}" else "Label Quiz Score: $correctCount / ${diagram.hotspots.size}",
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
@@ -514,7 +514,7 @@ private fun DiagramStudioCard(
             ) {
                 Icon(Icons.Default.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(6.dp))
-                Text("Ask AI Teacher Diagram Tips")
+                Text(if (isKannada) "AI ಶಿಕ್ಷಕರಿಂದ ಚಿತ್ರ ಮಾರ್ಗದರ್ಶನ" else "Ask AI Teacher Diagram Tips")
             }
         }
     }
