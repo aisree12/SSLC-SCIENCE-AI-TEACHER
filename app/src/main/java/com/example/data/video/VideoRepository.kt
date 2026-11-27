@@ -204,7 +204,11 @@ object VideoRepository {
             lastVerifiedDate = "2026-11-01",
             durationLabel = "11:20"
         )
-    )
+    ).map { video ->
+        // Catalogue URLs have not yet been individually checked on-device and against
+        // current syllabus coverage; do not present seeded links as verified.
+        video.copy(reviewStatus = VideoReviewStatus.NEEDS_REVIEW)
+    }
 
     fun videosForChapter(chapterId: String, category: VideoCategory? = null): List<ScienceVideo> {
         return catalog.filter { it.chapterId == chapterId && (category == null || it.category == category) }
