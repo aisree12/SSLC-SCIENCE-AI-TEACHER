@@ -279,7 +279,6 @@ fun ScienceTeacherApp(
                                 onToggleTopicCompleted = curriculumVm::toggleTopicCompleted,
                                 onSaveChapterNotesOffline = curriculumVm::saveChapterNotesOffline,
                                 onDownloadBook = curriculumVm::downloadTextbook,
-                                onDownloadSelectedPdf = curriculumVm::downloadSelectedOfficialPdf,
                                 onUpdateBookReading = curriculumVm::updateBookReadingState,
                                 onRefreshVerification = curriculumVm::verifyOfficialSyllabusAndPyqs,
                                 onAskAiTeacher = ::routeToAiWithPrompt,
