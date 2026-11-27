@@ -14,7 +14,9 @@ class VideoRepositoryTest {
     fun `every local Science chapter has a curated YouTube lesson link`() {
         val chapterIds = SyllabusRepository.chapters.map { it.id }.toSet()
         val linkedChapterIds = VideoRepository.catalog.map { it.chapterId }.toSet()
+        val topicIds = SyllabusRepository.chapters.flatMap { it.topics }.map { it.id }.toSet()
         assertEquals(chapterIds, linkedChapterIds)
+        assertTrue(VideoRepository.catalog.all { it.topicId in topicIds })
         assertEquals(13, VideoRepository.catalog.size)
     }
 
