@@ -343,7 +343,7 @@ class SharedCurriculumViewModel(
     fun verifyOfficialSyllabusAndPyqs() {
         viewModelScope.launch {
             val syllabusStatus = SyllabusRepository.verifyOfficialPortalsLive()
-            val pyqStatus = PyqRepository.discoverOfficialPapersLive()
+            val pyqStatus = PyqRepository.checkPaperArchiveIndexLive()
             _uiState.value = _uiState.value.copy(
                 verificationInfo = syllabusStatus,
                 pyqDiscoveryStatus = pyqStatus
