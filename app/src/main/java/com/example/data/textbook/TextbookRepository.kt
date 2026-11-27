@@ -41,8 +41,8 @@ class TextbookRepository(
                 edition = CATALOGUE_EDITION,
                 officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
-                sourceAuthority = "Karnataka Textbook Society (KTBS)",
-                chapterRangeLabel = "Chapters 1–7 (Chemistry & Biology)",
+                sourceAuthority = "KTBS portal — individual 2026–27 Science PDF not yet verified",
+                chapterRangeLabel = "Expected chapters 1–7 (provisional)",
                 estimatedSizeMb = "Size not verified"
             ),
             OfficialTextbook(
@@ -56,7 +56,7 @@ class TextbookRepository(
                 officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
-                chapterRangeLabel = "Chapters 8–13 (Heredity, Physics & Environment)",
+                chapterRangeLabel = "Expected chapters 8–13 (provisional)",
                 estimatedSizeMb = "Size not verified"
             ),
             OfficialTextbook(
@@ -70,7 +70,7 @@ class TextbookRepository(
                 officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
-                chapterRangeLabel = "ಅಧ್ಯಾಯ 1–7 (ರಸಾಯನಶಾಸ್ತ್ರ ಮತ್ತು ಜೀವಶಾಸ್ತ್ರ)",
+                chapterRangeLabel = "ಅಧ್ಯಾಯ 1–7 (ತಾತ್ಕಾಲಿಕ; ಪರಿಶೀಲನೆ ಬಾಕಿ)",
                 estimatedSizeMb = "Size not verified"
             ),
             OfficialTextbook(
@@ -84,7 +84,7 @@ class TextbookRepository(
                 officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
-                chapterRangeLabel = "ಅಧ್ಯಾಯ 8–13 (ಆನುವಂಶಿಕತೆ, ಭೌತಶಾಸ್ತ್ರ ಮತ್ತು ಪರಿಸರ)",
+                chapterRangeLabel = "ಅಧ್ಯಾಯ 8–13 (ತಾತ್ಕಾಲಿಕ; ಪರಿಶೀಲನೆ ಬಾಕಿ)",
                 estimatedSizeMb = "Size not verified"
             )
         )
