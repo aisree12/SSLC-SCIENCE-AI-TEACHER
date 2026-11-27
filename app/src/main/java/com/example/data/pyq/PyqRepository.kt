@@ -129,6 +129,46 @@ object PyqRepository {
             sourceNote = "Third-party document mirror of the 2022 KSEAB paper dated 11 April 2022. No official key is linked here."
         ),
         PyqPaperArchiveEntry(
+            id = "archive_2019_science",
+            title = "2019 SSLC Science — Main & Supplementary",
+            subtitle = "Year-wise archive • English and Kannada paper listings",
+            paperArchiveUrl = "https://www.indcareer.com/schools/karnataka-sslc-science-question-papers/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "Third-party year-wise archive listing 2019 Science papers. Select the correct paper code and medium; answer keys are not independently verified."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2018_science",
+            title = "2018 SSLC Science — Main & Supplementary",
+            subtitle = "Year-wise archive • English and Kannada paper listings",
+            paperArchiveUrl = "https://www.indcareer.com/schools/karnataka-sslc-science-question-papers/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "Third-party year-wise archive listing 2018 Science papers. Select the correct paper code and medium; answer keys are not independently verified."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2017_science",
+            title = "2017 SSLC Science — Main & Supplementary",
+            subtitle = "Year-wise archive • English and Kannada paper listings",
+            paperArchiveUrl = "https://www.indcareer.com/schools/karnataka-sslc-science-question-papers/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "Third-party year-wise archive listing 2017 Science papers. Select the correct paper code and medium; answer keys are not independently verified."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2016_science",
+            title = "2016 SSLC Science — Main & Supplementary",
+            subtitle = "Year-wise archive • English and Kannada paper listings",
+            paperArchiveUrl = "https://www.indcareer.com/schools/karnataka-sslc-science-question-papers/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "Third-party year-wise archive listing 2016 Science papers. Select the correct paper code and medium; answer keys are not independently verified."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2015_science",
+            title = "2015 SSLC Science — Main & Supplementary",
+            subtitle = "Year-wise archive • English and Kannada paper listings",
+            paperArchiveUrl = "https://www.indcareer.com/schools/karnataka-sslc-science-question-papers/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "Third-party year-wise archive listing 2015 Science papers. Select the correct paper code and medium; answer keys are not independently verified."
+        ),
+        PyqPaperArchiveEntry(
             id = "archive_2021_exam1",
             title = "2021 SSLC Science — Paper 1",
             subtitle = "Science paper index • choose the required medium and version",
