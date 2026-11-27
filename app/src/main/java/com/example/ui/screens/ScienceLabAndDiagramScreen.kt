@@ -73,7 +73,7 @@ fun ScienceLabAndDiagramScreen(
     BackHandler { onBack() }
 
     var activeStudioMode by remember { mutableIntStateOf(0) } // 0 = Interactive Lab, 1 = Diagram Studio
-    var isKannadaLabels by remember(language) { mutableStateOf(language == StudyLanguage.KANNADA) }
+    val isKannadaLabels = language == StudyLanguage.KANNADA
 
     val allSims = SimulationAndDiagramCatalog.simulations
     val defaultSim = remember(initialChapterId) {
@@ -149,11 +149,7 @@ fun ScienceLabAndDiagramScreen(
                         modifier = Modifier.testTag("lab_mode_diagrams")
                     )
                 }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("KN", style = MaterialTheme.typography.labelMedium)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Switch(checked = isKannadaLabels, onCheckedChange = { isKannadaLabels = it })
-                }
+
             }
         }
 
