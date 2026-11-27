@@ -10,6 +10,7 @@ class TextbookUrlPolicyTest {
     fun acceptsHttpsPdfFromOfficialKtbsDomains() {
         assertTrue(TextbookUrlPolicy.isTrustedPdfUrl("https://textbooks.karnataka.gov.in/books/sslc-science.pdf"))
         assertTrue(TextbookUrlPolicy.isTrustedPdfUrl("https://files.ktbs.kar.nic.in/2026/science.pdf"))
+        assertTrue(TextbookUrlPolicy.isTrustedPdfUrl("https://ncert.nic.in/textbook/pdf/jesc1ps.pdf"))
         assertTrue(TextbookUrlPolicy.isTrustedPdfUrl("https://textbooks.karnataka.gov.in/download?format=pdf"))
     }
 
