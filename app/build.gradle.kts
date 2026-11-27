@@ -33,10 +33,13 @@ android {
       keyPassword = System.getenv("KEY_PASSWORD")
     }
     create("debugConfig") {
-      storeFile = file("${rootDir}/debug.keystore")
-      storePassword = "android"
-      keyAlias = "androiddebugkey"
-      keyPassword = "android"
+      // A permanent Science-only keystore is supplied by GitHub Actions secrets.
+      // Local builds may use the same keystore via these environment variables.
+      val scienceKeystorePath = System.getenv("SCIENCE_KEYSTORE_PATH") ?: "${rootDir}/debug.keystore"
+      storeFile = file(scienceKeystorePath)
+      storePassword = System.getenv("SCIENCE_KEYSTORE_PASSWORD") ?: "android"
+      keyAlias = System.getenv("SCIENCE_KEY_ALIAS") ?: "androiddebugkey"
+      keyPassword = System.getenv("SCIENCE_KEY_PASSWORD") ?: "android"
     }
   }
 
