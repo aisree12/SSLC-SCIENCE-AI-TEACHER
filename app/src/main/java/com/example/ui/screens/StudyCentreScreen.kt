@@ -38,6 +38,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -172,6 +173,38 @@ fun StudyCentreScreen(
                         )
                     }
                 }
+            }
+        }
+
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(7.dp)
+            ) {
+                FilterChip(
+                    selected = uiState.selectedSubject == SubjectFilter.ALL,
+                    onClick = { onSelectSubject(SubjectFilter.ALL) },
+                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲ ವಿಷಯಗಳು" else "All") },
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8))
+                )
+                FilterChip(
+                    selected = uiState.selectedSubject == SubjectFilter.PHYSICS,
+                    onClick = { onSelectSubject(SubjectFilter.PHYSICS) },
+                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಭೌತಶಾಸ್ತ್ರ" else "Physics") },
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8))
+                )
+                FilterChip(
+                    selected = uiState.selectedSubject == SubjectFilter.CHEMISTRY,
+                    onClick = { onSelectSubject(SubjectFilter.CHEMISTRY) },
+                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ರಸಾಯನಶಾಸ್ತ್ರ" else "Chemistry") },
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFFCE7F3), selectedLabelColor = Color(0xFFBE185D))
+                )
+                FilterChip(
+                    selected = uiState.selectedSubject == SubjectFilter.BIOLOGY,
+                    onClick = { onSelectSubject(SubjectFilter.BIOLOGY) },
+                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಜೀವಶಾಸ್ತ್ರ" else "Biology") },
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDCFCE7), selectedLabelColor = Color(0xFF15803D))
+                )
             }
         }
 
