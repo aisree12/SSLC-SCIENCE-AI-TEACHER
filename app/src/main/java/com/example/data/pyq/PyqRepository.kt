@@ -587,7 +587,7 @@ object PyqRepository {
                     archiveIndexReachable = reachable,
                     archiveCollectionsCount = archiveCount,
                     message = if (reachable) {
-                        "$archiveCount paper collections are indexed: KSEAB SSLC Science papers for 2020–2026 papers and 2020–21/2026–27 model papers. 2026 includes English/Kannada papers with model answers; 2024/2025 paper indexes do not list official keys."
+                        "$archiveCount archive entries cover 2020–2026: KSEAB paper indexes for 2024–2026, third-party document mirrors for 2020–2023, and separate historical/current model-paper entries. 2026 includes English/Kannada papers with model answers; 2024/2025 indexes do not list official keys."
                     } else {
                         "$archiveCount paper collections are saved in the app. The online archive index returned HTTP ${resp.code}; open a collection when connected."
                     }
