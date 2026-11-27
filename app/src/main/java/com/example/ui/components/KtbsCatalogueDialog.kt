@@ -1,5 +1,7 @@
 package com.example.ui.components
 
+import android.content.Intent
+import android.net.Uri
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -32,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -46,6 +49,7 @@ fun KtbsCatalogueDialog(
     onDownloadPdf: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val context = LocalContext.current
     var capturedPdfUrl by remember(book.id) { mutableStateOf<String?>(null) }
     var pageTitle by remember(book.id) { mutableStateOf("Official KTBS catalogue") }
     var pageProgress by remember(book.id) { mutableStateOf(0) }
@@ -155,6 +159,12 @@ fun KtbsCatalogueDialog(
                                 Spacer(Modifier.width(8.dp))
                                 Text("Download for this textbook")
                             }
+                            OutlinedButton(
+                                onClick = {
+                                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) { Text("Open this PDF in browser") }
                             OutlinedButton(
                                 onClick = { capturedPdfUrl = null },
                                 modifier = Modifier.fillMaxWidth()
