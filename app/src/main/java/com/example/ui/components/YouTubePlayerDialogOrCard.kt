@@ -119,7 +119,7 @@ fun VideoResourceCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "${video.channel} • ${video.durationLabel} • ${video.language.label}",
+                text = if (video.reviewStatus == VideoReviewStatus.NEEDS_REVIEW) "Source and duration not yet checked • ${video.language.label}" else "${video.channel} • ${video.durationLabel} • ${video.language.label}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
