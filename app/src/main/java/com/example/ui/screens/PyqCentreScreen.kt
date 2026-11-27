@@ -313,7 +313,7 @@ fun PyqCentreScreen(
                         )
                     },
                     onOpenOfficialSource = {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(pyq.officialPdfUrl.ifBlank { "https://kseab.karnataka.gov.in/" })))
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(pyq.paperReferenceUrl ?: pyq.officialPdfUrl.ifBlank { "https://kseab.karnataka.gov.in/" })))
                     }
                 )
             }
@@ -362,6 +362,14 @@ private fun PyqCardItem(
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold
             )
+
+            if (pyq.paperReferenceUrl != null) {
+                Text(
+                    "Paper reference: third-party mirror; original KSEAB PDF verification pending.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
 
             if (language == StudyLanguage.BILINGUAL) {
                 Text(
