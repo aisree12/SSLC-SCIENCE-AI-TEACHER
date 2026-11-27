@@ -211,6 +211,17 @@ fun YouTubePlayerDialog(
     var reloadNonce by remember { mutableIntStateOf(0) }
     var webViewRef by remember { mutableStateOf<WebView?>(null) }
     var customFullscreenView by remember { mutableStateOf<View?>(null) }
+    var customFullscreenCallback by remember { mutableStateOf<WebChromeClient.CustomViewCallback?>(null) }
+
+    fun exitCustomFullscreen() {
+        val callback = customFullscreenCallback
+        customFullscreenCallback = null
+        customFullscreenView?.let { view ->
+            (view.parent as? ViewGroup)?.removeView(view)
+        }
+        customFullscreenView = null
+        callback?.onCustomViewHidden()
+    }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -310,11 +321,14 @@ fun YouTubePlayerDialog(
                                     settings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
                                     webChromeClient = object : WebChromeClient() {
                                         override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
-                                            customFullscreenView = view
+                                            if (view != null) {
+                                                customFullscreenCallback = callback
+                                                customFullscreenView = view
+                                            }
                                         }
 
                                         override fun onHideCustomView() {
-                                            customFullscreenView = null
+                                            exitCustomFullscreen()
                                         }
                                     }
                                     webViewClient = object : WebViewClient() {
@@ -457,8 +471,49 @@ fun YouTubePlayerDialog(
         }
     }
 
+    if (customFullscreenView != null) {
+        Dialog(
+            onDismissRequest = { exitCustomFullscreen() },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = { ctx ->
+                    FrameLayout(ctx).apply {
+                        setBackgroundColor(android.graphics.Color.BLACK)
+                        customFullscreenView?.let { view ->
+                            (view.parent as? ViewGroup)?.removeView(view)
+                            addView(
+                                view,
+                                FrameLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT
+                                )
+                            )
+                        }
+                    }
+                },
+                update = { container ->
+                    customFullscreenView?.let { view ->
+                        if (view.parent !== container) {
+                            (view.parent as? ViewGroup)?.removeView(view)
+                            container.addView(
+                                view,
+                                FrameLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT
+                                )
+                            )
+                        }
+                    }
+                }
+            )
+        }
+    }
+
     DisposableEffect(Unit) {
         onDispose {
+            exitCustomFullscreen()
             webViewRef?.destroy()
         }
     }
