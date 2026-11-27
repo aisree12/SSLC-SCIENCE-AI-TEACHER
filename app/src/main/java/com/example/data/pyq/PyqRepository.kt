@@ -42,9 +42,10 @@ data class PyqPaperArchiveEntry(
 
 object PyqRepository {
     /**
-     * Archive indexes link to the original KSEAB-issued PDF files.
-     * These are index pages, not direct PDF URLs. 2024/2025 have papers only;
-     * 2026 has Exam-1/Exam-2 model answers, and 2026-27 model papers have keys.
+     * Source notes identify whether an entry is a year index, a third-party mirror,
+     * or a direct third-party-hosted PDF. The app does not re-host these documents.
+     * The 2024–2026 indexes link KSEAB-issued papers; 2026 has Exam-1/Exam-2 model
+     * answers. Older entries are labelled mirrors/indexes, not verified official keys.
      */
     val paperArchive: List<PyqPaperArchiveEntry> = listOf(
         PyqPaperArchiveEntry(
