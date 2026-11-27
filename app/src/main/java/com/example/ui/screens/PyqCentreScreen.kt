@@ -29,6 +29,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -41,6 +42,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -111,7 +113,7 @@ fun PyqCentreScreen(
             Card(shape = RoundedCornerShape(18.dp)) {
                 Column(
                     modifier = Modifier.padding(10.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -155,11 +157,12 @@ fun PyqCentreScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         FilterChip(
                             selected = filterBySelectedChapter,
                             onClick = { filterBySelectedChapter = !filterBySelectedChapter },
+                            colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
                             label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಆಯ್ದ ಅಧ್ಯಾಯ ಮಾತ್ರ" else "Only Selected Chapter") },
                             modifier = Modifier.testTag("pyq_filter_chapter_chip")
                         )
@@ -167,6 +170,7 @@ fun PyqCentreScreen(
                         FilterChip(
                             selected = showAnalytics,
                             onClick = { showAnalytics = !showAnalytics },
+                            colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
                             leadingIcon = { Icon(Icons.Default.Analytics, contentDescription = null, modifier = Modifier.size(16.dp)) },
                             label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ವಿಶ್ಲೇಷಣೆ" else "Analytics & Predictions") },
                             modifier = Modifier.testTag("pyq_analytics_chip")
@@ -175,6 +179,7 @@ fun PyqCentreScreen(
                         FilterChip(
                             selected = showPaperArchive,
                             onClick = { showPaperArchive = !showPaperArchive },
+                            colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
                             label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಹಳೆಯ ಪ್ರಶ್ನೆಪತ್ರಿಕೆಗಳು" else "Past Paper PDFs") },
                             modifier = Modifier.testTag("pyq_paper_archive_chip")
                         )
@@ -184,12 +189,13 @@ fun PyqCentreScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         listOf(null to (if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ" else "All"), 2026 to "2026", 2025 to "2025", 2024 to "2024", 2023 to "2023", 2022 to "2022", 2021 to "2021", 2020 to "2020", 2019 to "2019", 2018 to "2018", 2017 to "2017", 2016 to "2016", 2015 to "2015").forEach { (yr, label) ->
                             FilterChip(
                                 selected = selectedYear == yr,
                                 onClick = { selectedYear = yr },
+                                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
                                 label = { Text(label) }
                             )
                         }
@@ -205,6 +211,7 @@ fun PyqCentreScreen(
                             FilterChip(
                                 selected = selectedMarks == m,
                                 onClick = { selectedMarks = m },
+                                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
                                 label = { Text(label) }
                             )
                         }
@@ -219,12 +226,14 @@ fun PyqCentreScreen(
                         FilterChip(
                             selected = selectedExamType == null,
                             onClick = { selectedExamType = null },
+                            colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
                             label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ ಪರೀಕ್ಷೆಗಳು" else "All Exams") }
                         )
                         PyqExamType.entries.forEach { et ->
                             FilterChip(
                                 selected = selectedExamType == et,
                                 onClick = { selectedExamType = if (selectedExamType == et) null else et },
+                                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
                                 label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) when (et) { PyqExamType.MAIN -> "ಮುಖ್ಯ ಪರೀಕ್ಷೆ"; PyqExamType.EXAM_1 -> "ಪರೀಕ್ಷೆ 1"; PyqExamType.EXAM_2 -> "ಪರೀಕ್ಷೆ 2"; PyqExamType.EXAM_3 -> "ಪರೀಕ್ಷೆ 3"; PyqExamType.SUPPLEMENTARY -> "ಪೂರಕ ಪರೀಕ್ಷೆ"; PyqExamType.PREPARATORY -> "ಪೂರ್ವಸಿದ್ಧತಾ ಪರೀಕ್ಷೆ"; PyqExamType.MODEL_PAPER -> "ಮಾದರಿ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" } else et.label) }
                             )
                         }
@@ -239,12 +248,14 @@ fun PyqCentreScreen(
                         FilterChip(
                             selected = selectedType == null,
                             onClick = { selectedType = null },
+                            colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
                             label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ ವಿಧಗಳು" else "All Types") }
                         )
                         QuestionType.entries.forEach { qt ->
                             FilterChip(
                                 selected = selectedType == qt,
                                 onClick = { selectedType = if (selectedType == qt) null else qt },
+                                colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
                                 label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) when (qt) { QuestionType.MCQ -> "ಬಹು ಆಯ್ಕೆ"; QuestionType.DEFINITION -> "ವ್ಯಾಖ್ಯಾನ"; QuestionType.DIFFERENCE -> "ವ್ಯತ್ಯಾಸ"; QuestionType.EXPLAIN_WHY -> "ಕಾರಣ ವಿವರಿಸಿ"; QuestionType.NUMERICAL -> "ಸಮಸ್ಯೆ"; QuestionType.DIAGRAM -> "ಚಿತ್ರ"; QuestionType.CHEMICAL_EQUATION -> "ರಾಸಾಯನಿಕ ಸಮೀಕರಣ"; QuestionType.DESCRIPTIVE -> "ವಿವರಣಾತ್ಮಕ" } else qt.label) }
                             )
                         }
@@ -272,8 +283,8 @@ fun PyqCentreScreen(
             items(PyqRepository.paperArchive, key = { it.id }) { entry ->
                 Card(shape = RoundedCornerShape(16.dp)) {
                     Column(
-                        modifier = Modifier.padding(14.dp),
-                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                        modifier = Modifier.padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "${entry.title.take(4)} SSLC ವಿಜ್ಞಾನ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" else entry.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
                         Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ವರ್ಷ ${entry.title.take(4)} • ಹಿಂದಿನ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" else entry.subtitle, style = MaterialTheme.typography.bodySmall)
@@ -390,8 +401,8 @@ private fun PyqCardItem(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
-            modifier = Modifier.padding(10.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -464,7 +475,7 @@ private fun PyqCardItem(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 if (language == StudyLanguage.ENGLISH && pyq.hasOfficialKey) {
                     OutlinedButton(
