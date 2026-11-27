@@ -461,7 +461,7 @@ object PyqRepository {
                     PyqDiscoveryStatus(
                         lastSyncedLabel = "KSEAB portal reachable",
                         kseabReachable = true,
-                        papersDiscoveredCount = allQuestions.size,
+                        papersDiscoveredCount = 0,
                         message = "KSEAB portal is reachable. ${allQuestions.size} starter practice questions are available offline; their original paper PDFs and official keys still need source verification."
                     )
                 } else {
