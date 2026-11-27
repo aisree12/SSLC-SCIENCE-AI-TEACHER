@@ -852,7 +852,7 @@ object PyqRepository {
             .build()
     }
 
-    suspend fun discoverOfficialPapersLive(): PyqDiscoveryStatus = withContext(Dispatchers.IO) {
+    suspend fun checkPaperArchiveIndexLive(): PyqDiscoveryStatus = withContext(Dispatchers.IO) {
         val archiveCount = paperArchive.size
         try {
             val req = Request.Builder()
