@@ -63,7 +63,9 @@ fun ChapterWorkspacePanel(
     onAskAiTeacher: (chapterId: String, prefill: String) -> Unit,
     onOpenLabForChapter: (chapterId: String) -> Unit,
     onOpenPyqTab: () -> Unit,
-    onWatchVideo: (ScienceVideo) -> Unit
+    onWatchVideo: (ScienceVideo) -> Unit,
+    textbookActionLabel: String,
+    onOpenTextbook: () -> Unit
 ) {
     var activeTabIndex by remember { mutableIntStateOf(0) }
     val tabTitles = if (language == StudyLanguage.KANNADA) listOf("ವಿಷಯಗಳು", "ಟಿಪ್ಪಣಿಗಳು", "ವೀಡಿಯೊಗಳು", "ಹಿಂದಿನ ಪ್ರಶ್ನೆಗಳು", "ಪ್ರಯೋಗಗಳು", "ಪರೀಕ್ಷೆ") else listOf("Topics", "Notes & Formulas", "Videos", "PYQs", "Lab & Diagrams", "Quick Quiz")
@@ -103,6 +105,12 @@ fun ChapterWorkspacePanel(
                     Text("Source: ${chapter.textbookSourceRef}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                 }
 
+                OutlinedButton(
+                    onClick = onOpenTextbook,
+                    modifier = Modifier.fillMaxWidth().minimumInteractiveComponentSize()
+                ) {
+                    Text(textbookActionLabel)
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
