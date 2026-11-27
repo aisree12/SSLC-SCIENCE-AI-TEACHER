@@ -1,6 +1,7 @@
 package com.example
 
 import com.example.data.pyq.PyqRepository
+import com.example.data.curriculum.SyllabusRepository
 import com.example.model.PyqExamType
 import com.example.model.ScienceDivision
 import org.junit.Assert.assertEquals
@@ -26,6 +27,16 @@ class PyqAndAnalyticsTest {
         assertTrue(keyed.all { !it.officialKeyAnswer.isNullOrBlank() })
         assertTrue(all.any { it.examType == PyqExamType.PREPARATORY })
         assertTrue(all.any { it.examType == PyqExamType.MODEL_PAPER })
+    }
+
+    @Test
+    fun `every PYQ is mapped to an existing chapter and topic`() {
+        val chapters = SyllabusRepository.chapters
+        val chapterIds = chapters.map { it.id }.toSet()
+        val topicIds = chapters.flatMap { it.topics }.map { it.id }.toSet()
+        assertTrue(PyqRepository.allQuestions.all {
+            it.chapterId in chapterIds && it.topicId in topicIds
+        })
     }
 
     @Test
