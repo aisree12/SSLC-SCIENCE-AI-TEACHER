@@ -40,6 +40,7 @@ import com.example.firebase.authStateFlow
 import com.example.firebase.configureAppCheck
 import com.example.ui.navigation.ScienceTeacherApp
 import com.example.ui.screens.AuthScreen
+import com.example.ui.screens.ScienceCinematicIntroScreen
 import com.example.ui.theme.ScienceTeacherTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -61,12 +62,6 @@ class MainActivity : ComponentActivity() {
                 var showStartupScreen by remember { mutableStateOf(true) }
 
                 LaunchedEffect(Unit) {
-                    // Short branded hand-off while Firebase session state and the first screen settle.
-                    delay(1100)
-                    showStartupScreen = false
-                }
-
-                LaunchedEffect(Unit) {
                     if (Firebase.auth.currentUser == null) {
                         attemptAutoSignIn(
                             context = this@MainActivity,
@@ -80,7 +75,10 @@ class MainActivity : ComponentActivity() {
 
                 val activeUser = currentUser
                 if (showStartupScreen) {
-                    ScienceStartupScreen()
+                    ScienceCinematicIntroScreen(
+                        studentName = activeUser?.displayName.orEmpty(),
+                        onEnterClassroom = { showStartupScreen = false }
+                    )
                 } else if (activeUser == null) {
                     AuthScreen(
                         authErrorMessage = authErrorMessage,
@@ -101,70 +99,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-@Composable
-private fun ScienceStartupScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(28.dp)
-        ) {
-            val introMotion = rememberInfiniteTransition(label = "science_intro")
-            val logoScale by introMotion.animateFloat(
-                initialValue = 0.96f,
-                targetValue = 1.04f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(1100),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "science_logo_pulse"
-            )
-            Text(
-                text = "SSLC",
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.ExtraBold,
-                modifier = Modifier.graphicsLayer {
-                    scaleX = logoScale
-                    scaleY = logoScale
-                }
-            )
-            Text(
-                text = "SCIENCE TEACHER",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Karnataka Class 10 Digital Science Classroom",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.height(28.dp))
-            CircularProgressIndicator()
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = "Preparing your classroom…",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = "SVANAM SOFTS",
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Developed with care for Karnataka SSLC students",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-    }
-}
