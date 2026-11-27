@@ -239,6 +239,7 @@ fun StudyCentreScreen(
             ) {
                 Button(
                     onClick = { onOpenLabForChapter(currentChapter.id) },
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 5.dp),
                     modifier = Modifier
                         .weight(1f)
                         .minimumInteractiveComponentSize()
