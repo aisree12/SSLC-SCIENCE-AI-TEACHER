@@ -148,7 +148,7 @@ fun KtbsCatalogueDialog(
                                 style = MaterialTheme.typography.labelMedium
                             )
                             Text(
-                                "Only continue if this filename is the correct ${book.title}. The app checks the official source domain and verifies the downloaded file is a PDF, but it cannot identify the textbook edition from the PDF itself.",
+                                "Only continue if this filename is the correct ${book.title}. The app checks the official KTBS or NCERT source domain and verifies the downloaded file is a PDF, but it cannot identify the textbook edition from the PDF itself.",
                                 style = MaterialTheme.typography.bodySmall
                             )
                             Button(
