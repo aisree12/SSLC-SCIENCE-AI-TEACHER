@@ -326,7 +326,7 @@ class SharedCurriculumViewModel(
             val result = textbookRepository.downloadSelectedOfficialPdf(bookId, selectedUrl)
             _uiState.value = _uiState.value.copy(
                 statusBannerMessage = if (result.isSuccess) {
-                    "The selected official PDF has been downloaded and checked. Open it from the textbook card."
+                    "The download is complete or already in progress. Check the textbook card; only a PDF that passes file verification can be opened offline."
                 } else {
                     result.exceptionOrNull()?.localizedMessage ?: "The textbook PDF download could not be completed."
                 }
