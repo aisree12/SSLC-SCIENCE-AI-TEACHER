@@ -6,6 +6,8 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.util.Log
+import android.os.Build
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -309,6 +311,11 @@ fun YouTubePlayerDialog(
                             modifier = Modifier.fillMaxSize(),
                             factory = { ctx ->
                                 WebView(ctx).apply {
+                                    Log.i(TAG, "Starting YouTube player: device=${Build.MODEL}, sdk=${Build.VERSION.SDK_INT}, video=${parsed.videoId}, playlist=${parsed.playlistId}")
+                                    if (Build.VERSION.SDK_INT >= 26) {
+                                        val pkg = WebView.getCurrentWebViewPackage()
+                                        Log.i(TAG, "Android System WebView: ${pkg?.packageName} ${pkg?.versionName}")
+                                    }
                                     layoutParams = FrameLayout.LayoutParams(
                                         ViewGroup.LayoutParams.MATCH_PARENT,
                                         ViewGroup.LayoutParams.MATCH_PARENT
@@ -338,6 +345,7 @@ fun YouTubePlayerDialog(
                                             error: WebResourceError?
                                         ) {
                                             if (request?.isForMainFrame == true) {
+                                                Log.e(TAG, "Main-frame WebView error ${error?.errorCode}: ${error?.description}")
                                                 errorMessage = "Video player error. Check internet or open directly on YouTube."
                                             }
                                         }
@@ -346,6 +354,7 @@ fun YouTubePlayerDialog(
                                         YouTubeJsBridge(
                                             onReady = { isReady = true },
                                             onPlayerError = { code ->
+                                                Log.w(TAG, "YouTube IFrame API error code=$code video=${parsed.videoId}")
                                                 errorMessage = when (code) {
                                                     2 -> "YouTube rejected the video ID or player parameters (Code 2)."
                                                     5 -> "YouTube HTML5 playback failed on this device (Code 5)."
@@ -356,8 +365,14 @@ fun YouTubePlayerDialog(
                                                 }
                                             },
                                             onStateChanged = { st -> isPlaying = (st == 1) },
-                                            onJsError = { message -> errorMessage = "Player script error: $message" },
-                                            onAutoplayBlocked = { playbackNotice = "Autoplay was blocked. Tap Play to start the video." }
+                                            onJsError = { message ->
+                                                Log.e(TAG, "YouTube player JavaScript error: $message")
+                                                errorMessage = "Player script error: $message"
+                                            },
+                                            onAutoplayBlocked = {
+                                                Log.i(TAG, "YouTube autoplay blocked; waiting for user gesture")
+                                                playbackNotice = "Autoplay was blocked. Tap Play to start the video."
+                                            }
                                         ),
                                         "AndroidYouTube"
                                     )
@@ -518,6 +533,8 @@ fun YouTubePlayerDialog(
         }
     }
 }
+
+private const val TAG = "ScienceYouTubePlayer"
 
 private fun buildYouTubeIframeHtml(videoId: String?, playlistId: String?): String {
     val playerConfig = if (!playlistId.isNullOrBlank()) {
