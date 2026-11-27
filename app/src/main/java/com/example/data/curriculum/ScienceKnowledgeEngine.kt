@@ -60,12 +60,24 @@ object ScienceKnowledgeEngine {
         val hasOffTopic = offTopicKeywords.any { q.contains(it) }
         val hasScienceCue = SyllabusRepository.chapters.any { ch ->
             q.contains(ch.titleEn.lowercase()) ||
-                ch.topics.any { t -> t.title.lowercase().split(" ").any { w -> w.length > 4 && q.contains(w) } }
+                ch.topics.any { t ->
+                    q.contains(t.kannadaTitle) ||
+                        t.title.lowercase().split(" ").any { w -> w.length > 4 && q.contains(w) }
+                }
         } || listOf(
             "science", "physics", "chemistry", "biology", "atom", "acid", "base", "salt",
-            "metal", "carbon", "ohm", "volt", "ampere", "current", "magnet", "lens", "mirror",
+            "metal", "carbon", "ohm", "volt", "ampere", "current", "electricity", "battery",
+            "circuit", "resistance", "voltage", "power", "fuse", "magnet", "solenoid",
+            "lens", "mirror", "reflection", "refraction", "scattering", "dispersion", "spectrum",
             "eye", "heart", "kidney", "nephron", "neuron", "brain", "mendel", "dna", "ozone",
-            "ph", "sslc", "kseab", "vigyana", "ವಿಜ್ಞಾನ", "ವಿದ್ಯುತ್", "ಬೆಳಕು", "ಆಮ್ಲ"
+            "photosynthesis", "digestion", "respiration", "nutrition", "transport", "excretion",
+            "reproduction", "pollination", "heredity", "genetics", "ecosystem", "food chain",
+            "trophic", "biomagnification", "corrosion", "oxidation", "reduction", "combustion",
+            "neutralisation", "indicator", "covalent", "homologous", "hydrocarbon", "soap",
+            "detergent", "fleming", "magnetic field", "focal length", "concave", "convex",
+            "stomata", "hormone", "reflex", "menstruation", "fertilization", "ph", "sslc",
+            "kseab", "vigyana", "ವಿಜ್ಞಾನ", "ವಿದ್ಯುತ್", "ಬೆಳಕು", "ಆಮ್ಲ", "ಕ್ಷಾರ", "ಲೋಹ",
+            "ಹೃದಯ", "ಮೆದುಳು", "ಉಸಿರಾಟ", "ಜೀರ್ಣಕ್ರಿಯೆ", "ವಂಶವಾಹಿ", "ಪರಿಸರ"
         ).any { q.contains(it) }
         val contextFollowUp = listOf(
             "explain", "more", "again", "repeat", "example", "this", "it", "why", "how",
