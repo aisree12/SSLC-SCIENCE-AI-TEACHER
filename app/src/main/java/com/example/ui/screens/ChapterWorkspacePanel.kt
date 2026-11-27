@@ -27,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedButtonDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
@@ -124,7 +123,7 @@ fun ChapterWorkspacePanel(
                 ) {
                     OutlinedButton(
                         onClick = { onSaveNotesOffline(chapter) },
-                        colors = OutlinedButtonDefaults.outlinedButtonColors(contentColor = androidx.compose.ui.graphics.Color(0xFF6D28D9)),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = androidx.compose.ui.graphics.Color(0xFF6D28D9)),
                         modifier = Modifier
                             .weight(1f)
                             .minimumInteractiveComponentSize()
