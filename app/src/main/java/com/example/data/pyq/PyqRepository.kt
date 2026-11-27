@@ -111,6 +111,38 @@ object PyqRepository {
             sourceNote = "KSEAB question paper listed in the archive. No official key is listed for 2024."
         ),
         PyqPaperArchiveEntry(
+            id = "archive_2023_exam1",
+            title = "2023 SSLC Science — Main Examination",
+            subtitle = "English medium 83-E • Question paper mirror",
+            paperArchiveUrl = "https://docs.aglasem.com/view/bc851700-9bfc-11ee-afd5-0a5e36bc6706",
+            answerKeyArchiveUrl = null,
+            sourceNote = "Third-party document mirror of the 2023 KSEAB paper. Check the paper code and date on page 1; no official key is linked here."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2022_exam1",
+            title = "2022 SSLC Science — Main Examination",
+            subtitle = "English medium 83-E • Question paper mirror",
+            paperArchiveUrl = "https://docs.aglasem.com/view/447726fc-5f41-11ed-8152-0a5e36bc6706",
+            answerKeyArchiveUrl = null,
+            sourceNote = "Third-party document mirror of the 2022 KSEAB paper dated 11 April 2022. No official key is linked here."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2020_exam1",
+            title = "2020 SSLC Science — Main Examination",
+            subtitle = "English medium 83-E • Question paper PDF mirror",
+            paperArchiveUrl = "https://static.collegedekho.com/media/uploads/2023/10/06/class-10-science-83-e-set-a-mar-2020.pdf",
+            answerKeyArchiveUrl = null,
+            sourceNote = "Third-party-hosted PDF whose first page identifies the KSEAB 30 March 2020 paper. Verify the version before practice."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2020_21_model",
+            title = "2020–21 SSLC Science — Historical Model Paper 1",
+            subtitle = "English medium 83-E • Historical model paper, not a board exam",
+            paperArchiveUrl = "https://docs.aglasem.com/view/7e94720c-8ee3-11eb-97f9-02f21f5619c4",
+            answerKeyArchiveUrl = null,
+            sourceNote = "Historical KSEB model paper. It may include content outside the current syllabus; use only for general practice."
+        ),
+        PyqPaperArchiveEntry(
             id = "archive_2026_27_model",
             title = "2026–27 SSLC Science — Model Papers 1 to 4",
             subtitle = "English medium 83-E • Four model papers and matching key answers",
