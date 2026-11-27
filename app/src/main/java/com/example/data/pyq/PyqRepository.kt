@@ -572,8 +572,7 @@ object PyqRepository {
             officialPdfUrl = "",
             extractionConfidence = 0.88f,
             paperReferenceUrl = "https://docs.aglasem.com/view/5463975c-c291-11ef-b8aa-0a5e36bc6706"
-        )
-
+        ),
 
         // Transcribed question stems from the 2023 SSLC Science 83-E paper mirror.
         PyqQuestion(
