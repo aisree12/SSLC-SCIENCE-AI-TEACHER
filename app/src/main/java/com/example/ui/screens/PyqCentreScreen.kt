@@ -258,9 +258,9 @@ fun PyqCentreScreen(
                         modifier = Modifier.padding(14.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Text("Karnataka SSLC Science Paper Archive", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಕರ್ನಾಟಕ SSLC ವಿಜ್ಞಾನ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ ಸಂಗ್ರಹ" else "Karnataka SSLC Science Paper Archive", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Text(
-                            "Archive indexes and mirrors are clearly labelled per collection. 2026 includes KSEAB model answers in English and Kannada. Older mirror PDFs are not official answer keys; check the paper code, year and medium before using them.",
+                            if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಪ್ರತಿ ವರ್ಷದ ಹಿಂದಿನ ಪ್ರಶ್ನೆಪತ್ರಿಕೆಗಳನ್ನು ಇಲ್ಲಿ ತೆರೆಯಬಹುದು. ಸರಿಯಾದ ವರ್ಷ ಮತ್ತು ಪರೀಕ್ಷಾ ಆವೃತ್ತಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ." else "Archive indexes and mirrors are clearly labelled per collection. 2026 includes KSEAB model answers in English and Kannada. Older mirror PDFs are not official answer keys; check the paper code, year and medium before using them.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -273,23 +273,23 @@ fun PyqCentreScreen(
                         modifier = Modifier.padding(14.dp),
                         verticalArrangement = Arrangement.spacedBy(7.dp)
                     ) {
-                        Text(entry.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-                        Text(entry.subtitle, style = MaterialTheme.typography.bodySmall)
-                        Text(entry.sourceNote, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "${entry.title.take(4)} SSLC ವಿಜ್ಞಾನ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" else entry.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                        Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ವರ್ಷ ${entry.title.take(4)} • ಹಿಂದಿನ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" else entry.subtitle, style = MaterialTheme.typography.bodySmall)
+                        if (curriculumState.selectedLanguage == StudyLanguage.ENGLISH) Text(entry.sourceNote, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             Button(
                                 onClick = {
                                     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(entry.paperArchiveUrl)))
                                 },
                                 modifier = Modifier.weight(1f)
-                            ) { Text("Open Papers") }
+                            ) { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಪ್ರಶ್ನೆಪತ್ರಿಕೆ ತೆರೆಯಿರಿ" else "Open Papers") }
                             if (entry.answerKeyArchiveUrl != null) {
                                 OutlinedButton(
                                     onClick = {
                                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(entry.answerKeyArchiveUrl)))
                                     },
                                     modifier = Modifier.weight(1f)
-                                ) { Text("Open Keys") }
+                                ) { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಉತ್ತರ ಕೀ ತೆರೆಯಿರಿ" else "Open Keys") }
                             }
                         }
                     }
