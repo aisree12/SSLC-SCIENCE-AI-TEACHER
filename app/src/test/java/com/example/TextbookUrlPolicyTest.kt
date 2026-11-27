@@ -1,0 +1,28 @@
+package com.example
+
+import com.example.data.textbook.TextbookUrlPolicy
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class TextbookUrlPolicyTest {
+    @Test
+    fun acceptsHttpsPdfFromOfficialKtbsDomains() {
+        assertTrue(TextbookUrlPolicy.isTrustedPdfUrl("https://textbooks.karnataka.gov.in/books/sslc-science.pdf"))
+        assertTrue(TextbookUrlPolicy.isTrustedPdfUrl("https://files.ktbs.kar.nic.in/2026/science.pdf"))
+        assertTrue(TextbookUrlPolicy.isTrustedPdfUrl("https://textbooks.karnataka.gov.in/download?format=pdf"))
+    }
+
+    @Test
+    fun rejectsNonHttpsAndNonPdfResources() {
+        assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("http://textbooks.karnataka.gov.in/science.pdf"))
+        assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("https://textbooks.karnataka.gov.in/science.html"))
+    }
+
+    @Test
+    fun rejectsLookalikeAndUntrustedHosts() {
+        assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("https://textbooks.karnataka.gov.in.attacker.example/science.pdf"))
+        assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("https://example.com/science.pdf"))
+        assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("https://karnataka.gov.in.example.com/science.pdf"))
+    }
+}
