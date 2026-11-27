@@ -179,6 +179,30 @@ class AiTeacherRepository(private val context: Context) : ScienceAiProvider {
         val fullPrompt = "$systemPrompt\n\nStudent Question:\n$question"
 
         val accumulated = StringBuilder()
+
+        suspend fun emitOfflineFallback(reason: String) {
+            val localAnswer = ScienceKnowledgeEngine.generateOfflineFallbackAnswer(
+                query = question,
+                language = language,
+                mode = mode,
+                retrieval = retrieval
+            )
+            val interruptionNote = if (accumulated.isNotBlank()) {
+                "\\n\\nCloud generation was interrupted. The answer below uses the local Science study notes."
+            } else {
+                ""
+            }
+            emit(
+                AiStreamEvent(
+                    accumulatedText = localAnswer + interruptionNote,
+                    isComplete = true,
+                    sourceCitation = retrieval.sourceCitation,
+                    detectedQuestionType = retrieval.detectedQuestionType,
+                    providerLabel = "Offline fallback — $reason"
+                )
+            )
+        }
+
         try {
             withTimeout(60_000L) {
                 chatModel.generateContentStream(fullPrompt).collect { chunk ->
@@ -191,7 +215,7 @@ class AiTeacherRepository(private val context: Context) : ScienceAiProvider {
                                 isComplete = false,
                                 sourceCitation = retrieval.sourceCitation,
                                 detectedQuestionType = retrieval.detectedQuestionType,
-                                providerLabel = "Gemini AI Teacher (Grounded in KTBS)"
+                                providerLabel = "Gemini AI Teacher (local Science notes used as context)"
                             )
                         )
                     }
@@ -206,17 +230,17 @@ class AiTeacherRepository(private val context: Context) : ScienceAiProvider {
                     isComplete = true,
                     sourceCitation = retrieval.sourceCitation,
                     detectedQuestionType = retrieval.detectedQuestionType,
-                    providerLabel = "Gemini AI Teacher (Grounded in KTBS)"
+                    providerLabel = "Gemini AI Teacher (local Science notes used as context)"
                 )
             )
         } catch (e: TimeoutCancellationException) {
-            Log.e(TAG, "Gemini AI request timed out", e)
-            throw IllegalStateException("AI Teacher timed out after 60 seconds. Check connection or retry.", e)
+            Log.e(TAG, "Gemini AI request timed out; using local fallback", e)
+            emitOfflineFallback("cloud timeout")
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            Log.e(TAG, "Gemini AI generation failed", e)
-            throw e
+            Log.e(TAG, "Gemini AI generation failed; using local fallback", e)
+            emitOfflineFallback("cloud service unavailable")
         }
     }
 
