@@ -211,7 +211,7 @@ private fun TopicsSection(
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = topic.kannadaTitle,
+                                text = if (language == StudyLanguage.KANNADA) topic.kannadaTitle else topic.title,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -251,7 +251,7 @@ private fun TopicsSection(
                         onClick = { onAskAiTopic(topic.title) },
                         modifier = Modifier.minimumInteractiveComponentSize()
                     ) {
-                        Text("Ask AI Teacher about this topic")
+                        Text(if (language == StudyLanguage.KANNADA) "ಈ ವಿಷಯದ ಬಗ್ಗೆ AI ಶಿಕ್ಷಕರನ್ನು ಕೇಳಿ" else "Ask AI Teacher about this topic")
                     }
                 }
             }
@@ -268,10 +268,10 @@ private fun NotesFormulasSection(
         if (chapter.definitions.isNotEmpty()) {
             Card(shape = RoundedCornerShape(16.dp)) {
                 Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Key Definitions", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Text(if (language == StudyLanguage.KANNADA) "ಪ್ರಮುಖ ವ್ಯಾಖ್ಯಾನಗಳು" else "Key Definitions", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                     chapter.definitions.forEach { d ->
                         Text(
-                            text = "${d.term} (${d.kannadaTerm})",
+                            text = if (language == StudyLanguage.KANNADA) d.kannadaTerm else d.term,
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.primary
@@ -280,7 +280,7 @@ private fun NotesFormulasSection(
                             text = if (language == StudyLanguage.KANNADA) d.kannadaDefinition else d.definition,
                             style = MaterialTheme.typography.bodyMedium
                         )
-                        Text(text = d.textbookRef, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        if (language == StudyLanguage.ENGLISH) Text(text = d.textbookRef, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }
@@ -289,16 +289,16 @@ private fun NotesFormulasSection(
         if (chapter.formulas.isNotEmpty()) {
             Card(shape = RoundedCornerShape(16.dp)) {
                 Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Formulas & SI Units", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Text(if (language == StudyLanguage.KANNADA) "ಸೂತ್ರಗಳು ಮತ್ತು SI ಏಕಮಾನಗಳು" else "Formulas & SI Units", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                     chapter.formulas.forEach { f ->
                         Surface(
                             shape = RoundedCornerShape(10.dp),
                             color = MaterialTheme.colorScheme.surfaceVariant
                         ) {
                             Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-                                Text(f.name, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                                if (language == StudyLanguage.ENGLISH) Text(f.name, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
                                 Text(f.formula, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
-                                Text("${f.variables} • SI Unit: ${f.siUnit}", style = MaterialTheme.typography.bodySmall)
+                                if (language == StudyLanguage.ENGLISH) Text("${f.variables} • SI Unit: ${f.siUnit}", style = MaterialTheme.typography.bodySmall)
                             }
                         }
                     }
@@ -309,16 +309,16 @@ private fun NotesFormulasSection(
         if (chapter.reactions.isNotEmpty()) {
             Card(shape = RoundedCornerShape(16.dp)) {
                 Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Balanced Chemical Equations", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Text(if (language == StudyLanguage.KANNADA) "ಸಮತೋಲಿತ ರಾಸಾಯನಿಕ ಸಮೀಕರಣಗಳು" else "Balanced Chemical Equations", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                     chapter.reactions.forEach { r ->
                         Surface(
                             shape = RoundedCornerShape(10.dp),
                             color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
                         ) {
                             Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-                                Text("${r.title} (${r.reactionType})", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                                if (language == StudyLanguage.ENGLISH) Text("${r.title} (${r.reactionType})", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
                                 Text(r.balancedEquation, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.secondary)
-                                Text("Observation: ${r.observation}", style = MaterialTheme.typography.bodySmall)
+                                if (language == StudyLanguage.ENGLISH) Text("Observation: ${r.observation}", style = MaterialTheme.typography.bodySmall)
                             }
                         }
                     }
@@ -326,7 +326,7 @@ private fun NotesFormulasSection(
             }
         }
 
-        if (chapter.activities.isNotEmpty()) {
+        if (language == StudyLanguage.ENGLISH && chapter.activities.isNotEmpty()) {
             Card(shape = RoundedCornerShape(16.dp)) {
                 Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text("Textbook Practical Activities", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
