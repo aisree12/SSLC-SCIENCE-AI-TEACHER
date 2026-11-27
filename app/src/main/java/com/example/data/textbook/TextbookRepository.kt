@@ -198,7 +198,7 @@ class TextbookRepository(
         return@withContext try {
             val request = DownloadManager.Request(Uri.parse(book.officialUrl))
                 .setTitle(book.title)
-                .setDescription("Downloading official KTBS SSLC Science PDF")
+                .setDescription("Downloading official SSLC Science textbook PDF")
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(false)
@@ -417,7 +417,7 @@ class TextbookRepository(
                                         status = DownloadStatus.FAILED.name,
                                         progressPercent = 0,
                                         localFilePath = null,
-                                        statusNote = "Portal returned HTML redirect instead of direct PDF. Tap 'Open KTBS Portal' to download from official browser.",
+                                        statusNote = "The selected link did not return a valid PDF. Open the official textbook catalogue in your browser and choose the book file.",
                                         updatedAtMillis = System.currentTimeMillis()
                                     )
                                 )
@@ -429,7 +429,7 @@ class TextbookRepository(
                                 current.copy(
                                     status = DownloadStatus.FAILED.name,
                                     progressPercent = 0,
-                                    statusNote = "Official server unavailable or link moved. Tap Retry or Open KTBS Portal.",
+                                    statusNote = "Official textbook server unavailable or link moved. Retry from the catalogue or open it in your browser.",
                                     updatedAtMillis = System.currentTimeMillis()
                                 )
                             )
