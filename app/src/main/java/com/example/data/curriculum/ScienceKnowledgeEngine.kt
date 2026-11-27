@@ -67,7 +67,11 @@ object ScienceKnowledgeEngine {
             "eye", "heart", "kidney", "nephron", "neuron", "brain", "mendel", "dna", "ozone",
             "ph", "sslc", "kseab", "vigyana", "ವಿಜ್ಞಾನ", "ವಿದ್ಯುತ್", "ಬೆಳಕು", "ಆಮ್ಲ"
         ).any { q.contains(it) }
-        return hasOffTopic && !hasScienceCue
+        val contextFollowUp = listOf(
+            "explain", "more", "again", "repeat", "example", "this", "it", "why", "how",
+            "ಇದನ್ನು", "ಇದು", "ಹೇಗೆ", "ಯಾಕೆ", "ಮತ್ತೊಮ್ಮೆ"
+        ).any { q.contains(it) }
+        return (hasOffTopic && !hasScienceCue) || (!hasScienceCue && !contextFollowUp)
     }
 
     fun detectQuestionType(query: String): String {
@@ -108,9 +112,9 @@ object ScienceKnowledgeEngine {
             .take(2)
 
         val contextBlock = buildString {
-            appendLine("=== VERIFIED KARNATAKA SSLC SYLLABUS CONTEXT ===")
+            appendLine("=== LOCAL KARNATAKA SSLC SCIENCE STUDY CONTEXT (CURRENT-YEAR OFFICIAL CROSS-CHECK PENDING) ===")
             appendLine("Chapter ${bestChapter.chapterNumber} (${bestChapter.division.displayName}): ${bestChapter.titleEn} / ${bestChapter.titleKn}")
-            appendLine("Official Reference: ${bestChapter.textbookSourceRef}")
+            appendLine("Textbook chapter reference: ${bestChapter.textbookSourceRef}")
             appendLine("Summary: ${bestChapter.introduction}")
             appendLine("Key Topics:")
             bestChapter.topics.forEach { t ->
@@ -135,7 +139,7 @@ object ScienceKnowledgeEngine {
                 }
             }
             if (matchedPyqs.isNotEmpty()) {
-                appendLine("Related KSEAB PYQs:")
+                appendLine("Related starter practice questions (original KSEAB paper verification pending):")
                 matchedPyqs.forEach { p ->
                     appendLine("- [${p.year} ${p.examType.label}, ${p.marks}M]: ${p.questionText}")
                 }
@@ -173,11 +177,11 @@ object ScienceKnowledgeEngine {
             else -> "Format cleanly with headings, bullet points, formulas/equations where relevant, and exam tips."
         }
         return """
-You are the Karnataka SSLC Science AI Teacher exclusively for Class 10 (SSLC) Physics, Chemistry, and Biology under KSEAB & KTBS.
+You are the Karnataka SSLC Science AI Teacher for Class 10 Physics, Chemistry, and Biology. Keep every teaching answer within the local 13-chapter Karnataka SSLC Science study catalogue.
 STRICT BOUNDARIES:
-1. Only answer questions related to Karnataka SSLC Class 10 Science (13 rationalized chapters). If a question is off-topic (sports, movies, politics, coding, general chat), politely decline and guide the student back to SSLC Science chapters.
+1. Answer only questions that relate to the current chapter context or the local 13-chapter Science study catalogue. For clearly unrelated requests (sports, movies, politics, coding, general chat), politely redirect the student to SSLC Science.
 2. Understand English, Kannada (ಕನ್ನಡ), and Kanglish (Kannada typed in English letters, e.g. 'Current andre enu?').
-3. Never fabricate scientific facts or claim an AI explanation is an official KSEAB key answer. Label your response clearly as an AI Teacher explanation grounded in the verified textbook context below.
+3. Never fabricate scientific facts or claim an AI explanation is an official KSEAB key answer. Label your response as an AI Teacher explanation based on the local textbook-aligned study notes below. Do not claim the local chapter list has been officially verified for 2026–27.
 4. Teaching Mode: ${mode.title} — ${mode.promptInstruction}
 5. Question Type Detected: $questionType — $formattingRule
 6. Language Preference: $langRule
@@ -206,7 +210,7 @@ $ragContext
         } ?: ch.topics.firstOrNull()
 
         return buildString {
-            appendLine("[Offline Local Science Knowledge Engine — Verified Syllabus Notes]")
+            appendLine("[Offline Local Science Knowledge Engine — Local Study Notes; current-year syllabus verification pending]")
             appendLine("Mode: ${mode.title} | Type: ${retrieval.detectedQuestionType}")
             appendLine("Chapter ${ch.chapterNumber}: ${ch.titleEn} (${ch.titleKn})")
             appendLine()
