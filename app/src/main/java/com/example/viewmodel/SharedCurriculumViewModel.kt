@@ -320,6 +320,19 @@ class SharedCurriculumViewModel(
         }
     }
 
+    fun downloadSelectedOfficialPdf(bookId: String, selectedUrl: String) {
+        viewModelScope.launch {
+            val result = textbookRepository.downloadSelectedOfficialPdf(bookId, selectedUrl)
+            _uiState.value = _uiState.value.copy(
+                statusBannerMessage = if (result.isSuccess) {
+                    "The selected official PDF has been downloaded and checked. Open it from the textbook card."
+                } else {
+                    result.exceptionOrNull()?.localizedMessage ?: "The textbook PDF download could not be completed."
+                }
+            )
+        }
+    }
+
     fun downloadAllTextbooks() {
         viewModelScope.launch {
             TextbookRepository.officialCatalogue.forEach { book ->
