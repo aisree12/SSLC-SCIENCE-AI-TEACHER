@@ -120,12 +120,12 @@ fun PyqCentreScreen(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Science PYQ Intelligence Centre",
+                                text = if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ವಿಜ್ಞಾನ ಹಿಂದಿನ ಪ್ರಶ್ನೆಗಳ ಕೇಂದ್ರ" else "Science PYQ Intelligence Centre",
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = curriculumState.pyqDiscoveryStatus.message,
+                                text = if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "2015 ರಿಂದ 2026 ರವರೆಗಿನ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ ಸಂಗ್ರಹ ಲಭ್ಯವಿದೆ." else curriculumState.pyqDiscoveryStatus.message,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -160,20 +160,20 @@ fun PyqCentreScreen(
                         FilterChip(
                             selected = filterBySelectedChapter,
                             onClick = { filterBySelectedChapter = !filterBySelectedChapter },
-                            label = { Text("Only Selected Chapter") },
+                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಆಯ್ದ ಅಧ್ಯಾಯ ಮಾತ್ರ" else "Only Selected Chapter") },
                             modifier = Modifier.testTag("pyq_filter_chapter_chip")
                         )
                         FilterChip(
                             selected = showAnalytics,
                             onClick = { showAnalytics = !showAnalytics },
                             leadingIcon = { Icon(Icons.Default.Analytics, contentDescription = null, modifier = Modifier.size(16.dp)) },
-                            label = { Text("Analytics & Predictions") },
+                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ವಿಶ್ಲೇಷಣೆ" else "Analytics & Predictions") },
                             modifier = Modifier.testTag("pyq_analytics_chip")
                         )
                         FilterChip(
                             selected = showPaperArchive,
                             onClick = { showPaperArchive = !showPaperArchive },
-                            label = { Text("Past Paper PDFs") },
+                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಹಳೆಯ ಪ್ರಶ್ನೆಪತ್ರಿಕೆಗಳು" else "Past Paper PDFs") },
                             modifier = Modifier.testTag("pyq_paper_archive_chip")
                         )
                     }
@@ -184,7 +184,7 @@ fun PyqCentreScreen(
                             .horizontalScroll(rememberScrollState()),
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        listOf(null to "All", 2026 to "2026", 2025 to "2025", 2024 to "2024", 2023 to "2023", 2022 to "2022", 2021 to "2021", 2020 to "2020", 2019 to "2019", 2018 to "2018", 2017 to "2017", 2016 to "2016", 2015 to "2015").forEach { (yr, label) ->
+                        listOf(null to (if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ" else "All"), 2026 to "2026", 2025 to "2025", 2024 to "2024", 2023 to "2023", 2022 to "2022", 2021 to "2021", 2020 to "2020", 2019 to "2019", 2018 to "2018", 2017 to "2017", 2016 to "2016", 2015 to "2015").forEach { (yr, label) ->
                             FilterChip(
                                 selected = selectedYear == yr,
                                 onClick = { selectedYear = yr },
@@ -199,7 +199,7 @@ fun PyqCentreScreen(
                             .horizontalScroll(rememberScrollState()),
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        listOf(null to "All Marks", 1 to "1M", 2 to "2M", 3 to "3M", 4 to "4M").forEach { (m, label) ->
+                        listOf(null to (if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ ಅಂಕಗಳು" else "All Marks"), 1 to "1M", 2 to "2M", 3 to "3M", 4 to "4M").forEach { (m, label) ->
                             FilterChip(
                                 selected = selectedMarks == m,
                                 onClick = { selectedMarks = m },
@@ -217,7 +217,7 @@ fun PyqCentreScreen(
                         FilterChip(
                             selected = selectedExamType == null,
                             onClick = { selectedExamType = null },
-                            label = { Text("All Exams") }
+                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ ಪರೀಕ್ಷೆಗಳು" else "All Exams") }
                         )
                         PyqExamType.entries.forEach { et ->
                             FilterChip(
@@ -237,7 +237,7 @@ fun PyqCentreScreen(
                         FilterChip(
                             selected = selectedType == null,
                             onClick = { selectedType = null },
-                            label = { Text("All Types") }
+                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ ವಿಧಗಳು" else "All Types") }
                         )
                         QuestionType.entries.forEach { qt ->
                             FilterChip(
@@ -396,7 +396,7 @@ private fun PyqCardItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                DivisionBadge(division = pyq.division)
+                if (language == StudyLanguage.KANNADA) Text(pyq.division.kannadaName, style = MaterialTheme.typography.labelMedium) else DivisionBadge(division = pyq.division)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     AssistChip(onClick = {}, label = { Text("${pyq.year} • ${pyq.examType.label}") })
                     AssistChip(onClick = {}, label = { Text("${pyq.marks}M") })
@@ -405,7 +405,7 @@ private fun PyqCardItem(
             }
 
             Text(
-                text = "${pyq.questionNumber} • ${pyq.topicName} (${pyq.questionType.label})",
+                text = if (language == StudyLanguage.KANNADA) "ಪ್ರಶ್ನೆ ${pyq.questionNumber} • ${SyllabusRepository.getChapterById(pyq.chapterId).titleKn}" else "${pyq.questionNumber} • ${pyq.topicName} (${pyq.questionType.label})",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -484,14 +484,14 @@ private fun PyqCardItem(
                 ) {
                     Icon(Icons.Default.AutoAwesome, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("AI Solution")
+                    Text(if (language == StudyLanguage.KANNADA) "AI ಪರಿಹಾರ" else "AI Solution")
                 }
                 OutlinedButton(
                     onClick = onOpenOfficialSource,
                     modifier = Modifier.minimumInteractiveComponentSize()
                 ) {
                     Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open source paper reference", modifier = Modifier.size(18.dp))
-                    Text("KSEAB")
+                    Text(if (language == StudyLanguage.KANNADA) "ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" else "KSEAB")
                 }
             }
         }
