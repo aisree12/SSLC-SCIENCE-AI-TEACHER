@@ -118,10 +118,20 @@ class TextbookRepository(
                         updatedAtMillis = System.currentTimeMillis()
                     )
                 )
-            } else if (existing.edition != book.edition && existing.status == DownloadStatus.DOWNLOADED.name) {
+            } else if (existing.edition != book.edition || existing.officialUrl != book.officialUrl ||
+                existing.academicYear != book.academicYear
+            ) {
+                val note = if (existing.status == DownloadStatus.DOWNLOADED.name) {
+                    "A previously downloaded edition is kept offline. Check the official KTBS catalogue for the current ${book.academicYear} edition."
+                } else {
+                    "Open the official KTBS catalogue. A direct Class 10 Science PDF URL has not yet been verified for this edition."
+                }
                 toUpsert.add(
                     existing.copy(
-                        statusNote = "Newer official edition (${book.edition}) available",
+                        academicYear = book.academicYear,
+                        edition = book.edition,
+                        officialUrl = book.officialUrl,
+                        statusNote = note,
                         updatedAtMillis = System.currentTimeMillis()
                     )
                 )
