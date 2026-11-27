@@ -1,6 +1,5 @@
 package com.example.ui.components
 
-import android.net.Uri
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -11,7 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.weight
 import androidx.compose.material.icons.Icons
@@ -51,7 +50,7 @@ fun KtbsCatalogueDialog(
     var pageTitle by remember(book.id) { mutableStateOf("Official KTBS catalogue") }
     var pageProgress by remember(book.id) { mutableStateOf(0) }
     var blockedExternal by remember(book.id) { mutableStateOf(false) }
-    var webView: WebView? = null
+    val webViewRef = remember { java.util.concurrent.atomic.AtomicReference<WebView?>(null) }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -87,7 +86,7 @@ fun KtbsCatalogueDialog(
                     modifier = Modifier.weight(1f).fillMaxWidth().testTag("ktbs_catalogue_webview"),
                     factory = { context ->
                         WebView(context).apply {
-                            webView = this
+                            webViewRef.set(this)
                             settings.javaScriptEnabled = true
                             settings.domStorageEnabled = true
                             settings.allowFileAccess = false
@@ -107,12 +106,12 @@ fun KtbsCatalogueDialog(
                             webViewClient = object : WebViewClient() {
                                 override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest): Boolean {
                                     val uri = request.url
-                                    if (isPdfUrl(uri)) {
-                                        if (isTrustedKtbsHost(uri.host)) capturedPdfUrl = uri.toString()
+                                    if (TextbookUrlPolicy.isPdfUrl(uri.toString())) {
+                                        if (TextbookUrlPolicy.isTrustedPdfUrl(uri.toString())) capturedPdfUrl = uri.toString()
                                         else blockedExternal = true
                                         return true
                                     }
-                                    if (!isTrustedKtbsHost(uri.host)) {
+                                    if (!uri.scheme.equals("https", true) || !TextbookUrlPolicy.isTrustedPortalHost(uri.host)) {
                                         blockedExternal = true
                                         return true
                                     }
@@ -120,17 +119,18 @@ fun KtbsCatalogueDialog(
                                 }
                             }
                             setDownloadListener { url, _, _, mimeType, _ ->
-                                val uri = runCatching { Uri.parse(url) }.getOrNull()
-                                if (uri != null && isTrustedKtbsHost(uri.host) &&
-                                    (mimeType.equals("application/pdf", true) || isPdfUrl(uri))
-                                ) capturedPdfUrl = url else blockedExternal = true
+                                if (TextbookUrlPolicy.isTrustedPdfUrl(url) && mimeType.equals("application/pdf", true)) {
+                                    capturedPdfUrl = url
+                                } else {
+                                    blockedExternal = true
+                                }
                             }
                             loadUrl("https://textbooks.karnataka.gov.in/")
                         }
                     },
-                    update = { webView = it }
+                    update = { webViewRef.set(it) }
                 )
-                capturedPdfUrl?.let { _ ->
+                capturedPdfUrl?.let { url ->
                     Surface(tonalElevation = 3.dp) {
                         Column(
                             modifier = Modifier.fillMaxWidth().padding(14.dp),
@@ -142,11 +142,11 @@ fun KtbsCatalogueDialog(
                                 style = MaterialTheme.typography.bodySmall
                             )
                             Button(
-                                onClick = { onDownloadPdf(capturedPdfUrl!!) },
+                                onClick = { onDownloadPdf(url) },
                                 modifier = Modifier.fillMaxWidth().testTag("confirm_ktbs_pdf_download")
                             ) {
                                 Icon(Icons.Default.Download, contentDescription = null)
-                                Spacer(Modifier.height(0.dp))
+                                Spacer(Modifier.width(8.dp))
                                 Text("Download for this textbook")
                             }
                             OutlinedButton(
@@ -162,15 +162,10 @@ fun KtbsCatalogueDialog(
 
     DisposableEffect(Unit) {
         onDispose {
-            webView?.stopLoading()
-            webView?.destroy()
-            webView = null
+            webViewRef.getAndSet(null)?.let { view ->
+                view.stopLoading()
+                view.destroy()
+            }
         }
     }
 }
-
-private fun isTrustedKtbsHost(host: String?): Boolean =
-    TextbookUrlPolicy.isTrustedPortalHost(host)
-
-private fun isPdfUrl(uri: Uri): Boolean =
-    TextbookUrlPolicy.isPdfUrl(uri.toString())
