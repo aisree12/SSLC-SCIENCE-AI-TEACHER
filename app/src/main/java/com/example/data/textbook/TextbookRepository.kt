@@ -41,7 +41,7 @@ class TextbookRepository(
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
                 chapterRangeLabel = "Chapters 1–7 (Chemistry & Biology)",
-                estimatedSizeMb = "14.2 MB"
+                estimatedSizeMb = "Size not verified"
             ),
             OfficialTextbook(
                 id = "ktbs_10_sci_en_p2",
@@ -55,7 +55,7 @@ class TextbookRepository(
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
                 chapterRangeLabel = "Chapters 8–13 (Heredity, Physics & Environment)",
-                estimatedSizeMb = "15.8 MB"
+                estimatedSizeMb = "Size not verified"
             ),
             OfficialTextbook(
                 id = "ktbs_10_sci_kn_p1",
@@ -69,7 +69,7 @@ class TextbookRepository(
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
                 chapterRangeLabel = "ಅಧ್ಯಾಯ 1–7 (ರಸಾಯನಶಾಸ್ತ್ರ ಮತ್ತು ಜೀವಶಾಸ್ತ್ರ)",
-                estimatedSizeMb = "16.4 MB"
+                estimatedSizeMb = "Size not verified"
             ),
             OfficialTextbook(
                 id = "ktbs_10_sci_kn_p2",
@@ -83,7 +83,7 @@ class TextbookRepository(
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
                 chapterRangeLabel = "ಅಧ್ಯಾಯ 8–13 (ಆನುವಂಶಿಕತೆ, ಭೌತಶಾಸ್ತ್ರ ಮತ್ತು ಪರಿಸರ)",
-                estimatedSizeMb = "17.1 MB"
+                estimatedSizeMb = "Size not verified"
             )
         )
     }
