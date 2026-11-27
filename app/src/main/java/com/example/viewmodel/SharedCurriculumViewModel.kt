@@ -312,6 +312,7 @@ class SharedCurriculumViewModel(
                     }
                 }
             }
+            val mediumStr = if (isKannada) "KANNADA" else "ENGLISH"
             offlineNoteDao.insert(
                 OfflineNoteEntity(
                     chapterId = chapter.id,
@@ -325,7 +326,7 @@ class SharedCurriculumViewModel(
             val res = firestoreRepository.saveStudyNote(
                 userId = currentUserId,
                 chapterId = chapter.id,
-                title = "Revision Pack: ${chapter.titleEn}",
+                title = if (isKannada) "ಅಧ್ಯಾಯ ಟಿಪ್ಪಣಿಗಳು: ${chapter.titleKn}" else "Revision Pack: ${chapter.titleEn}",
                 content = content,
                 sourceType = "OFFICIAL_TEXTBOOK",
                 medium = mediumStr
