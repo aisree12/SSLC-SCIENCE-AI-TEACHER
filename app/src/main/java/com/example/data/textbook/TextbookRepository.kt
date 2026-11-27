@@ -28,7 +28,6 @@ class TextbookRepository(
         const val CURRENT_ACADEMIC_YEAR = "2026–2027"
         const val CATALOGUE_EDITION = "2026–27 catalogue — direct Science PDF links pending official verification"
         const val PORTAL_KTBS = "https://textbooks.karnataka.gov.in/"
-        const val PORTAL_PATHYAPUSTAKA = "https://pathyapustaka.in/"
 
         val officialCatalogue: List<OfficialTextbook> = listOf(
             OfficialTextbook(
