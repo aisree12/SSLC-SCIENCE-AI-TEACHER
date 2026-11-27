@@ -5,6 +5,7 @@ import com.example.model.PyqQuestion
 import com.example.model.QuestionType
 import com.example.model.ScienceDivision
 import com.example.model.TextbookMedium
+import com.example.data.curriculum.SyllabusRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -882,6 +883,21 @@ object PyqRepository {
             .sortedByDescending { it.value }
             .map { it.key to it.value }
         val marksDist = questions.groupingBy { it.marks }.eachCount().toSortedMap()
+        fun topLabelsFor(type: QuestionType): List<String> =
+            questions.filter { it.questionType == type }
+                .groupingBy { it.topicName }
+                .eachCount()
+                .entries
+                .sortedByDescending { it.value }
+                .take(4)
+                .map { "${it.key} (${it.value} question(s))" }
+
+        val limitedSamplePredictions = chapterFreq.take(3).map { (chapterId, count) ->
+            val chapterTitle = SyllabusRepository.chapters.firstOrNull { it.id == chapterId }?.titleEn ?: chapterId
+            "Prediction (Not guaranteed; limited local sample): $chapterTitle appears in $count question-bank entries."
+        }.ifEmpty {
+            listOf("Prediction (Not guaranteed): insufficient question data for a useful pattern.")
+        }
 
         return PyqAnalyticsSummary(
             totalQuestions = questions.size,
@@ -889,28 +905,10 @@ object PyqRepository {
             divisionCounts = divisionCounts,
             topRepeatedChapters = chapterFreq,
             topMarksDistribution = marksDist,
-            topDiagrams = listOf(
-                "Human Heart Sectional View (4M)",
-                "Human Brain Structure (3M–4M)",
-                "Concave Mirror & Convex Lens Ray Diagrams (3M)",
-                "Electrolysis of Water / Acid + Zinc (2M–3M)"
-            ),
-            topReactions = listOf(
-                "Thermal decomposition of FeSO4 -> Fe2O3 + SO2 + SO3",
-                "Roasting (2ZnS + 3O2) vs Calcination (ZnCO3)",
-                "Setting of Plaster of Paris -> Gypsum",
-                "Esterification & Saponification"
-            ),
-            topNumericals = listOf(
-                "Lens / Mirror Formula (1/f = 1/v ± 1/u) & Magnification",
-                "Electricity Cost (kWh) & Series/Parallel Equivalent Resistance",
-                "10% Trophic Energy Law Calculation"
-            ),
-            probablePredictionTopics = listOf(
-                "Prediction (Not guaranteed): Ohm's Law V-I graph & kWh numerical",
-                "Prediction (Not guaranteed): Human Heart / Nephron labelled diagram",
-                "Prediction (Not guaranteed): Cleansing action of soap micelles & pH salts"
-            )
+            topDiagrams = topLabelsFor(QuestionType.DIAGRAM).ifEmpty { listOf("No diagram questions tagged yet.") },
+            topReactions = topLabelsFor(QuestionType.CHEMICAL_EQUATION).ifEmpty { listOf("No chemical-equation questions tagged yet.") },
+            topNumericals = topLabelsFor(QuestionType.NUMERICAL).ifEmpty { listOf("No numerical questions tagged yet.") },
+            probablePredictionTopics = limitedSamplePredictions
         )
     }
 }
