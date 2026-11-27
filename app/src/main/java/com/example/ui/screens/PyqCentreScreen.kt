@@ -398,9 +398,9 @@ private fun PyqCardItem(
             ) {
                 if (language == StudyLanguage.KANNADA) Text(pyq.division.kannadaName, style = MaterialTheme.typography.labelMedium) else DivisionBadge(division = pyq.division)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    AssistChip(onClick = {}, label = { Text("${pyq.year} • ${pyq.examType.label}") })
+                    AssistChip(onClick = {}, label = { Text(if (language == StudyLanguage.KANNADA) "${pyq.year} • ಪರೀಕ್ಷೆ" else "${pyq.year} • ${pyq.examType.label}") })
                     AssistChip(onClick = {}, label = { Text("${pyq.marks}M") })
-                    if (pyq.flaggedForReview) AssistChip(onClick = {}, label = { Text("Practice • Source pending") })
+                    if (pyq.flaggedForReview) AssistChip(onClick = {}, label = { Text(if (language == StudyLanguage.KANNADA) "ಅಭ್ಯಾಸ ಪ್ರಶ್ನೆ" else "Practice • Source pending") })
                 }
             }
 
@@ -453,7 +453,7 @@ private fun PyqCardItem(
                     color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Text(
-                        text = if (pyq.flaggedForReview) "Practice solution not yet matched to an official source. Use AI Teacher Solution for further practice." else "Official Key not published (${pyq.officialSource}). Use AI Teacher Solution for practice.",
+                        text = if (language == StudyLanguage.KANNADA) "ಈ ಪ್ರಶ್ನೆಯ ಉತ್ತರಕ್ಕಾಗಿ AI ಶಿಕ್ಷಕರನ್ನು ಕೇಳಿ." else if (pyq.flaggedForReview) "Practice solution not yet matched to an official source. Use AI Teacher Solution for further practice." else "Official Key not published (${pyq.officialSource}). Use AI Teacher Solution for practice.",
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.fillMaxWidth().padding(10.dp)
                     )
@@ -472,7 +472,7 @@ private fun PyqCardItem(
                             .minimumInteractiveComponentSize()
                             .testTag("toggle_official_key_${pyq.id}")
                     ) {
-                        Text(if (showOfficialKey) "Hide Answer" else if (pyq.flaggedForReview) "Practice Answer" else "Official Key")
+                        Text(if (language == StudyLanguage.KANNADA) { if (showOfficialKey) "ಉತ್ತರ ಮರೆಮಾಡಿ" else "ಉತ್ತರ ನೋಡಿ" } else if (showOfficialKey) "Hide Answer" else if (pyq.flaggedForReview) "Practice Answer" else "Official Key")
                     }
                 }
                 Button(
