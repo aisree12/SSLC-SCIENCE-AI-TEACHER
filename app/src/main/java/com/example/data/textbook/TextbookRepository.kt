@@ -55,7 +55,7 @@ class TextbookRepository(
                 edition = CATALOGUE_EDITION,
                 officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
-                sourceAuthority = "Karnataka Textbook Society (KTBS)",
+                sourceAuthority = "KTBS portal — individual 2026–27 Science PDF not yet verified",
                 chapterRangeLabel = "Expected chapters 8–13 (provisional)",
                 estimatedSizeMb = "Size not verified"
             ),
@@ -69,7 +69,7 @@ class TextbookRepository(
                 edition = CATALOGUE_EDITION,
                 officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
-                sourceAuthority = "Karnataka Textbook Society (KTBS)",
+                sourceAuthority = "KTBS portal — individual 2026–27 Science PDF not yet verified",
                 chapterRangeLabel = "ಅಧ್ಯಾಯ 1–7 (ತಾತ್ಕಾಲಿಕ; ಪರಿಶೀಲನೆ ಬಾಕಿ)",
                 estimatedSizeMb = "Size not verified"
             ),
@@ -83,7 +83,7 @@ class TextbookRepository(
                 edition = CATALOGUE_EDITION,
                 officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
-                sourceAuthority = "Karnataka Textbook Society (KTBS)",
+                sourceAuthority = "KTBS portal — individual 2026–27 Science PDF not yet verified",
                 chapterRangeLabel = "ಅಧ್ಯಾಯ 8–13 (ತಾತ್ಕಾಲಿಕ; ಪರಿಶೀಲನೆ ಬಾಕಿ)",
                 estimatedSizeMb = "Size not verified"
             )
