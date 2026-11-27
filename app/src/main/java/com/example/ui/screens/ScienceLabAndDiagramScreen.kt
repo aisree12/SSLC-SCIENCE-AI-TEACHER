@@ -334,12 +334,90 @@ private fun DiagramStudioCard(
                         topLeft = Offset.Zero,
                         size = size
                     )
-                    drawOval(
-                        color = Color(0xFF94A3B8),
-                        topLeft = Offset(size.width * 0.16f, size.height * 0.14f),
-                        size = Size(size.width * 0.68f, size.height * 0.72f),
-                        style = Stroke(width = 4f)
-                    )
+                    val w = size.width
+                    val h = size.height
+                    when (diagram.id) {
+                        "diag_human_heart" -> {
+                            val heart = androidx.compose.ui.graphics.Path().apply {
+                                moveTo(w * 0.50f, h * 0.84f)
+                                cubicTo(w * 0.38f, h * 0.72f, w * 0.18f, h * 0.53f, w * 0.24f, h * 0.32f)
+                                cubicTo(w * 0.29f, h * 0.14f, w * 0.45f, h * 0.20f, w * 0.50f, h * 0.34f)
+                                cubicTo(w * 0.58f, h * 0.16f, w * 0.76f, h * 0.16f, w * 0.80f, h * 0.36f)
+                                cubicTo(w * 0.84f, h * 0.56f, w * 0.62f, h * 0.76f, w * 0.50f, h * 0.84f)
+                                close()
+                            }
+                            drawPath(heart, Color(0xFFFCA5A5))
+                            drawPath(heart, Color(0xFF991B1B), style = Stroke(width = 5f))
+                            drawLine(Color(0xFF2563EB), Offset(w*.34f,h*.15f), Offset(w*.34f,h*.42f), 9f)
+                            drawLine(Color(0xFFDC2626), Offset(w*.62f,h*.12f), Offset(w*.62f,h*.39f), 9f)
+                            drawLine(Color.White, Offset(w*.50f,h*.36f), Offset(w*.50f,h*.75f), 5f)
+                            drawLine(Color.White, Offset(w*.28f,h*.49f), Offset(w*.72f,h*.49f), 4f)
+                            drawOval(Color(0xFF3B82F6), Offset(w*.28f,h*.30f), Size(w*.20f,h*.20f))
+                            drawOval(Color(0xFFEF4444), Offset(w*.52f,h*.30f), Size(w*.20f,h*.20f))
+                            drawOval(Color(0xFF1D4ED8), Offset(w*.28f,h*.51f), Size(w*.20f,h*.22f))
+                            drawOval(Color(0xFFB91C1C), Offset(w*.52f,h*.51f), Size(w*.20f,h*.22f))
+                        }
+                        "diag_nephron" -> {
+                            drawCircle(Color(0xFFDC2626), 32f, Offset(w*.24f,h*.28f))
+                            drawCircle(Color(0xFFFCA5A5), 22f, Offset(w*.24f,h*.28f), style=Stroke(width=7f))
+                            drawArc(Color(0xFF0F766E), 185f, 170f, false, Offset(w*.10f,h*.12f), Size(w*.29f,h*.33f), style=Stroke(width=9f))
+                            val tubule = androidx.compose.ui.graphics.Path().apply {
+                                moveTo(w*.37f,h*.34f); cubicTo(w*.49f,h*.18f,w*.52f,h*.43f,w*.48f,h*.54f)
+                                cubicTo(w*.42f,h*.73f,w*.63f,h*.80f,w*.67f,h*.59f)
+                                cubicTo(w*.70f,h*.38f,w*.78f,h*.40f,w*.82f,h*.30f)
+                                lineTo(w*.82f,h*.88f)
+                            }
+                            drawPath(tubule, Color(0xFFD97706), style=Stroke(width=10f))
+                            drawLine(Color(0xFF7C3AED), Offset(w*.83f,h*.28f), Offset(w*.83f,h*.90f), 12f)
+                            drawLine(Color(0xFFDC2626), Offset(w*.14f,h*.18f), Offset(w*.25f,h*.08f), 5f)
+                        }
+                        "diag_neuron" -> {
+                            val cx=w*.28f; val cy=h*.50f
+                            drawCircle(Color(0xFFFBBF24), 34f, Offset(cx,cy))
+                            drawCircle(Color(0xFF92400E), 10f, Offset(cx,cy))
+                            for (angle in listOf(-2.7f,-2.1f,-1.5f,-.9f,-.3f,.4f)) {
+                                val ex=cx+75f*kotlin.math.cos(angle); val ey=cy+65f*kotlin.math.sin(angle)
+                                drawLine(Color(0xFFB45309), Offset(cx,cy), Offset(ex,ey), 5f)
+                                drawLine(Color(0xFFB45309), Offset(ex,ey), Offset(ex+18f,ey-16f), 3f)
+                                drawLine(Color(0xFFB45309), Offset(ex,ey), Offset(ex+16f,ey+15f), 3f)
+                            }
+                            drawLine(Color(0xFF0F766E), Offset(w*.36f,cy), Offset(w*.85f,cy), 8f)
+                            for (x in listOf(.47f,.59f,.71f)) drawRoundRect(Color(0xFF67E8F9), Offset(w*x,cy-14f), Size(w*.055f,28f), cornerRadius=androidx.compose.ui.geometry.CornerRadius(8f))
+                            drawCircle(Color(0xFFDC2626), 9f, Offset(w*.87f,cy))
+                        }
+                        "diag_human_brain" -> {
+                            drawOval(Color(0xFFFDE68A), Offset(w*.18f,h*.12f), Size(w*.58f,h*.62f))
+                            drawOval(Color(0xFFB45309), Offset(w*.18f,h*.12f), Size(w*.58f,h*.62f), style=Stroke(width=5f))
+                            for (i in 0..4) drawArc(Color(0xFFB45309), 190f+i*23f, 145f, false, Offset(w*(.22f+i*.035f),h*.20f), Size(w*.38f,h*.38f), style=Stroke(width=3f))
+                            drawCircle(Color(0xFF60A5FA), 42f, Offset(w*.70f,h*.65f))
+                            drawLine(Color(0xFFB45309), Offset(w*.52f,h*.62f), Offset(w*.53f,h*.91f), 10f)
+                        }
+                        "diag_electrolysis_water" -> {
+                            drawRoundRect(Color(0xFFBAE6FD), Offset(w*.18f,h*.46f), Size(w*.64f,h*.42f), cornerRadius=androidx.compose.ui.geometry.CornerRadius(12f))
+                            drawLine(Color(0xFF0369A1), Offset(w*.18f,h*.46f), Offset(w*.82f,h*.46f), 5f)
+                            drawRoundRect(Color(0xFFE0F2FE), Offset(w*.29f,h*.10f), Size(w*.15f,h*.43f), cornerRadius=androidx.compose.ui.geometry.CornerRadius(5f), style=Stroke(width=4f))
+                            drawRoundRect(Color(0xFFE0F2FE), Offset(w*.56f,h*.10f), Size(w*.15f,h*.43f), cornerRadius=androidx.compose.ui.geometry.CornerRadius(5f), style=Stroke(width=4f))
+                            drawLine(Color(0xFFDC2626), Offset(w*.36f,h*.10f), Offset(w*.36f,h*.68f), 6f)
+                            drawLine(Color(0xFF2563EB), Offset(w*.63f,h*.10f), Offset(w*.63f,h*.68f), 6f)
+                            drawCircle(Color(0xFFDC2626), 5f, Offset(w*.36f,h*.18f))
+                            drawCircle(Color(0xFF2563EB), 5f, Offset(w*.63f,h*.32f))
+                        }
+                        "diag_ohms_circuit" -> {
+                            val y=h*.52f
+                            drawLine(Color(0xFF0F766E), Offset(w*.15f,y), Offset(w*.30f,y), 5f)
+                            drawLine(Color(0xFF0F766E), Offset(w*.70f,y), Offset(w*.85f,y), 5f)
+                            val resistor=androidx.compose.ui.graphics.Path().apply { moveTo(w*.30f,y); for(i in 0..6) lineTo(w*(.30f+i*.055f), y+(if(i%2==0) -18f else 18f)); lineTo(w*.70f,y) }
+                            drawPath(resistor, Color(0xFFD97706), style=Stroke(width=5f))
+                            drawCircle(Color(0xFF2563EB), 20f, Offset(w*.15f,y))
+                            drawCircle(Color(0xFF0F766E), 19f, Offset(w*.85f,y))
+                            drawLine(Color(0xFF7C3AED), Offset(w*.50f,h*.52f), Offset(w*.50f,h*.18f), 4f)
+                            drawLine(Color(0xFF7C3AED), Offset(w*.50f,h*.18f), Offset(w*.85f,h*.18f), 4f)
+                            drawLine(Color(0xFF7C3AED), Offset(w*.85f,h*.18f), Offset(w*.85f,y), 4f)
+                        }
+                        else -> {
+                            drawOval(Color(0xFF94A3B8), Offset(w*.16f,h*.14f), Size(w*.68f,h*.72f), style=Stroke(width=4f))
+                        }
+                    }
                     diagram.hotspots.forEach { spot ->
                         val sx = spot.normalizedX * size.width
                         val sy = spot.normalizedY * size.height
