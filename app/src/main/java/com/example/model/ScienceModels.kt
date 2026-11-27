@@ -168,6 +168,7 @@ data class OfficialTextbook(
     val sourceAuthority: String,
     val chapterRangeLabel: String,
     val estimatedSizeMb: String,
+    val directPdfVerified: Boolean = false,
     val status: DownloadStatus = DownloadStatus.NOT_DOWNLOADED,
     val progressPercent: Int = 0,
     val localFilePath: String? = null,
@@ -218,7 +219,8 @@ data class PyqQuestion(
     val officialSource: String,
     val officialPdfUrl: String,
     val extractionConfidence: Float,
-    val flaggedForReview: Boolean = false
+    val flaggedForReview: Boolean = false,
+    val paperReferenceUrl: String? = null
 )
 
 enum class VideoCategory(val label: String) {
