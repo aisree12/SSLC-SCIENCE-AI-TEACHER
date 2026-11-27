@@ -14,6 +14,9 @@ interface TextbookDownloadDao {
     @Query("SELECT * FROM textbook_downloads WHERE id = :id")
     suspend fun getById(id: String): TextbookDownloadEntity?
 
+    @Query("SELECT * FROM textbook_downloads WHERE status = 'DOWNLOADING'")
+    suspend fun getDownloading(): List<TextbookDownloadEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(entity: TextbookDownloadEntity)
 
