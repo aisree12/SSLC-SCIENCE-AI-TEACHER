@@ -1,0 +1,370 @@
+package com.example.data.textbook
+
+import android.app.DownloadManager
+import android.content.Context
+import android.database.Cursor
+import android.net.Uri
+import android.os.Environment
+import com.example.data.local.TextbookDownloadDao
+import com.example.data.local.TextbookDownloadEntity
+import com.example.model.DownloadStatus
+import com.example.model.OfficialTextbook
+import com.example.model.TextbookMedium
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.security.MessageDigest
+
+class TextbookRepository(
+    private val context: Context,
+    private val dao: TextbookDownloadDao
+) {
+    companion object {
+        const val CURRENT_ACADEMIC_YEAR = "2025–2026"
+        const val CATALOGUE_EDITION = "KTBS Rationalized Ed. 2025.1"
+        const val PORTAL_KTBS = "https://textbooks.karnataka.gov.in/"
+        const val PORTAL_PATHYAPUSTAKA = "https://pathyapustaka.in/"
+
+        val officialCatalogue: List<OfficialTextbook> = listOf(
+            OfficialTextbook(
+                id = "ktbs_10_sci_en_p1",
+                title = "Class 10 Science – Part 1 (English Medium)",
+                kannadaTitle = "10ನೇ ತರಗತಿ ವಿಜ್ಞಾನ – ಭಾಗ 1 (ಇಂಗ್ಲಿಷ್ ಮಾಧ್ಯಮ)",
+                medium = TextbookMedium.ENGLISH,
+                part = 1,
+                academicYear = CURRENT_ACADEMIC_YEAR,
+                edition = CATALOGUE_EDITION,
+                officialUrl = "https://textbooks.karnataka.gov.in/en/10th-science-part-1.pdf",
+                portalUrl = PORTAL_KTBS,
+                sourceAuthority = "Karnataka Textbook Society (KTBS)",
+                chapterRangeLabel = "Chapters 1–7 (Chemistry & Biology)",
+                estimatedSizeMb = "14.2 MB"
+            ),
+            OfficialTextbook(
+                id = "ktbs_10_sci_en_p2",
+                title = "Class 10 Science – Part 2 (English Medium)",
+                kannadaTitle = "10ನೇ ತರಗತಿ ವಿಜ್ಞಾನ – ಭಾಗ 2 (ಇಂಗ್ಲಿಷ್ ಮಾಧ್ಯಮ)",
+                medium = TextbookMedium.ENGLISH,
+                part = 2,
+                academicYear = CURRENT_ACADEMIC_YEAR,
+                edition = CATALOGUE_EDITION,
+                officialUrl = "https://textbooks.karnataka.gov.in/en/10th-science-part-2.pdf",
+                portalUrl = PORTAL_KTBS,
+                sourceAuthority = "Karnataka Textbook Society (KTBS)",
+                chapterRangeLabel = "Chapters 8–13 (Heredity, Physics & Environment)",
+                estimatedSizeMb = "15.8 MB"
+            ),
+            OfficialTextbook(
+                id = "ktbs_10_sci_kn_p1",
+                title = "Class 10 Science – Part 1 (Kannada Medium)",
+                kannadaTitle = "10ನೇ ತರಗತಿ ವಿಜ್ಞಾನ – ಭಾಗ 1 (ಕನ್ನಡ ಮಾಧ್ಯಮ)",
+                medium = TextbookMedium.KANNADA,
+                part = 1,
+                academicYear = CURRENT_ACADEMIC_YEAR,
+                edition = CATALOGUE_EDITION,
+                officialUrl = "https://textbooks.karnataka.gov.in/kn/10th-science-part-1.pdf",
+                portalUrl = PORTAL_KTBS,
+                sourceAuthority = "Karnataka Textbook Society (KTBS)",
+                chapterRangeLabel = "ಅಧ್ಯಾಯ 1–7 (ರಸಾಯನಶಾಸ್ತ್ರ ಮತ್ತು ಜೀವಶಾಸ್ತ್ರ)",
+                estimatedSizeMb = "16.4 MB"
+            ),
+            OfficialTextbook(
+                id = "ktbs_10_sci_kn_p2",
+                title = "Class 10 Science – Part 2 (Kannada Medium)",
+                kannadaTitle = "10ನೇ ತರಗತಿ ವಿಜ್ಞಾನ – ಭಾಗ 2 (ಕನ್ನಡ ಮಾಧ್ಯಮ)",
+                medium = TextbookMedium.KANNADA,
+                part = 2,
+                academicYear = CURRENT_ACADEMIC_YEAR,
+                edition = CATALOGUE_EDITION,
+                officialUrl = "https://textbooks.karnataka.gov.in/kn/10th-science-part-2.pdf",
+                portalUrl = PORTAL_KTBS,
+                sourceAuthority = "Karnataka Textbook Society (KTBS)",
+                chapterRangeLabel = "ಅಧ್ಯಾಯ 8–13 (ಆನುವಂಶಿಕತೆ, ಭೌತಶಾಸ್ತ್ರ ಮತ್ತು ಪರಿಸರ)",
+                estimatedSizeMb = "17.1 MB"
+            )
+        )
+    }
+
+    private val downloadManager: DownloadManager by lazy {
+        context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+    }
+
+    suspend fun ensureCatalogueSeeded() = withContext(Dispatchers.IO) {
+        val toUpsert = mutableListOf<TextbookDownloadEntity>()
+        for (book in officialCatalogue) {
+            val existing = dao.getById(book.id)
+            if (existing == null) {
+                toUpsert.add(
+                    TextbookDownloadEntity(
+                        id = book.id,
+                        medium = book.medium.name,
+                        part = book.part,
+                        title = book.title,
+                        kannadaTitle = book.kannadaTitle,
+                        academicYear = book.academicYear,
+                        edition = book.edition,
+                        officialUrl = book.officialUrl,
+                        localFilePath = null,
+                        downloadManagerId = null,
+                        status = DownloadStatus.NOT_DOWNLOADED.name,
+                        progressPercent = 0,
+                        sha256Checksum = null,
+                        lastReadPage = 0,
+                        bookmarkedPagesCsv = "",
+                        statusNote = "Ready to download from KTBS",
+                        updatedAtMillis = System.currentTimeMillis()
+                    )
+                )
+            } else if (existing.edition != book.edition && existing.status == DownloadStatus.DOWNLOADED.name) {
+                toUpsert.add(
+                    existing.copy(
+                        statusNote = "Newer official edition (${book.edition}) available",
+                        updatedAtMillis = System.currentTimeMillis()
+                    )
+                )
+            }
+        }
+        if (toUpsert.isNotEmpty()) {
+            dao.upsertAll(toUpsert)
+        }
+    }
+
+    fun observeTextbooks(): Flow<List<OfficialTextbook>> {
+        return dao.observeAll().map { entities ->
+            officialCatalogue.map { base ->
+                val saved = entities.firstOrNull { it.id == base.id }
+                if (saved == null) {
+                    base
+                } else {
+                    val fileExists = saved.localFilePath?.let { File(it).exists() } == true
+                    val status = when {
+                        saved.status == DownloadStatus.DOWNLOADED.name && !fileExists -> DownloadStatus.NOT_DOWNLOADED
+                        else -> DownloadStatus.entries.firstOrNull { it.name == saved.status } ?: DownloadStatus.NOT_DOWNLOADED
+                    }
+                    base.copy(
+                        status = status,
+                        progressPercent = saved.progressPercent,
+                        localFilePath = if (fileExists) saved.localFilePath else null,
+                        sha256Checksum = saved.sha256Checksum,
+                        lastReadPage = saved.lastReadPage,
+                        bookmarkedPages = saved.bookmarkedPagesCsv
+                            .split(",")
+                            .mapNotNull { it.trim().toIntOrNull() },
+                        statusNote = saved.statusNote
+                    )
+                }
+            }
+        }
+    }
+
+    suspend fun startDownload(bookId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        val book = officialCatalogue.firstOrNull { it.id == bookId }
+            ?: return@withContext Result.failure(IllegalArgumentException("Unknown textbook ID"))
+
+        val existing = dao.getById(bookId)
+        if (existing?.status == DownloadStatus.DOWNLOADED.name &&
+            existing.localFilePath?.let { File(it).exists() } == true
+        ) {
+            return@withContext Result.success(Unit)
+        }
+        if (existing?.status == DownloadStatus.DOWNLOADING.name) {
+            return@withContext Result.success(Unit)
+        }
+
+        val targetDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) ?: context.filesDir
+        val fileName = "${book.id}.pdf"
+        val destFile = File(targetDir, fileName)
+        if (destFile.exists()) destFile.delete()
+
+        return@withContext try {
+            val request = DownloadManager.Request(Uri.parse(book.officialUrl))
+                .setTitle(book.title)
+                .setDescription("Downloading official KTBS SSLC Science PDF")
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setAllowedOverMetered(true)
+                .setAllowedOverRoaming(false)
+                .setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOCUMENTS, fileName)
+
+            val downloadId = downloadManager.enqueue(request)
+            dao.upsert(
+                (existing ?: TextbookDownloadEntity(
+                    id = book.id,
+                    medium = book.medium.name,
+                    part = book.part,
+                    title = book.title,
+                    kannadaTitle = book.kannadaTitle,
+                    academicYear = book.academicYear,
+                    edition = book.edition,
+                    officialUrl = book.officialUrl,
+                    localFilePath = destFile.absolutePath,
+                    downloadManagerId = downloadId,
+                    status = DownloadStatus.DOWNLOADING.name,
+                    progressPercent = 0,
+                    sha256Checksum = null,
+                    lastReadPage = 0,
+                    bookmarkedPagesCsv = "",
+                    statusNote = "Downloading from official KTBS portal...",
+                    updatedAtMillis = System.currentTimeMillis()
+                )).copy(
+                    localFilePath = destFile.absolutePath,
+                    downloadManagerId = downloadId,
+                    status = DownloadStatus.DOWNLOADING.name,
+                    progressPercent = 5,
+                    statusNote = "Downloading from official KTBS portal...",
+                    updatedAtMillis = System.currentTimeMillis()
+                )
+            )
+            monitorDownload(book, downloadId, destFile)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            dao.upsert(
+                (existing ?: TextbookDownloadEntity(
+                    id = book.id,
+                    medium = book.medium.name,
+                    part = book.part,
+                    title = book.title,
+                    kannadaTitle = book.kannadaTitle,
+                    academicYear = book.academicYear,
+                    edition = book.edition,
+                    officialUrl = book.officialUrl,
+                    localFilePath = null,
+                    downloadManagerId = null,
+                    status = DownloadStatus.FAILED.name,
+                    progressPercent = 0,
+                    sha256Checksum = null,
+                    lastReadPage = 0,
+                    bookmarkedPagesCsv = "",
+                    statusNote = e.localizedMessage ?: "Download failed. Open KTBS portal directly.",
+                    updatedAtMillis = System.currentTimeMillis()
+                )).copy(
+                    status = DownloadStatus.FAILED.name,
+                    statusNote = "Direct download unavailable (${e.localizedMessage ?: "error"}). Use Open Official KTBS Portal.",
+                    updatedAtMillis = System.currentTimeMillis()
+                )
+            )
+            Result.failure(e)
+        }
+    }
+
+    private suspend fun monitorDownload(
+        book: OfficialTextbook,
+        downloadId: Long,
+        destFile: File
+    ) {
+        var active = true
+        while (active) {
+            delay(800L)
+            val query = DownloadManager.Query().setFilterById(downloadId)
+            var cursor: Cursor? = null
+            try {
+                cursor = downloadManager.query(query)
+                if (cursor != null && cursor.moveToFirst()) {
+                    val statusIdx = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                    val dlBytesIdx = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
+                    val totalBytesIdx = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
+                    val status = if (statusIdx >= 0) cursor.getInt(statusIdx) else DownloadManager.STATUS_FAILED
+                    val downloaded = if (dlBytesIdx >= 0) cursor.getLong(dlBytesIdx) else 0L
+                    val total = if (totalBytesIdx >= 0) cursor.getLong(totalBytesIdx) else -1L
+                    val pct = if (total > 0) ((downloaded * 100) / total).toInt().coerceIn(5, 99) else 25
+
+                    val current = dao.getById(book.id) ?: return
+                    when (status) {
+                        DownloadManager.STATUS_RUNNING, DownloadManager.STATUS_PENDING, DownloadManager.STATUS_PAUSED -> {
+                            dao.upsert(
+                                current.copy(
+                                    progressPercent = pct,
+                                    statusNote = if (status == DownloadManager.STATUS_PAUSED) "Paused — will resume automatically" else "Downloading ($pct%)...",
+                                    updatedAtMillis = System.currentTimeMillis()
+                                )
+                            )
+                        }
+                        DownloadManager.STATUS_SUCCESSFUL -> {
+                            active = false
+                            val isValidPdf = verifyPdfHeader(destFile)
+                            if (isValidPdf) {
+                                val hash = computeSha256(destFile)
+                                dao.upsert(
+                                    current.copy(
+                                        status = DownloadStatus.DOWNLOADED.name,
+                                        progressPercent = 100,
+                                        localFilePath = destFile.absolutePath,
+                                        sha256Checksum = hash,
+                                        statusNote = "Verified PDF ready offline",
+                                        updatedAtMillis = System.currentTimeMillis()
+                                    )
+                                )
+                            } else {
+                                destFile.delete()
+                                dao.upsert(
+                                    current.copy(
+                                        status = DownloadStatus.FAILED.name,
+                                        progressPercent = 0,
+                                        localFilePath = null,
+                                        statusNote = "Portal returned HTML redirect instead of direct PDF. Tap 'Open KTBS Portal' to download from official browser.",
+                                        updatedAtMillis = System.currentTimeMillis()
+                                    )
+                                )
+                            }
+                        }
+                        DownloadManager.STATUS_FAILED -> {
+                            active = false
+                            dao.upsert(
+                                current.copy(
+                                    status = DownloadStatus.FAILED.name,
+                                    progressPercent = 0,
+                                    statusNote = "Official server unavailable or link moved. Tap Retry or Open KTBS Portal.",
+                                    updatedAtMillis = System.currentTimeMillis()
+                                )
+                            )
+                        }
+                    }
+                } else {
+                    active = false
+                }
+            } finally {
+                cursor?.close()
+            }
+        }
+    }
+
+    suspend fun updateReadingProgress(bookId: String, page: Int, bookmarkedPages: List<Int>) =
+        withContext(Dispatchers.IO) {
+            val current = dao.getById(bookId) ?: return@withContext
+            dao.upsert(
+                current.copy(
+                    lastReadPage = page.coerceAtLeast(0),
+                    bookmarkedPagesCsv = bookmarkedPages.distinct().sorted().joinToString(","),
+                    updatedAtMillis = System.currentTimeMillis()
+                )
+            )
+        }
+
+    fun verifyPdfHeader(file: File): Boolean {
+        if (!file.exists() || file.length() < 100) return false
+        return try {
+            file.inputStream().use { input ->
+                val header = ByteArray(5)
+                val read = input.read(header)
+                read == 5 && String(header) == "%PDF-"
+            }
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    fun computeSha256(file: File): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        file.inputStream().use { input ->
+            val buffer = ByteArray(8192)
+            var bytes = input.read(buffer)
+            while (bytes > 0) {
+                digest.update(buffer, 0, bytes)
+                bytes = input.read(buffer)
+            }
+        }
+        return digest.digest().joinToString("") { "%02x".format(it) }
+    }
+}

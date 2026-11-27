@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Student profile and Karnataka SSLC Science learning preferences.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID of the student." },
+        "displayName": { "type": "string", "description": "Student display name." },
+        "preferredMedium": { "type": "string", "enum": ["ENGLISH", "KANNADA", "BILINGUAL"] },
+        "selectedSubject": { "type": "string", "enum": ["ALL", "PHYSICS", "CHEMISTRY", "BIOLOGY"] },
+        "selectedChapterId": { "type": "string", "description": "Currently selected SSLC Science chapter ID." },
+        "dailyTargetMinutes": { "type": "integer", "description": "Daily revision target in minutes." },
+        "streakDays": { "type": "integer", "description": "Consecutive study days." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update." }
+      },
+      "required": ["userId", "displayName", "preferredMedium", "selectedSubject", "selectedChapterId", "dailyTargetMinutes", "streakDays", "createdAt", "updatedAt"]
+    },
+    "ChapterProgress": {
+      "title": "ChapterProgress",
+      "description": "Per-chapter topic completion, mastery score, and revision tracking.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "chapterId": { "type": "string" },
+        "subject": { "type": "string", "enum": ["PHYSICS", "CHEMISTRY", "BIOLOGY"] },
+        "completedTopicIds": { "type": "array", "description": "List of completed topic IDs." },
+        "masteryPercent": { "type": "integer" },
+        "notesBookmarked": { "type": "boolean" },
+        "lastOpenedTopicId": { "type": "string" },
+        "lastRevisedAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "chapterId", "subject", "completedTopicIds", "masteryPercent", "notesBookmarked", "lastOpenedTopicId", "createdAt", "updatedAt"]
+    },
+    "ExamAttempt": {
+      "title": "ExamAttempt",
+      "description": "Student Science exam or chapter test evaluation record.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "chapterId": { "type": "string" },
+        "examType": { "type": "string", "enum": ["CHAPTER_TEST", "MOCK_80", "DIAGRAM_QUIZ", "NUMERICAL_TEST", "EQUATION_TEST", "PYQ_PRACTICE"] },
+        "subject": { "type": "string", "enum": ["ALL", "PHYSICS", "CHEMISTRY", "BIOLOGY"] },
+        "score": { "type": "integer" },
+        "maxScore": { "type": "integer" },
+        "weakTopics": { "type": "array" },
+        "feedbackSummary": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "chapterId", "examType", "subject", "score", "maxScore", "weakTopics", "feedbackSummary", "createdAt", "updatedAt"]
+    },
+    "SavedStudyNote": {
+      "title": "SavedStudyNote",
+      "description": "Bookmarked study note or AI Teacher explanation with explicit source attribution.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "chapterId": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "sourceType": { "type": "string", "enum": ["OFFICIAL_TEXTBOOK", "AI_TEACHER", "STUDENT_NOTE"] },
+        "medium": { "type": "string", "enum": ["ENGLISH", "KANNADA"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "chapterId", "title", "content", "sourceType", "medium", "createdAt", "updatedAt"]
+    },
+    "AiConversationRecord": {
+      "title": "AiConversationRecord",
+      "description": "Saved SSLC Science AI Teacher Q&A entry.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "chapterId": { "type": "string" },
+        "question": { "type": "string" },
+        "answer": { "type": "string" },
+        "teachingMode": { "type": "string" },
+        "language": { "type": "string", "enum": ["ENGLISH", "KANNADA", "BILINGUAL"] },
+        "sourceCitation": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "chapterId", "question", "answer", "teachingMode", "language", "sourceCitation", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Student profile and learning preferences."
+    },
+    "/users/{userId}/chapter_progress/{chapterId}": {
+      "schema": { "$ref": "#/entities/ChapterProgress" },
+      "description": "Per-chapter progress and mastery records."
+    },
+    "/users/{userId}/exam_attempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/ExamAttempt" },
+      "description": "Completed exam and quiz attempts."
+    },
+    "/users/{userId}/saved_notes/{noteId}": {
+      "schema": { "$ref": "#/entities/SavedStudyNote" },
+      "description": "Saved revision notes and bookmarks."
+    },
+    "/users/{userId}/ai_conversations/{messageId}": {
+      "schema": { "$ref": "#/entities/AiConversationRecord" },
+      "description": "Saved AI Science Teacher explanations."
+    }
+  }
+}

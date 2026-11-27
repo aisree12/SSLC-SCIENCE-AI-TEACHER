@@ -1,0 +1,1251 @@
+# MASTER PROJECT PROMPT
+
+# KARNATAKA SSLC SCIENCE AI TEACHER – ADVANCED ANDROID LEARNING PLATFORM
+
+## 1. YOUR ROLE
+
+Act as a senior Android architect, Kotlin developer, AI/ML engineer, educational-content researcher, science curriculum specialist, UI/UX designer, and quality-assurance engineer.
+
+Build a complete, production-quality Android application named:
+
+**Karnataka SSLC Science AI Teacher**
+
+The app is exclusively for Karnataka State Board Class 10 (SSLC) Science students.
+
+It must support:
+
+- Physics
+- Chemistry
+- Biology
+
+The application must teach the complete applicable Karnataka SSLC Science syllabus, help students prepare for board examinations, explain difficult concepts, provide verified previous-year questions and solutions, and make learning interactive.
+
+This is not a simple AI chatbot. It must function as a complete digital Science classroom, personal teacher, practical laboratory, revision centre and examination preparation platform.
+
+## 2. MOST IMPORTANT DEVELOPMENT INSTRUCTION
+
+Use the existing project below as the primary architecture and design reference:
+
+GitHub repository:
+[https://github.com/aisree12/SSLC-Maths-AI-Karnataka-New](https://github.com/aisree12/SSLC-Maths-AI-Karnataka-New)
+
+Reference branch: `main`
+
+Reference implementation: latest available code, including the video-player correction commit `f585f2f`.
+
+Before writing code:
+
+1. Inspect the entire repository and its latest working source.
+2. Study its Kotlin and Jetpack Compose architecture.
+3. Study its navigation, screens, theme, reusable components and dropdown behaviour.
+4. Study its AI Teacher and voice-query implementation.
+5. Study its Firebase, Room database, authentication and App Check setup.
+6. Study its Study Centre and chapter-wise content system.
+7. Study its PYQ and examination preparation architecture.
+8. Study its interactive blackboard implementation.
+9. Study its YouTube lesson library and embedded video player.
+10. Study its build configuration, signing setup and GitHub Actions workflow.
+
+Do not merely copy screenshots or create a similar-looking application.
+
+Reuse proven architecture, reusable components, design patterns and working code wherever technically appropriate.
+
+However, replace all Mathematics-specific content and calculation logic with a proper Science knowledge system.
+
+Do not blindly copy old bugs, incomplete features or Mathematics-only assumptions.
+
+**The Science application must be more advanced, reliable, better organised and more thoroughly tested than the Maths application.**
+
+## 3. OFFICIAL CURRICULUM AND SYLLABUS ENGINE
+
+The first task is to establish the correct Karnataka SSLC Science syllabus for the selected academic year.
+
+Primary sources:
+
+- Karnataka School Examination and Assessment Board: [https://kseab.karnataka.gov.in/](https://kseab.karnataka.gov.in/)
+- Karnataka Textbook Society: [https://textbooks.karnataka.gov.in/](https://textbooks.karnataka.gov.in/)
+- Karnataka textbook portal: [https://pathyapustaka.in/](https://pathyapustaka.in/)
+- DIKSHA: [https://diksha.gov.in/](https://diksha.gov.in/)
+
+Use official sources as the authority.
+
+Do not assume that an old NCERT chapter list is automatically the current Karnataka syllabus.
+
+### Automatic syllabus verification
+
+Create a syllabus ingestion and verification engine that:
+
+- Retrieves the latest available official syllabus.
+- Identifies the academic year and examination cycle.
+- Extracts the Science chapter list.
+- Identifies Physics, Chemistry and Biology sections.
+- Extracts chapter titles, subtopics, textbook references and practical activities.
+- Identifies deleted, modified, added or excluded portions.
+- Compares English and Kannada editions.
+- Records source URL, publication date, edition and verification date.
+- Maintains a versioned syllabus database.
+
+Do not invent chapter names, marks distribution or deleted topics.
+
+If an official document is unavailable, display an honest verification status and continue using the latest verified source.
+
+### Chapter organisation
+
+Organise Science into three subject divisions:
+
+1. Physics
+2. Chemistry
+3. Biology
+
+Every official chapter must have its own dedicated learning workspace.
+
+Each chapter must contain:
+
+- Chapter introduction.
+- Learning objectives.
+- Complete topic list.
+- Simple explanations.
+- Detailed explanations.
+- Important definitions.
+- Scientific laws and principles.
+- Formulae and units, wherever applicable.
+- Important diagrams.
+- Labelled diagram explanations.
+- Textbook examples and activities.
+- Important observations.
+- Applications in daily life.
+- Frequently asked questions.
+- Textbook exercise questions.
+- Previous-year questions.
+- Important board examination questions.
+- Revision notes.
+- Chapter tests.
+- Related videos.
+- Interactive experiments or simulations.
+
+The chapter structure must automatically follow the verified official syllabus.
+
+## 4. AUTOMATIC STATE TEXTBOOK DOWNLOAD SYSTEM
+
+This is a core requirement.
+
+The application must locate and download the Karnataka SSLC Science textbooks in:
+
+- English Medium – Part 1
+- English Medium – Part 2
+- Kannada Medium – Part 1
+- Kannada Medium – Part 2
+
+Use the official Karnataka Textbook Society source wherever available.
+
+### Textbook download behaviour
+
+When the student opens the application for the first time:
+
+1. Detect the current academic year.
+2. Check the latest official textbook catalogue.
+3. Locate all four Science textbook PDFs.
+4. Verify the book title, medium, part and edition.
+5. Show the available downloads.
+6. Allow the student to download the selected medium.
+7. Provide an option to download all four books.
+8. Save downloaded books locally.
+9. Display download progress.
+10. Resume interrupted downloads.
+11. Verify downloaded file integrity.
+12. Detect updated textbook editions.
+13. Notify students if a newer edition becomes available.
+
+Use Android DownloadManager or a suitable WorkManager-based download architecture.
+
+Do not repeatedly download the same file.
+
+### Local textbook library
+
+Create a dedicated Textbook Library with:
+
+- English textbooks.
+- Kannada textbooks.
+- Part 1 and Part 2.
+- Chapter-wise navigation.
+- PDF reading.
+- Search.
+- Bookmarks.
+- Last-read page.
+- Offline access.
+- Download status.
+- Edition information.
+
+Where technically and legally permitted, support chapter-level indexing and searchable textbook content.
+
+Do not bundle copyrighted full textbook PDFs into the APK or redistribute them without permission. Download from authorised public sources and respect their terms.
+
+The app must distinguish the actual official textbook from AI-generated supplementary notes.
+
+## 5. COMPLETE SCIENCE AI TEACHER
+
+Create an advanced AI Science Teacher.
+
+The teacher must be capable of explaining Science like an experienced Karnataka SSLC teacher.
+
+### Strict subject restriction
+
+The AI must focus exclusively on Karnataka SSLC Class 10 Science.
+
+It must understand:
+
+- Physics questions.
+- Chemistry questions.
+- Biology questions.
+- Mixed Science questions.
+- Textbook-based questions.
+- Board examination questions.
+- Practical and diagram questions.
+
+If students ask unrelated questions, politely redirect them towards SSLC Science.
+
+Do not allow the AI to drift into unrelated general conversations.
+
+### Language support
+
+Full support for:
+
+- English.
+- Kannada.
+- Mixed Kannada-English questions.
+
+The AI must understand a student who types Kannada in English letters.
+
+Examples:
+
+- "Explain electric current."
+- "ವಿದ್ಯುತ್ ಪ್ರವಾಹ ಎಂದರೇನು?"
+- "Current andre enu?"
+- "Acid and base difference explain madi."
+
+The teacher must answer in the student's preferred language.
+
+Maintain correct scientific terminology in both languages.
+
+Do not translate scientific terms inaccurately.
+
+### Teaching modes
+
+Provide these teaching modes:
+
+1. Simple Explanation
+2. Detailed Explanation
+3. Teach Like a Classroom Teacher
+4. Step-by-Step Answer
+5. Diagram Explanation
+6. Board Exam Answer
+7. One-Mark Revision
+8. Three-Mark Answer
+9. Five-Mark Answer, where applicable to the official pattern
+10. Quick Revision
+11. Concept Comparison
+12. Real-Life Application
+13. Practical Activity Explanation
+14. Doubt Clearing
+
+### Intelligent answer formatting
+
+For every answer, identify the question type.
+
+For example:
+
+**Definition question**
+
+- Correct definition.
+- Important scientific terms.
+- Short exam-ready answer.
+
+**Difference question**
+
+- Comparison table.
+- Correct scientific points.
+- Appropriate examples.
+
+**Explain why question**
+
+- Scientific principle.
+- Step-by-step reasoning.
+- Final conclusion.
+
+**Numerical question**
+
+- Given values.
+- Required quantity.
+- Formula.
+- Substitution.
+- Calculation.
+- Correct unit.
+- Final answer.
+
+**Diagram question**
+
+- Correct diagram.
+- Labels.
+- Explanation.
+- Important examination points.
+
+**Chemical equation question**
+
+- Correct reactants.
+- Correct products.
+- Balanced equation.
+- State symbols where appropriate.
+- Reaction type.
+- Explanation.
+
+**Biology question**
+
+- Correct biological terminology.
+- Structured explanation.
+- Diagram where necessary.
+- Functions and processes.
+
+Never fabricate a scientific answer just to provide a response.
+
+If uncertain, say so and explain what source needs verification.
+
+## 6. ADVANCED SCIENCE AI KNOWLEDGE ENGINE
+
+Build a structured Science knowledge engine instead of relying entirely on an AI model's general knowledge.
+
+Create separate knowledge layers:
+
+1. Official syllabus database.
+2. Official textbook corpus.
+3. Chapter-wise Science notes.
+4. Definitions and scientific terminology.
+5. Formula and unit database.
+6. Chemical reactions database.
+7. Biology processes and diagrams database.
+8. Physics laws and principles database.
+9. Practical activities and experiments.
+10. Previous-year questions.
+11. Official answer keys.
+12. Verified model question papers.
+13. Examination answer-writing rules.
+
+Use retrieval-augmented generation (RAG).
+
+Every AI answer should prioritise verified Karnataka SSLC source material.
+
+When possible, show the source chapter, topic, textbook edition and page reference.
+
+Clearly distinguish:
+
+- Official textbook content.
+- Official board answer keys.
+- AI-generated explanations.
+- Supplementary educational material.
+
+Do not represent an AI-generated solution as an official board answer.
+
+## 7. SCIENCE PYQ INTELLIGENCE CENTRE
+
+Build a powerful previous-year question bank.
+
+Automatically discover, collect and organise Karnataka SSLC Science question papers from available sources.
+
+Primary source:
+[https://kseab.karnataka.gov.in/](https://kseab.karnataka.gov.in/)
+
+Also inspect authorised educational archives where official documents are linked.
+
+### Years and examination types
+
+Collect all available verified papers, including:
+
+- Main examinations.
+- Examination 1.
+- Examination 2.
+- Examination 3.
+- Supplementary examinations.
+- Preparatory papers, when available.
+- Official model question papers.
+- Official answer keys.
+
+Do not assume every year has every examination type.
+
+Maintain the exact year, examination type, medium and paper code.
+
+### Automatic PDF collection
+
+Build a scheduled or manually triggered content discovery system.
+
+It must:
+
+1. Search for available Science papers.
+2. Identify official PDF links.
+3. Download available documents.
+4. Extract text from PDFs.
+5. Use OCR for scanned pages.
+6. Identify question numbers.
+7. Identify marks.
+8. Identify Physics, Chemistry or Biology.
+9. Map questions to official syllabus chapters and topics.
+10. Identify duplicate questions.
+11. Identify English and Kannada versions.
+12. Store source information.
+13. Record whether an official answer key exists.
+14. Track extraction confidence.
+15. Flag uncertain questions for review.
+
+Do not silently classify a question into an incorrect chapter.
+
+### PYQ interface
+
+Create filters for:
+
+- All Science.
+- Physics.
+- Chemistry.
+- Biology.
+- Chapter.
+- Topic.
+- Year.
+- Examination type.
+- Marks.
+- English.
+- Kannada.
+- Question type.
+
+Each question must display:
+
+- Original question.
+- Original paper year.
+- Paper type.
+- Medium.
+- Subject division.
+- Chapter.
+- Topic.
+- Marks.
+- Official source.
+- Official key-answer availability.
+
+### Solutions
+
+Provide two clearly separated answer types:
+
+**Official Key Answer**
+Display the original official key answer when available and verified.
+
+**AI Teacher Solution**
+Provide a detailed student-friendly explanation.
+
+AI solutions must include:
+
+- Correct scientific concept.
+- Important points.
+- Diagram or equation when needed.
+- Board-answer format.
+- Marks-oriented presentation.
+- Common mistakes.
+- Explanation in Kannada or English.
+
+Never label an AI-generated answer as an official key answer.
+
+### PYQ analytics
+
+Calculate:
+
+- Most frequently repeated topics.
+- Chapter-wise question frequency.
+- Year-wise question trends.
+- Marks distribution.
+- Frequently asked diagrams.
+- Frequently asked chemical reactions.
+- Frequently asked numerical problems.
+- Frequently tested definitions.
+- Important practical concepts.
+
+Display probable questions as predictions, not guaranteed examination questions.
+
+## 8. CHAPTER-WISE YOUTUBE VIDEO SYSTEM
+
+Recreate the Maths application's YouTube lesson catalogue, but make it more advanced and suitable for Science.
+
+Every official Science chapter must have a video section.
+
+### Video categories
+
+For each chapter, organise videos into:
+
+1. Full Chapter Explanation.
+2. Topic-wise Explanation.
+3. Physics Numericals.
+4. Chemical Reactions.
+5. Biology Diagrams.
+6. Important Board Questions.
+7. PYQ Solutions.
+8. Quick Revision.
+9. Kannada Explanation.
+10. English Explanation.
+
+Only display categories relevant to the chapter.
+
+### Video discovery and mapping
+
+Discover educational videos from suitable YouTube channels.
+
+Match videos using actual concept and topic content, not merely the chapter number in the video title.
+
+Every video record must include:
+
+- Unique video ID.
+- Chapter ID.
+- Topic ID.
+- Video title.
+- Channel.
+- Language.
+- YouTube URL.
+- Resource type.
+- Video category.
+- Review status.
+- Last verification date.
+
+Support:
+
+- Standard YouTube videos.
+- YouTube Shorts.
+- Embedded video URLs.
+- Live streams.
+- Playlist links.
+
+Use official YouTube embedding through the IFrame Player API.
+
+### Video player requirements
+
+Reuse and improve the existing Maths app player.
+
+Required features:
+
+- In-app playback.
+- Play and pause.
+- Seek.
+- Full-screen.
+- Volume controls.
+- Playback status.
+- Retry.
+- Loading indicator.
+- Error messages.
+- Open on YouTube fallback.
+- Correct orientation handling.
+- Proper audio and video playback.
+
+For a URL containing both `v=VIDEO_ID` and `list=PLAYLIST_ID`, prioritise the individual video ID unless the student explicitly selected playlist mode.
+
+Do not repeat the Maths app's earlier playlist parsing mistake.
+
+Implement robust URL parsing and test all supported URL formats.
+
+Do not scrape YouTube video streams or bypass YouTube restrictions.
+
+Some videos may prohibit embedded playback. In that case, show an honest message and an **Open on YouTube** option.
+
+### Video verification
+
+Maintain video review states:
+
+- Discovered.
+- Needs Review.
+- Approved.
+- Rejected.
+- Unavailable.
+
+Do not show a video as verified simply because its URL exists.
+
+Verify language, actual subject content, chapter mapping and availability.
+
+## 9. ADVANCED INTERACTIVE SCIENCE LAB
+
+This must be one of the biggest improvements over the Maths app.
+
+Reuse the existing InteractiveMathBlackboard architectural idea, but create a much more powerful interactive Science learning environment.
+
+Name it:
+
+**Interactive Science Laboratory**
+
+The laboratory should be accessible from the Study Centre and from relevant chapter pages.
+
+### Physics simulations
+
+Create interactive visual demonstrations for applicable syllabus topics:
+
+- Reflection of light.
+- Refraction of light.
+- Ray diagrams.
+- Mirrors and lenses.
+- Image formation.
+- Electric circuits.
+- Series and parallel circuits.
+- Voltage, current and resistance.
+- Ohm's law.
+- Magnetic field around a conductor.
+- Electromagnets.
+- Electric motor principles.
+- Electromagnetic induction.
+- Human eye and vision.
+
+Allow students to change suitable simulation parameters using sliders, switches and interactive controls.
+
+Show live results and scientific explanations.
+
+### Chemistry simulations
+
+Create safe educational simulations for:
+
+- Chemical reactions.
+- Balancing chemical equations.
+- Acids, bases and salts.
+- pH scale.
+- Indicators.
+- Metals and non-metals.
+- Reactivity series.
+- Ionic compounds.
+- Carbon compounds.
+- Functional groups.
+- Combustion.
+- Oxidation and reduction.
+
+Show reactants, products, balanced equations and observations.
+
+Do not simulate unsafe experiments as instructions for students to perform at home.
+
+### Biology interactive models
+
+Create interactive visual models for applicable syllabus concepts:
+
+- Human body systems.
+- Life processes.
+- Nutrition.
+- Respiration.
+- Transportation.
+- Excretion.
+- Control and coordination.
+- Nervous system.
+- Reproductive processes.
+- Heredity.
+- Ecosystems.
+- Food chains.
+- Environmental balance.
+
+Students should be able to select a structure or label and see its name, function and explanation.
+
+### Interactive board controls
+
+Provide:
+
+- Start.
+- Pause.
+- Reset.
+- Step-by-step demonstration.
+- Sliders.
+- Switches.
+- Labels.
+- Zoom.
+- Explanation panel.
+- Kannada/English toggle.
+- Question mode.
+
+The board must respond to student interaction, not merely display static pictures.
+
+### AI connection
+
+Add a button:
+
+**Ask AI Teacher About This Experiment**
+
+When selected, pass the current simulation, chapter and student question to the AI Teacher.
+
+The teacher should explain the actual experiment currently displayed.
+
+## 10. SCIENCE DIAGRAM STUDIO
+
+Build a dedicated diagram-learning system.
+
+It must support:
+
+- Labelled diagrams.
+- Unlabelled practice diagrams.
+- Step-by-step drawing instructions.
+- Diagram identification quizzes.
+- Label matching.
+- Explanation of every component.
+- Kannada and English labels.
+- Exam-ready diagram presentation.
+
+Include diagrams relevant to the verified official syllabus.
+
+Students should be able to practise labelling a diagram and check their answers.
+
+Do not create scientifically inaccurate diagrams.
+
+## 11. SAME APP NAVIGATION AND DROPDOWN DESIGN
+
+Follow the existing Maths application's navigation and dropdown design language.
+
+Keep the following primary sections:
+
+1. Study Centre
+2. AI Teach
+3. PYQs
+4. Science Academy
+5. Student Coach
+
+Retain responsive bottom navigation on phones and suitable rail navigation on larger screens.
+
+Use the same clean Material 3 design system.
+
+### Dropdown system
+
+Create consistent dropdowns for:
+
+- Physics / Chemistry / Biology.
+- Chapter selection.
+- Topic selection.
+- Language.
+- Video category.
+- PYQ year.
+- Examination type.
+- Marks.
+- Difficulty.
+- Revision mode.
+
+The dropdown behaviour must be consistent throughout the app.
+
+Selecting a subject should filter the available chapters.
+
+Selecting a chapter should filter topics, videos, notes, questions and interactive simulations.
+
+Preserve the student's selected chapter when moving between related screens.
+
+Do not create separate confusing chapter selectors with inconsistent behaviour.
+
+The first screen should prioritise the Study Centre, as in the Maths application.
+
+## 12. SCIENCE STUDY CENTRE
+
+Make this the main student workspace.
+
+Each chapter should have a structured learning page with:
+
+- Chapter title.
+- English and Kannada names.
+- Completion progress.
+- Topics.
+- Textbook reference.
+- Notes.
+- Videos.
+- PYQs.
+- Diagrams.
+- Interactive lab.
+- Chapter quiz.
+- Revision.
+
+Add:
+
+- Search.
+- Reset search.
+- Download chapter notes.
+- Download chapter resources.
+- Continue learning.
+- Recently opened chapters.
+- Completed topics.
+- Pending revision.
+
+Support offline access to downloaded resources.
+
+## 13. VOICE-ENABLED AI TEACHER
+
+Retain the voice-query functionality from the Maths app.
+
+Do not remove the microphone option.
+
+Students should be able to:
+
+1. Tap the microphone.
+2. Ask a Science question in Kannada or English.
+3. See the recognised question.
+4. Edit the recognised text if needed.
+5. Submit the question.
+6. Hear or read the answer.
+
+Support text-to-speech where available.
+
+Show clear microphone permission and listening status.
+
+Provide typing as an alternative.
+
+Do not introduce camera or image-scanner buttons into Study Centre or AI Teach screens.
+
+## 14. AI MODEL AND BACKEND ARCHITECTURE
+
+Reuse the proven AI architecture from the Maths app where suitable.
+
+Support:
+
+- Gemini through a secure backend.
+- Other compatible AI providers through a provider abstraction.
+- Downloadable on-device open-weight models.
+- Local deterministic Science knowledge engine.
+- Offline textbook and PYQ access.
+
+The AI must not depend on one provider alone.
+
+### Important security requirements
+
+- Never embed secret API keys in Android source code.
+- Use secure backend or Firebase-managed integrations.
+- Apply Firebase App Check.
+- Use Firebase Authentication.
+- Handle provider quota exhaustion.
+- Handle network failures.
+- Provide clear error messages.
+- Avoid exposing student information.
+- Use rate limiting and abuse protection.
+
+### Offline mode
+
+Students must be able to access:
+
+- Downloaded textbooks.
+- Notes.
+- PYQs.
+- Saved solutions.
+- Diagrams.
+- Interactive simulations.
+- Previously downloaded resources.
+
+When an on-device AI model has been downloaded, enable offline question answering using the model and local Science knowledge.
+
+Do not claim unlimited AI access because a student has signed in with Google.
+
+Clearly display model availability and download requirements.
+
+## 15. SCIENCE EXAMINATION ACADEMY
+
+Create a dedicated examination preparation section.
+
+Features:
+
+- Full-length mock examinations.
+- Chapter-wise tests.
+- Topic-wise tests.
+- Physics tests.
+- Chemistry tests.
+- Biology tests.
+- Diagram tests.
+- Chemical equation tests.
+- Numerical tests.
+- Previous-year paper practice.
+- Revision tests.
+
+Follow the current official KSEAB examination pattern.
+
+Do not hardcode old examination patterns.
+
+### Answer evaluation
+
+Evaluate student answers using subject-specific rubrics.
+
+For example:
+
+Physics:
+
+- Formula.
+- Substitution.
+- Calculation.
+- Unit.
+- Conclusion.
+
+Chemistry:
+
+- Correct reactants.
+- Correct products.
+- Balanced equation.
+- Scientific explanation.
+- Reaction type.
+
+Biology:
+
+- Correct terminology.
+- Required scientific points.
+- Sequence of process.
+- Diagram and labels where applicable.
+
+Show:
+
+- Marks obtained.
+- Expected answer.
+- Missing points.
+- Scientific errors.
+- Suggested improvement.
+- Model answer.
+
+Do not promise exact official marking unless the official marking scheme is available.
+
+## 16. STUDENT COACH AND PROGRESS TRACKING
+
+Create a personal Science study coach.
+
+Track:
+
+- Chapter completion.
+- Topic mastery.
+- PYQ practice.
+- Mock examination marks.
+- Weak chapters.
+- Strong chapters.
+- Diagram performance.
+- Numerical performance.
+- Revision history.
+
+Provide personalised study plans.
+
+Give daily revision targets.
+
+Identify weak topics and recommend appropriate videos, notes, simulations and PYQs.
+
+Use supportive language.
+
+Never shame students for poor scores.
+
+## 17. LOCAL DATABASE AND CLOUD SYNC
+
+Use Room for local storage.
+
+Use Firebase for authentication and suitable cloud synchronisation.
+
+Store:
+
+- Student preferences.
+- Selected language.
+- Selected chapter.
+- Download metadata.
+- Notes.
+- Bookmarks.
+- PYQ history.
+- Quiz results.
+- Progress.
+- Revision schedule.
+- Saved AI conversations where appropriate.
+
+The app must remain useful when internet connectivity is unavailable.
+
+Use appropriate database versioning and migration tests.
+
+##
+
+## 19. UI/UX QUALITY REQUIREMENTS
+
+Use the Maths app's existing visual identity as the foundation.
+
+Improve it with:
+
+- Professional educational design.
+- Consistent spacing.
+- Clear typography.
+- Good contrast.
+- Smooth navigation.
+- Reusable cards.
+- Responsive layouts.
+- Loading states.
+- Empty states.
+- Error states.
+- Confirmation messages.
+- Accessible controls.
+
+Do not overload the home screen.
+
+Do not create unnecessary buttons.
+
+Keep the main learning journey simple:
+
+Study Centre → Subject → Chapter → Topic → Learn → Practise → Revise.
+
+## 20. PERFORMANCE AND RELIABILITY
+
+The app must be suitable for ordinary Android phones.
+
+Requirements:
+
+- Avoid unnecessary background processes.
+- Download large resources only with student awareness.
+- Support resumable downloads.
+- Cache frequently used content.
+- Optimise PDF reading.
+- Optimise video WebViews.
+- Release resources correctly.
+- Prevent navigation-related crashes.
+- Avoid blocking the UI thread.
+- Handle low-memory conditions.
+- Handle network changes.
+- Handle expired download links.
+
+Do not promise that every YouTube video can be embedded. Respect YouTube playback restrictions.
+
+## 21. TESTING REQUIREMENTS
+
+Do not consider a feature complete merely because the code compiles.
+
+Create automated tests and manual test procedures.
+
+### Curriculum tests
+
+- Verify all official chapters.
+- Verify chapter titles.
+- Verify English and Kannada mappings.
+- Verify academic-year versioning.
+
+### Textbook tests
+
+- Download all four book files.
+- Verify file integrity.
+- Open each PDF.
+- Confirm offline access.
+- Confirm download resume.
+
+### AI tests
+
+- English questions.
+- Kannada questions.
+- Mixed-language questions.
+- Physics numericals.
+- Chemical equations.
+- Biology explanations.
+- Diagram questions.
+- Unrelated-topic redirection.
+- Provider failure.
+- Offline model operation.
+
+### PYQ tests
+
+- Correct year.
+- Correct paper type.
+- Correct chapter mapping.
+- Correct marks.
+- Correct medium.
+- Correct official source.
+- Correct answer-key distinction.
+
+### Video tests
+
+Test:
+
+- Standard videos.
+- Shorts.
+- Embed URLs.
+- Live links.
+- Playlist-only URLs.
+- Watch URLs containing both video and playlist IDs.
+- Full-screen.
+- Audio.
+- Video.
+- Retry.
+- Open on YouTube.
+
+### Interactive Science Lab tests
+
+- Parameter changes.
+- Reset.
+- Step-by-step mode.
+- Kannada labels.
+- English labels.
+- AI explanation connection.
+
+### Android tests
+
+- Fresh installation.
+- Existing app upgrade.
+- Login.
+- Navigation.
+- Offline operation.
+- Download failures.
+- Device rotation.
+- Low-memory conditions.
+- APK installation.
+
+## 22. DEVELOPMENT WORKFLOW
+
+Work directly in the designated GitHub repository.
+
+Before making changes:
+
+- Inspect the full repository.
+- Identify reusable modules.
+- Identify dependencies.
+- Preserve proven working architecture.
+- Create a clean Science project structure.
+
+Use:
+
+- Kotlin.
+- Jetpack Compose.
+- Material 3.
+- Navigation Compose.
+- Room.
+- Firebase.
+- WorkManager or DownloadManager.
+- MediaPipe or another suitable on-device model runtime.
+- Official YouTube IFrame API.
+
+Use proper package naming for the new Science application.
+
+Do not overwrite the Maths application.
+
+Build the Science application as a separate project/repository or a clearly isolated application module.
+
+Keep the Maths app fully intact.
+
+### GitHub development rules
+
+- Make small logical commits.
+- Avoid huge unreviewed changes.
+- Do not overwrite working modules unnecessarily.
+- Run Gradle builds after each major phase.
+- Fix compilation errors before continuing.
+- Run available automated tests.
+- Check APK signing.
+- Preserve stable build configuration.
+- Maintain a working GitHub Actions APK workflow.
+
+Do not report a successful build unless GitHub Actions confirms it.
+
+Do not report a successful feature unless it has been tested.
+
+## 23. REQUIRED DEVELOPMENT PHASES
+
+Build the application in controlled phases.
+
+**Phase 1 – Architecture and foundation**
+
+- Inspect Maths app.
+- Create Science repository.
+- Configure Android project.
+- Set theme and navigation.
+- Set up Firebase and Room.
+- Create source-management architecture.
+
+**Phase 2 – Official syllabus and textbooks**
+
+- Verify official Science syllabus.
+- Create chapter database.
+- Create English/Kannada mappings.
+- Build automatic textbook discovery and download.
+- Implement offline textbook library.
+
+**Phase 3 – Science knowledge engine**
+
+- Ingest textbook content.
+- Build chapter notes.
+- Build definitions and formulas.
+- Build chemical reactions and biology concepts.
+- Implement source-based retrieval.
+
+**Phase 4 – AI Teacher**
+
+- Build bilingual Science AI.
+- Integrate voice queries.
+- Implement subject guard.
+- Implement teaching modes.
+- Add offline model support.
+
+**Phase 5 – PYQ intelligence**
+
+- Discover official papers.
+- Download and extract PDFs.
+- Build chapter mapping.
+- Add verified official answer keys.
+- Generate separate AI solutions.
+- Add analytics.
+
+**Phase 6 – YouTube learning system**
+
+- Build chapter-wise video catalogue.
+- Verify video links.
+- Implement robust player.
+- Add full-screen and fallback.
+- Test on actual Android devices.
+
+**Phase 7 – Interactive Science Laboratory**
+
+- Physics simulations.
+- Chemistry simulations.
+- Biology interactive models.
+- Diagram Studio.
+- AI explanation integration.
+
+**Phase 8 – Examination Academy**
+
+- Mock tests.
+- Chapter tests.
+- Answer evaluation.
+- Progress analytics.
+- Revision plans.
+
+**Phase 9 – Final quality and deployment**
+
+- Full application testing.
+- Performance testing.
+- Security review.
+- Build APK.
+- Verify signing.
+- Test installation and upgrade.
+- Publish GitHub Actions artifact.
+
+Do not rush through phases just to generate an APK.
+
+## 24. FINAL ACCEPTANCE CRITERIA
+
+The project is not complete until all of the following are satisfied:
+
+1. The official Karnataka SSLC Science syllabus is correctly represented.
+2. All verified chapters have dedicated learning workspaces.
+3. English and Kannada textbooks can be downloaded.
+4. Downloaded textbooks work offline.
+5. PYQs are collected with traceable source information.
+6. Official answers are distinguished from AI solutions.
+7. AI Teacher understands Kannada and English.
+8. Voice queries work.
+9. The teacher stays within the SSLC Science syllabus.
+10. Videos are organised chapter-wise and topic-wise.
+11. The YouTube player handles supported formats reliably.
+12. Physics, Chemistry and Biology interactive simulations work.
+13. Diagram learning and practice work.
+14. Examination preparation and evaluation work.
+15. Student progress is saved.
+16. The application remains useful offline.
+17. The app builds successfully.
+18. The APK installs and runs on a real Android device.
+19. The Maths application remains untouched.
+
+## 25. FINAL INSTRUCTION TO THE CODING AGENT
+
+Do not begin by generating a generic chatbot or a decorative home screen.
+
+First inspect the existing Maths application thoroughly.
+
+Understand why certain features were added, why some features were removed, what worked, what failed and what was redesigned.
+
+Reuse its successful architecture and improve its weak areas.
+
+The goal is to create a complete Karnataka SSLC Science digital classroom that is more intelligent, more interactive, more reliable and more comprehensive than the existing Maths application.
+
+Every chapter must be syllabus-aligned.
+
+Every downloaded resource must have a source.
+
+Every answer must be scientifically responsible.
+
+Every video must be mapped correctly.
+
+Every interactive experiment must teach something meaningful.
+
+Every feature must be tested.
+
+**Build a genuine Karnataka SSLC Science AI Teacher—not just another AI chat application.**

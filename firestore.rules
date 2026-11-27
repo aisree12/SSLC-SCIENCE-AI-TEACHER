@@ -1,0 +1,199 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidTimestamp(ts) {
+      return ts is timestamp && ts <= request.time;
+    }
+
+    function isValidMedium(val) {
+      return val in ['ENGLISH', 'KANNADA', 'BILINGUAL'];
+    }
+
+    function isValidSubjectFilter(val) {
+      return val in ['ALL', 'PHYSICS', 'CHEMISTRY', 'BIOLOGY'];
+    }
+
+    function isValidScienceDivision(val) {
+      return val in ['PHYSICS', 'CHEMISTRY', 'BIOLOGY'];
+    }
+
+    function isValidUserProfile(data, userId) {
+      return data.userId == userId &&
+             data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 80 &&
+             isValidMedium(data.preferredMedium) &&
+             isValidSubjectFilter(data.selectedSubject) &&
+             data.selectedChapterId is string && data.selectedChapterId.size() >= 1 && data.selectedChapterId.size() <= 64 &&
+             data.dailyTargetMinutes is int && data.dailyTargetMinutes >= 10 && data.dailyTargetMinutes <= 300 &&
+             data.streakDays is int && data.streakDays >= 0 && data.streakDays <= 3650 &&
+             isValidTimestamp(data.createdAt) &&
+             isValidTimestamp(data.updatedAt);
+    }
+
+    function isValidChapterProgress(data, userId) {
+      return data.userId == userId &&
+             data.chapterId is string && data.chapterId.size() >= 1 && data.chapterId.size() <= 64 &&
+             isValidScienceDivision(data.subject) &&
+             data.completedTopicIds is list && data.completedTopicIds.size() <= 40 &&
+             (data.completedTopicIds.size() == 0 || data.completedTopicIds[0] is string) &&
+             data.masteryPercent is int && data.masteryPercent >= 0 && data.masteryPercent <= 100 &&
+             data.notesBookmarked is bool &&
+             data.lastOpenedTopicId is string && data.lastOpenedTopicId.size() <= 64 &&
+             (!('lastRevisedAt' in data) || data.lastRevisedAt == null || isValidTimestamp(data.lastRevisedAt)) &&
+             isValidTimestamp(data.createdAt) &&
+             isValidTimestamp(data.updatedAt);
+    }
+
+    function isValidExamAttempt(data, userId) {
+      return data.userId == userId &&
+             data.chapterId is string && data.chapterId.size() >= 1 && data.chapterId.size() <= 64 &&
+             data.examType in ['CHAPTER_TEST', 'MOCK_80', 'DIAGRAM_QUIZ', 'NUMERICAL_TEST', 'EQUATION_TEST', 'PYQ_PRACTICE'] &&
+             isValidSubjectFilter(data.subject) &&
+             data.score is int && data.score >= 0 && data.score <= 100 &&
+             data.maxScore is int && data.maxScore >= 1 && data.maxScore <= 100 &&
+             data.score <= data.maxScore &&
+             data.weakTopics is list && data.weakTopics.size() <= 20 &&
+             (data.weakTopics.size() == 0 || data.weakTopics[0] is string) &&
+             data.feedbackSummary is string && data.feedbackSummary.size() <= 1000 &&
+             isValidTimestamp(data.createdAt) &&
+             isValidTimestamp(data.updatedAt);
+    }
+
+    function isValidSavedNote(data, userId) {
+      return data.userId == userId &&
+             data.chapterId is string && data.chapterId.size() >= 1 && data.chapterId.size() <= 64 &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 150 &&
+             data.content is string && data.content.size() >= 1 && data.content.size() <= 5000 &&
+             data.sourceType in ['OFFICIAL_TEXTBOOK', 'AI_TEACHER', 'STUDENT_NOTE'] &&
+             data.medium in ['ENGLISH', 'KANNADA'] &&
+             isValidTimestamp(data.createdAt) &&
+             isValidTimestamp(data.updatedAt);
+    }
+
+    function isValidAiConversation(data, userId) {
+      return data.userId == userId &&
+             data.chapterId is string && data.chapterId.size() <= 64 &&
+             data.question is string && data.question.size() >= 1 && data.question.size() <= 1500 &&
+             data.answer is string && data.answer.size() >= 1 && data.answer.size() <= 12000 &&
+             data.teachingMode is string && data.teachingMode.size() >= 1 && data.teachingMode.size() <= 50 &&
+             isValidMedium(data.language) &&
+             data.sourceCitation is string && data.sourceCitation.size() <= 300 &&
+             isValidTimestamp(data.createdAt) &&
+             isValidTimestamp(data.updatedAt);
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if false;
+
+      allow create: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       incoming().keys().hasAll(['userId', 'displayName', 'preferredMedium', 'selectedSubject', 'selectedChapterId', 'dailyTargetMinutes', 'streakDays', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['userId', 'displayName', 'preferredMedium', 'selectedSubject', 'selectedChapterId', 'dailyTargetMinutes', 'streakDays', 'createdAt', 'updatedAt']) &&
+                       isValidUserProfile(incoming(), userId);
+
+      allow update: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       isValidUserProfile(incoming(), userId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'preferredMedium', 'selectedSubject', 'selectedChapterId', 'dailyTargetMinutes', 'streakDays', 'updatedAt']);
+
+      allow delete: if isOwner(userId) && isValidId(userId);
+
+      match /chapter_progress/{chapterId} {
+        allow get: if isOwner(userId) && isValidId(chapterId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(chapterId) &&
+                         incoming().keys().hasAll(['userId', 'chapterId', 'subject', 'completedTopicIds', 'masteryPercent', 'notesBookmarked', 'lastOpenedTopicId', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'chapterId', 'subject', 'completedTopicIds', 'masteryPercent', 'notesBookmarked', 'lastOpenedTopicId', 'lastRevisedAt', 'createdAt', 'updatedAt']) &&
+                         isValidChapterProgress(incoming(), userId);
+
+        allow update: if isOwner(userId) &&
+                         isValidId(chapterId) &&
+                         isValidChapterProgress(incoming(), userId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().chapterId == existing().chapterId &&
+                         incoming().subject == existing().subject &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly(['completedTopicIds', 'masteryPercent', 'notesBookmarked', 'lastOpenedTopicId', 'lastRevisedAt', 'updatedAt']);
+
+        allow delete: if isOwner(userId) && isValidId(chapterId);
+      }
+
+      match /exam_attempts/{attemptId} {
+        allow get: if isOwner(userId) && isValidId(attemptId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(attemptId) &&
+                         incoming().keys().hasAll(['userId', 'chapterId', 'examType', 'subject', 'score', 'maxScore', 'weakTopics', 'feedbackSummary', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'chapterId', 'examType', 'subject', 'score', 'maxScore', 'weakTopics', 'feedbackSummary', 'createdAt', 'updatedAt']) &&
+                         isValidExamAttempt(incoming(), userId);
+
+        allow update: if false;
+        allow delete: if isOwner(userId) && isValidId(attemptId);
+      }
+
+      match /saved_notes/{noteId} {
+        allow get: if isOwner(userId) && isValidId(noteId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(noteId) &&
+                         incoming().keys().hasAll(['userId', 'chapterId', 'title', 'content', 'sourceType', 'medium', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'chapterId', 'title', 'content', 'sourceType', 'medium', 'createdAt', 'updatedAt']) &&
+                         isValidSavedNote(incoming(), userId);
+
+        allow update: if isOwner(userId) &&
+                         isValidId(noteId) &&
+                         isValidSavedNote(incoming(), userId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly(['title', 'content', 'updatedAt']);
+
+        allow delete: if isOwner(userId) && isValidId(noteId);
+      }
+
+      match /ai_conversations/{messageId} {
+        allow get: if isOwner(userId) && isValidId(messageId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(messageId) &&
+                         incoming().keys().hasAll(['userId', 'chapterId', 'question', 'answer', 'teachingMode', 'language', 'sourceCitation', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'chapterId', 'question', 'answer', 'teachingMode', 'language', 'sourceCitation', 'createdAt', 'updatedAt']) &&
+                         isValidAiConversation(incoming(), userId);
+
+        allow update: if false;
+        allow delete: if isOwner(userId) && isValidId(messageId);
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">SSLC Science Teacher</string>
+    <string name="app_subtitle">Karnataka Class 10 Digital Science Classroom</string>
+    <string name="nav_study_centre">Study Centre</string>
+    <string name="nav_ai_teach">AI Teach</string>
+    <string name="nav_pyqs">PYQs</string>
+    <string name="nav_academy">Academy</string>
+    <string name="nav_coach">Coach</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_out">Sign out</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+</resources>

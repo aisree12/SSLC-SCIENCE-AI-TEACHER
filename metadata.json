@@ -1,0 +1,6 @@
+{
+  "name": "SSLC Science Teacher",
+  "description": "Karnataka SSLC Class 10 Science AI Teacher covering Physics, Chemistry, and Biology with bilingual English and Kannada support, interactive labs, PYQs, exam academy, and offline textbook library.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
