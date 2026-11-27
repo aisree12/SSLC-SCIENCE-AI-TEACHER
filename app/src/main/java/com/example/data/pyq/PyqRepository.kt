@@ -468,8 +468,8 @@ object PyqRepository {
                     PyqDiscoveryStatus(
                         lastSyncedLabel = "Using local practice archive",
                         kseabReachable = false,
-                        papersDiscoveredCount = allQuestions.size,
-                        message = "KSEAB portal returned HTTP ${resp.code}; serving the local starter practice bank. Official paper verification is pending."
+                        papersDiscoveredCount = 0,
+                        message = "KSEAB portal returned HTTP ${resp.code}; ${allQuestions.size} starter practice questions remain available offline. No official paper PDFs were discovered."
                     )
                 }
             }
@@ -477,8 +477,8 @@ object PyqRepository {
             PyqDiscoveryStatus(
                 lastSyncedLabel = "Offline practice bank active",
                 kseabReachable = false,
-                papersDiscoveredCount = allQuestions.size,
-                message = "Offline mode: displaying starter practice questions. Source paper PDFs and official answer keys have not yet been verified."
+                papersDiscoveredCount = 0,
+                message = "Offline mode: ${allQuestions.size} starter practice questions are available. Source paper PDFs and official answer keys have not yet been verified."
             )
         }
     }
