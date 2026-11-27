@@ -137,7 +137,7 @@ fun UnifiedCurriculumControls(
                 modifier = Modifier.weight(1f)
             ) {
                 OutlinedTextField(
-                    value = selectedSubject.label,
+                    value = if (selectedLanguage == StudyLanguage.KANNADA) when (selectedSubject) { SubjectFilter.ALL -> "ಎಲ್ಲಾ ವಿಜ್ಞಾನ"; SubjectFilter.PHYSICS -> "ಭೌತಶಾಸ್ತ್ರ"; SubjectFilter.CHEMISTRY -> "ರಸಾಯನಶಾಸ್ತ್ರ"; SubjectFilter.BIOLOGY -> "ಜೀವಶಾಸ್ತ್ರ" } else selectedSubject.label,
                     onValueChange = {},
                     readOnly = true,
                     singleLine = true,
@@ -155,7 +155,7 @@ fun UnifiedCurriculumControls(
                 ) {
                     SubjectFilter.entries.forEach { filter ->
                         DropdownMenuItem(
-                            text = { Text(filter.label) },
+                            text = { Text(if (selectedLanguage == StudyLanguage.KANNADA) when (filter) { SubjectFilter.ALL -> "ಎಲ್ಲಾ ವಿಜ್ಞಾನ"; SubjectFilter.PHYSICS -> "ಭೌತಶಾಸ್ತ್ರ"; SubjectFilter.CHEMISTRY -> "ರಸಾಯನಶಾಸ್ತ್ರ"; SubjectFilter.BIOLOGY -> "ಜೀವಶಾಸ್ತ್ರ" } else filter.label) },
                             onClick = {
                                 subjectExpanded = false
                                 onSubjectSelected(filter)
