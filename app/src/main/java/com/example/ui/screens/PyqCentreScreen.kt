@@ -444,7 +444,7 @@ private fun PyqCardItem(
                     onClick = onOpenOfficialSource,
                     modifier = Modifier.minimumInteractiveComponentSize()
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open KSEAB portal", modifier = Modifier.size(18.dp))
+                    Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open source paper reference", modifier = Modifier.size(18.dp))
                     Text("KSEAB")
                 }
             }
