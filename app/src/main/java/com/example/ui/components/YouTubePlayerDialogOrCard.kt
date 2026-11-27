@@ -3,6 +3,8 @@ package com.example.ui.components
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
@@ -156,16 +158,36 @@ fun VideoResourceCard(
 private class YouTubeJsBridge(
     private val onReady: () -> Unit,
     private val onPlayerError: (Int) -> Unit,
-    private val onStateChanged: (Int) -> Unit
+    private val onStateChanged: (Int) -> Unit,
+    private val onJsError: (String) -> Unit,
+    private val onAutoplayBlocked: () -> Unit
 ) {
-    @JavascriptInterface
-    fun notifyReady() = onReady()
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     @JavascriptInterface
-    fun notifyError(code: Int) = onPlayerError(code)
+    fun notifyReady() {
+        mainHandler.post { onReady() }
+    }
 
     @JavascriptInterface
-    fun notifyState(state: Int) = onStateChanged(state)
+    fun notifyError(code: Int) {
+        mainHandler.post { onPlayerError(code) }
+    }
+
+    @JavascriptInterface
+    fun notifyState(state: Int) {
+        mainHandler.post { onStateChanged(state) }
+    }
+
+    @JavascriptInterface
+    fun notifyJsError(message: String) {
+        mainHandler.post { onJsError(message.take(180)) }
+    }
+
+    @JavascriptInterface
+    fun notifyAutoplayBlocked() {
+        mainHandler.post { onAutoplayBlocked() }
+    }
 }
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -185,6 +207,7 @@ fun YouTubePlayerDialog(
     var isPlaying by remember { mutableStateOf(false) }
     var isMuted by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var playbackNotice by remember { mutableStateOf<String?>(null) }
     var reloadNonce by remember { mutableIntStateOf(0) }
     var webViewRef by remember { mutableStateOf<WebView?>(null) }
     var customFullscreenView by remember { mutableStateOf<View?>(null) }
@@ -310,12 +333,17 @@ fun YouTubePlayerDialog(
                                             onReady = { isReady = true },
                                             onPlayerError = { code ->
                                                 errorMessage = when (code) {
-                                                    101, 150 -> "Channel owner disabled embedded playback (Code $code)."
+                                                    2 -> "YouTube rejected the video ID or player parameters (Code 2)."
+                                                    5 -> "YouTube HTML5 playback failed on this device (Code 5)."
                                                     100 -> "Video unavailable or private (Code 100)."
+                                                    101, 150 -> "Channel owner disabled embedded playback (Code $code)."
+                                                    153 -> "YouTube did not receive a valid referrer or client identity (Code 153)."
                                                     else -> "Playback error (Code $code)."
                                                 }
                                             },
-                                            onStateChanged = { st -> isPlaying = (st == 1) }
+                                            onStateChanged = { st -> isPlaying = (st == 1) },
+                                            onJsError = { message -> errorMessage = "Player script error: $message" },
+                                            onAutoplayBlocked = { playbackNotice = "Autoplay was blocked. Tap Play to start the video." }
                                         ),
                                         "AndroidYouTube"
                                     )
@@ -358,6 +386,14 @@ fun YouTubePlayerDialog(
                             }
                         }
                     }
+                }
+
+                if (playbackNotice != null) {
+                    Text(
+                        playbackNotice.orEmpty(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -449,6 +485,9 @@ private fun buildYouTubeIframeHtml(videoId: String?, playlistId: String?): Strin
           <script src="https://www.youtube.com/iframe_api"></script>
           <script>
             var player;
+            window.onerror = function(message) {
+              try { AndroidYouTube.notifyJsError(String(message)); } catch (ignored) {}
+            };
             function onYouTubeIframeAPIReady() {
               player = new YT.Player('player', {
                 width: '100%',
@@ -457,7 +496,8 @@ private fun buildYouTubeIframeHtml(videoId: String?, playlistId: String?): Strin
                 events: {
                   'onReady': function() { AndroidYouTube.notifyReady(); },
                   'onError': function(e) { AndroidYouTube.notifyError(e.data); },
-                  'onStateChange': function(e) { AndroidYouTube.notifyState(e.data); }
+                  'onStateChange': function(e) { AndroidYouTube.notifyState(e.data); },
+                  'onAutoplayBlocked': function() { AndroidYouTube.notifyAutoplayBlocked(); }
                 }
               });
             }
