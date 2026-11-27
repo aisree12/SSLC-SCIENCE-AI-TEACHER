@@ -163,7 +163,7 @@ fun PyqCentreScreen(
                             selected = filterBySelectedChapter,
                             onClick = { filterBySelectedChapter = !filterBySelectedChapter },
                             colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
-                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಆಯ್ದ ಅಧ್ಯಾಯ ಮಾತ್ರ" else "Only Selected Chapter") },
+                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಆಯ್ದ ಅಧ್ಯಾಯ ಮಾತ್ರ" else "Only Selected Chapter", fontWeight = FontWeight.Bold) },
                             modifier = Modifier.testTag("pyq_filter_chapter_chip")
                         )
                         if (curriculumState.selectedLanguage == StudyLanguage.ENGLISH) {
@@ -172,7 +172,7 @@ fun PyqCentreScreen(
                             onClick = { showAnalytics = !showAnalytics },
                             colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
                             leadingIcon = { Icon(Icons.Default.Analytics, contentDescription = null, modifier = Modifier.size(16.dp)) },
-                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ವಿಶ್ಲೇಷಣೆ" else "Analytics & Predictions") },
+                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ವಿಶ್ಲೇಷಣೆ" else "Analytics & Predictions", fontWeight = FontWeight.Bold) },
                             modifier = Modifier.testTag("pyq_analytics_chip")
                         )
                         }
@@ -180,7 +180,7 @@ fun PyqCentreScreen(
                             selected = showPaperArchive,
                             onClick = { showPaperArchive = !showPaperArchive },
                             colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
-                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಹಳೆಯ ಪ್ರಶ್ನೆಪತ್ರಿಕೆಗಳು" else "Past Paper PDFs") },
+                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಹಳೆಯ ಪ್ರಶ್ನೆಪತ್ರಿಕೆಗಳು" else "Past Paper PDFs", fontWeight = FontWeight.Bold) },
                             modifier = Modifier.testTag("pyq_paper_archive_chip")
                         )
                     }
@@ -196,7 +196,7 @@ fun PyqCentreScreen(
                                 selected = selectedYear == yr,
                                 onClick = { selectedYear = yr },
                                 colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
-                                label = { Text(label) }
+                                label = { Text(label, fontWeight = FontWeight.Bold) }
                             )
                         }
                     }
@@ -212,7 +212,7 @@ fun PyqCentreScreen(
                                 selected = selectedMarks == m,
                                 onClick = { selectedMarks = m },
                                 colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
-                                label = { Text(label) }
+                                label = { Text(label, fontWeight = FontWeight.Bold) }
                             )
                         }
                     }
@@ -227,14 +227,14 @@ fun PyqCentreScreen(
                             selected = selectedExamType == null,
                             onClick = { selectedExamType = null },
                             colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
-                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ ಪರೀಕ್ಷೆಗಳು" else "All Exams") }
+                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ ಪರೀಕ್ಷೆಗಳು" else "All Exams", fontWeight = FontWeight.Bold) }
                         )
                         PyqExamType.entries.forEach { et ->
                             FilterChip(
                                 selected = selectedExamType == et,
                                 onClick = { selectedExamType = if (selectedExamType == et) null else et },
                                 colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
-                                label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) when (et) { PyqExamType.MAIN -> "ಮುಖ್ಯ ಪರೀಕ್ಷೆ"; PyqExamType.EXAM_1 -> "ಪರೀಕ್ಷೆ 1"; PyqExamType.EXAM_2 -> "ಪರೀಕ್ಷೆ 2"; PyqExamType.EXAM_3 -> "ಪರೀಕ್ಷೆ 3"; PyqExamType.SUPPLEMENTARY -> "ಪೂರಕ ಪರೀಕ್ಷೆ"; PyqExamType.PREPARATORY -> "ಪೂರ್ವಸಿದ್ಧತಾ ಪರೀಕ್ಷೆ"; PyqExamType.MODEL_PAPER -> "ಮಾದರಿ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" } else et.label) }
+                                label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) when (et) { PyqExamType.MAIN -> "ಮುಖ್ಯ ಪರೀಕ್ಷೆ"; PyqExamType.EXAM_1 -> "ಪರೀಕ್ಷೆ 1"; PyqExamType.EXAM_2 -> "ಪರೀಕ್ಷೆ 2"; PyqExamType.EXAM_3 -> "ಪರೀಕ್ಷೆ 3"; PyqExamType.SUPPLEMENTARY -> "ಪೂರಕ ಪರೀಕ್ಷೆ"; PyqExamType.PREPARATORY -> "ಪೂರ್ವಸಿದ್ಧತಾ ಪರೀಕ್ಷೆ"; PyqExamType.MODEL_PAPER -> "ಮಾದರಿ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" } else et.label, fontWeight = FontWeight.Bold) }
                             )
                         }
                     }
@@ -249,14 +249,14 @@ fun PyqCentreScreen(
                             selected = selectedType == null,
                             onClick = { selectedType = null },
                             colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
-                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ ವಿಧಗಳು" else "All Types") }
+                            label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲಾ ವಿಧಗಳು" else "All Types", fontWeight = FontWeight.Bold) }
                         )
                         QuestionType.entries.forEach { qt ->
                             FilterChip(
                                 selected = selectedType == qt,
                                 onClick = { selectedType = if (selectedType == qt) null else qt },
                                 colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8), containerColor = Color(0xFFF1F5F9), labelColor = Color(0xFF1E293B)),
-                                label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) when (qt) { QuestionType.MCQ -> "ಬಹು ಆಯ್ಕೆ"; QuestionType.DEFINITION -> "ವ್ಯಾಖ್ಯಾನ"; QuestionType.DIFFERENCE -> "ವ್ಯತ್ಯಾಸ"; QuestionType.EXPLAIN_WHY -> "ಕಾರಣ ವಿವರಿಸಿ"; QuestionType.NUMERICAL -> "ಸಮಸ್ಯೆ"; QuestionType.DIAGRAM -> "ಚಿತ್ರ"; QuestionType.CHEMICAL_EQUATION -> "ರಾಸಾಯನಿಕ ಸಮೀಕರಣ"; QuestionType.DESCRIPTIVE -> "ವಿವರಣಾತ್ಮಕ" } else qt.label) }
+                                label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) when (qt) { QuestionType.MCQ -> "ಬಹು ಆಯ್ಕೆ"; QuestionType.DEFINITION -> "ವ್ಯಾಖ್ಯಾನ"; QuestionType.DIFFERENCE -> "ವ್ಯತ್ಯಾಸ"; QuestionType.EXPLAIN_WHY -> "ಕಾರಣ ವಿವರಿಸಿ"; QuestionType.NUMERICAL -> "ಸಮಸ್ಯೆ"; QuestionType.DIAGRAM -> "ಚಿತ್ರ"; QuestionType.CHEMICAL_EQUATION -> "ರಾಸಾಯನಿಕ ಸಮೀಕರಣ"; QuestionType.DESCRIPTIVE -> "ವಿವರಣಾತ್ಮಕ" } else qt.label, fontWeight = FontWeight.Bold) }
                             )
                         }
                     }
@@ -411,9 +411,9 @@ private fun PyqCardItem(
             ) {
                 if (language == StudyLanguage.KANNADA) Text(pyq.division.kannadaName, style = MaterialTheme.typography.labelMedium) else DivisionBadge(division = pyq.division)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    AssistChip(onClick = {}, label = { Text(if (language == StudyLanguage.KANNADA) "${pyq.year} • ಪರೀಕ್ಷೆ" else "${pyq.year} • ${pyq.examType.label}") })
-                    AssistChip(onClick = {}, label = { Text("${pyq.marks}M") })
-                    if (pyq.flaggedForReview) AssistChip(onClick = {}, label = { Text(if (language == StudyLanguage.KANNADA) "ಅಭ್ಯಾಸ ಪ್ರಶ್ನೆ" else "Practice • Source pending") })
+                    AssistChip(onClick = {}, label = { Text(if (language == StudyLanguage.KANNADA) "${pyq.year} • ಪರೀಕ್ಷೆ" else "${pyq.year} • ${pyq.examType.label}", fontWeight = FontWeight.Bold) })
+                    AssistChip(onClick = {}, label = { Text("${pyq.marks}M", fontWeight = FontWeight.Bold) })
+                    if (pyq.flaggedForReview) AssistChip(onClick = {}, label = { Text(if (language == StudyLanguage.KANNADA) "ಅಭ್ಯಾಸ ಪ್ರಶ್ನೆ" else "Practice • Source pending", fontWeight = FontWeight.Bold) })
                 }
             }
 
