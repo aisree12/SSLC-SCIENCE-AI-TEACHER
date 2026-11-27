@@ -311,7 +311,7 @@ fun StudyCentreScreen(
                             FilterChip(
                                 selected = ch.id == currentChapter.id,
                                 onClick = { onSelectChapter(ch.id) },
-                                label = { Text("Ch ${ch.chapterNumber}: ${ch.titleEn}") }
+                                label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಅಧ್ಯಾಯ ${ch.chapterNumber}: ${ch.titleKn}" else "Ch ${ch.chapterNumber}: ${ch.titleEn}") }
                             )
                         }
                     }
