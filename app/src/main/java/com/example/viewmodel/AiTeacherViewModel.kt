@@ -12,13 +12,17 @@ import com.example.data.remote.FirestoreRepository
 import com.example.model.AiConversationRecord
 import com.example.model.StudyLanguage
 import com.example.model.TeachingMode
+import com.google.firebase.Timestamp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Date
 
 data class AiChatMessage(
     val id: String,
@@ -62,13 +66,35 @@ class AiTeacherViewModel(
     private val _providerStatus = MutableStateFlow<AiProviderStatus>(aiRepository.currentProviderStatus())
     val providerStatus: StateFlow<AiProviderStatus> = _providerStatus.asStateFlow()
 
-    val savedHistory: StateFlow<List<AiConversationRecord>> = firestoreRepository
-        .observeAiConversations(currentUserId)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = emptyList()
-        )
+    val savedHistory: StateFlow<List<AiConversationRecord>> = combine(
+        firestoreRepository.observeAiConversations(currentUserId)
+            .catch { error ->
+                Log.w(TAG, "Cloud AI history unavailable; showing local history", error)
+                emit(emptyList())
+            },
+        cachedAiDao.observeRecent()
+    ) { cloud, local ->
+        val localRecords = local.map { item ->
+            AiConversationRecord(
+                id = "local_${item.id}",
+                userId = currentUserId,
+                chapterId = item.chapterId,
+                question = item.question,
+                answer = item.answer,
+                teachingMode = item.teachingMode,
+                language = item.language,
+                sourceCitation = item.sourceCitation,
+                createdAt = Timestamp(Date(item.createdAtMillis))
+            )
+        }
+        (cloud + localRecords)
+            .distinctBy { it.id }
+            .sortedByDescending { it.createdAt?.toDate()?.time ?: 0L }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = emptyList()
+    )
 
     fun refreshProviderStatus() {
         _providerStatus.value = aiRepository.currentProviderStatus()
@@ -150,15 +176,21 @@ class AiTeacherViewModel(
                             createdAtMillis = System.currentTimeMillis()
                         )
                     )
-                    firestoreRepository.saveAiConversation(
-                        userId = currentUserId,
-                        chapterId = chapterId,
-                        question = trimmed,
-                        answer = finalAnswer,
-                        teachingMode = mode.title,
-                        language = language.name,
-                        sourceCitation = finalCitation
-                    )
+                    try {
+                        firestoreRepository.saveAiConversation(
+                            userId = currentUserId,
+                            chapterId = chapterId,
+                            question = trimmed,
+                            answer = finalAnswer,
+                            teachingMode = mode.title,
+                            language = language.name,
+                            sourceCitation = finalCitation
+                        )
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Cloud conversation save failed; local answer is retained", e)
+                    }
                 } else {
                     _uiState.value = AiTeacherUiState.Error("No response received from AI Teacher.")
                 }
