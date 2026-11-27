@@ -163,10 +163,10 @@ object PyqRepository {
         PyqPaperArchiveEntry(
             id = "archive_2015_science",
             title = "2015 SSLC Science — Main & Supplementary",
-            subtitle = "Year-wise archive • English and Kannada paper listings",
-            paperArchiveUrl = "https://www.indcareer.com/schools/karnataka-sslc-science-question-papers/",
+            subtitle = "English medium 83-E • April 2015 main paper",
+            paperArchiveUrl = "https://www.indcareer.com/docs/dfe70f0c-e855-4fdb-97bf-ac38ae36f061",
             answerKeyArchiveUrl = null,
-            sourceNote = "Third-party year-wise archive listing 2015 Science papers. Select the correct paper code and medium; answer keys are not independently verified."
+            sourceNote = "Third-party document page for the April 2015 83-E paper. Check the first page and exam version before practice."
         ),
         PyqPaperArchiveEntry(
             id = "archive_2021_exam1",
