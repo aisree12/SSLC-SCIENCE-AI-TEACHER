@@ -223,7 +223,7 @@ fun PyqCentreScreen(
                             FilterChip(
                                 selected = selectedExamType == et,
                                 onClick = { selectedExamType = if (selectedExamType == et) null else et },
-                                label = { Text(et.label) }
+                                label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) when (et) { PyqExamType.MAIN -> "ಮುಖ್ಯ ಪರೀಕ್ಷೆ"; PyqExamType.EXAM_1 -> "ಪರೀಕ್ಷೆ 1"; PyqExamType.EXAM_2 -> "ಪರೀಕ್ಷೆ 2"; PyqExamType.EXAM_3 -> "ಪರೀಕ್ಷೆ 3"; PyqExamType.SUPPLEMENTARY -> "ಪೂರಕ ಪರೀಕ್ಷೆ"; PyqExamType.PREPARATORY -> "ಪೂರ್ವಸಿದ್ಧತಾ ಪರೀಕ್ಷೆ"; PyqExamType.MODEL_PAPER -> "ಮಾದರಿ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" } else et.label) }
                             )
                         }
                     }
@@ -243,7 +243,7 @@ fun PyqCentreScreen(
                             FilterChip(
                                 selected = selectedType == qt,
                                 onClick = { selectedType = if (selectedType == qt) null else qt },
-                                label = { Text(qt.label) }
+                                label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) when (qt) { QuestionType.MCQ -> "ಬಹು ಆಯ್ಕೆ"; QuestionType.DEFINITION -> "ವ್ಯಾಖ್ಯಾನ"; QuestionType.DIFFERENCE -> "ವ್ಯತ್ಯಾಸ"; QuestionType.EXPLAIN_WHY -> "ಕಾರಣ ವಿವರಿಸಿ"; QuestionType.NUMERICAL -> "ಸಮಸ್ಯೆ"; QuestionType.DIAGRAM -> "ಚಿತ್ರ"; QuestionType.CHEMICAL_EQUATION -> "ರಾಸಾಯನಿಕ ಸಮೀಕರಣ"; QuestionType.DESCRIPTIVE -> "ವಿವರಣಾತ್ಮಕ" } else qt.label) }
                             )
                         }
                     }
