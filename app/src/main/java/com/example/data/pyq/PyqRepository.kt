@@ -32,6 +32,8 @@ data class PyqDiscoveryStatus(
 
 object PyqRepository {
 
+    // These entries are a starter study bank, not source-verified transcriptions of official papers.
+    // Keep them flagged until each question and its paper/key URL is matched to an actual KSEAB document.
     val allQuestions: List<PyqQuestion> = listOf(
         PyqQuestion(
             id = "pyq_2025_m_c1_1",
@@ -327,7 +329,7 @@ object PyqRepository {
             officialPdfUrl = "https://kseab.karnataka.gov.in/",
             extractionConfidence = 1.0f
         )
-    )
+    ).map { it.copy(flaggedForReview = true) }
 
     private val httpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
@@ -342,26 +344,26 @@ object PyqRepository {
             httpClient.newCall(req).execute().use { resp ->
                 if (resp.isSuccessful || resp.code in 200..399) {
                     PyqDiscoveryStatus(
-                        lastSyncedLabel = "Synced with KSEAB portal",
+                        lastSyncedLabel = "KSEAB portal reachable",
                         kseabReachable = true,
                         papersDiscoveredCount = allQuestions.size,
-                        message = "KSEAB official portal is reachable. ${allQuestions.size} verified PYQs across 2022–2025 indexed."
+                        message = "KSEAB portal is reachable. ${allQuestions.size} starter practice questions are available offline; their original paper PDFs and official keys still need source verification."
                     )
                 } else {
                     PyqDiscoveryStatus(
-                        lastSyncedLabel = "Using verified local PYQ archive",
+                        lastSyncedLabel = "Using local practice archive",
                         kseabReachable = false,
                         papersDiscoveredCount = allQuestions.size,
-                        message = "KSEAB portal returned HTTP ${resp.code}; serving verified offline PYQ bank."
+                        message = "KSEAB portal returned HTTP ${resp.code}; serving the local starter practice bank. Official paper verification is pending."
                     )
                 }
             }
         } catch (_: Exception) {
             PyqDiscoveryStatus(
-                lastSyncedLabel = "Offline archive active",
+                lastSyncedLabel = "Offline practice bank active",
                 kseabReachable = false,
                 papersDiscoveredCount = allQuestions.size,
-                message = "Offline mode: displaying verified KSEAB PYQ bank with source paper codes."
+                message = "Offline mode: displaying starter practice questions. Source paper PDFs and official answer keys have not yet been verified."
             )
         }
     }
