@@ -330,6 +330,10 @@ private fun NotesFormulasSection(
             }
         }
 
+        if (chapter.division.name == "CHEMISTRY" && chapter.reactions.isNotEmpty()) {
+            ReactionBalancerWorkspace(language = language)
+        }
+
         if (language == StudyLanguage.ENGLISH && chapter.activities.isNotEmpty()) {
             Card(shape = RoundedCornerShape(16.dp)) {
                 Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
