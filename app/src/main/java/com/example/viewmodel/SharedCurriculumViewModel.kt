@@ -187,6 +187,7 @@ class SharedCurriculumViewModel(
                 dailyTargetMinutes = _uiState.value.dailyTargetMinutes.toLong()
             )
         }
+        viewModelScope.launch { textbookRepository.reconcileActiveDownloads() }
         verifyOfficialSyllabusAndPyqs()
     }
 
