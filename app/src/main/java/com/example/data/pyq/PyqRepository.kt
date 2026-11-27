@@ -128,6 +128,14 @@ object PyqRepository {
             sourceNote = "Third-party document mirror of the 2022 KSEAB paper dated 11 April 2022. No official key is linked here."
         ),
         PyqPaperArchiveEntry(
+            id = "archive_2021_exam1",
+            title = "2021 SSLC Science — Paper 1",
+            subtitle = "Science paper index • choose the required medium and version",
+            paperArchiveUrl = "https://www.indcareer.com/schools/karnataka-sslc-science-question-papers/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "Third-party year-wise paper index. Confirm the first-page paper code, medium and exam date; no official key is linked here."
+        ),
+        PyqPaperArchiveEntry(
             id = "archive_2020_exam1",
             title = "2020 SSLC Science — Main Examination",
             subtitle = "English medium 83-E • Question paper PDF mirror",
