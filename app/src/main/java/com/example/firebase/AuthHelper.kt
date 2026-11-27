@@ -70,7 +70,7 @@ fun attemptAutoSignIn(
     }
     val clientId = context.resources.getIdentifier("default_web_client_id", "string", context.packageName)
         .takeIf { it != 0 }
-        ?.let(context::getString)
+        ?.let { id -> context.getString(id) }
         ?.takeIf { it.isNotBlank() }
     if (clientId == null) {
         onUnauthenticated()
@@ -110,7 +110,7 @@ fun onGoogleSignInClicked(
 ) {
     val clientId = context.resources.getIdentifier("default_web_client_id", "string", context.packageName)
         .takeIf { it != 0 }
-        ?.let(context::getString)
+        ?.let { id -> context.getString(id) }
         ?.takeIf { it.isNotBlank() }
     if (clientId == null) {
         onAuthError("Google Sign-In is not configured for this app build. Add the Firebase Android configuration to enable it.")
