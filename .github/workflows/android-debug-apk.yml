@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build debug APK
+    name: Build Science APK with permanent signing key
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
@@ -39,17 +39,35 @@ jobs:
       - name: Install Android platform
         run: sdkmanager "platforms;android-36.1"
 
-      - name: Create local debug signing key
+      - name: Load and verify permanent Science signing key
+        env:
+          SCIENCE_KEYSTORE_BASE64: ${{ secrets.SCIENCE_KEYSTORE_BASE64 }}
+          SCIENCE_KEYSTORE_PASSWORD: ${{ secrets.SCIENCE_KEYSTORE_PASSWORD }}
+          SCIENCE_KEY_ALIAS: ${{ secrets.SCIENCE_KEY_ALIAS }}
+          SCIENCE_KEY_PASSWORD: ${{ secrets.SCIENCE_KEY_PASSWORD }}
         run: |
-          keytool -genkeypair -v \
-            -keystore debug.keystore \
-            -storepass android \
-            -alias androiddebugkey \
-            -keypass android \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -dname "CN=Android Debug,O=Android,C=US"
+          set -euo pipefail
+          for name in SCIENCE_KEYSTORE_BASE64 SCIENCE_KEYSTORE_PASSWORD SCIENCE_KEY_ALIAS SCIENCE_KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Required Science signing secret is missing: $name"
+              exit 1
+            fi
+          done
+
+          printf '%s' "$SCIENCE_KEYSTORE_BASE64" | base64 --decode > science-signing.keystore
+          test -s science-signing.keystore
+          keytool -list -v -keystore science-signing.keystore \
+            -storepass "$SCIENCE_KEYSTORE_PASSWORD" -alias "$SCIENCE_KEY_ALIAS" \
+            > science-signing-certificate.txt
+
+          echo "Verified Science signing certificate:"
+          grep -E 'SHA1:|SHA256:' science-signing-certificate.txt
+          {
+            echo "SCIENCE_KEYSTORE_PATH=$GITHUB_WORKSPACE/science-signing.keystore"
+            echo "SCIENCE_KEYSTORE_PASSWORD=$SCIENCE_KEYSTORE_PASSWORD"
+            echo "SCIENCE_KEY_ALIAS=$SCIENCE_KEY_ALIAS"
+            echo "SCIENCE_KEY_PASSWORD=$SCIENCE_KEY_PASSWORD"
+          } >> "$GITHUB_ENV"
 
       - name: Build debug APK
         run: gradle --no-daemon :app:assembleDebug
