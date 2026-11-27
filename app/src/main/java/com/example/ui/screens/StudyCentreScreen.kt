@@ -155,7 +155,7 @@ fun StudyCentreScreen(
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
-                                text = "KSEAB 13-Chapter Rationalized Syllabus",
+                                text = "Karnataka SSLC Science • Local 13-chapter catalogue",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = Color(0xFF99F6E4)
                             )
@@ -384,7 +384,7 @@ fun StudyCentreScreen(
     if (showVerificationDialog) {
         AlertDialog(
             onDismissRequest = { showVerificationDialog = false },
-            title = { Text("KSEAB Syllabus & Rationalized Deletions") },
+            title = { Text("Syllabus Reference & Historical Exclusions") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(uiState.verificationInfo.statusMessage, style = MaterialTheme.typography.bodyMedium)
@@ -393,7 +393,7 @@ fun StudyCentreScreen(
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
-                    Text("Removed in KSEAB Rationalized Syllabus:", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                    Text("Historical rationalized exclusions — current-year confirmation pending:", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
                     SyllabusRepository.rationalizedDeletions.forEach { del ->
                         Surface(
                             shape = RoundedCornerShape(10.dp),
