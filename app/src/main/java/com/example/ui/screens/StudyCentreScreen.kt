@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
@@ -185,25 +186,25 @@ fun StudyCentreScreen(
                 FilterChip(
                     selected = uiState.selectedSubject == SubjectFilter.ALL,
                     onClick = { onSelectSubject(SubjectFilter.ALL) },
-                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲ ವಿಷಯಗಳು" else "All") },
+                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಎಲ್ಲ ವಿಷಯಗಳು" else "All", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium) },
                     colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8))
                 )
                 FilterChip(
                     selected = uiState.selectedSubject == SubjectFilter.PHYSICS,
                     onClick = { onSelectSubject(SubjectFilter.PHYSICS) },
-                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಭೌತಶಾಸ್ತ್ರ" else "Physics") },
+                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಭೌತಶಾಸ್ತ್ರ" else "Physics", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium) },
                     colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDBEAFE), selectedLabelColor = Color(0xFF1D4ED8))
                 )
                 FilterChip(
                     selected = uiState.selectedSubject == SubjectFilter.CHEMISTRY,
                     onClick = { onSelectSubject(SubjectFilter.CHEMISTRY) },
-                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ರಸಾಯನಶಾಸ್ತ್ರ" else "Chemistry") },
+                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ರಸಾಯನಶಾಸ್ತ್ರ" else "Chemistry", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium) },
                     colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFFCE7F3), selectedLabelColor = Color(0xFFBE185D))
                 )
                 FilterChip(
                     selected = uiState.selectedSubject == SubjectFilter.BIOLOGY,
                     onClick = { onSelectSubject(SubjectFilter.BIOLOGY) },
-                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಜೀವಶಾಸ್ತ್ರ" else "Biology") },
+                    label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಜೀವಶಾಸ್ತ್ರ" else "Biology", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium) },
                     colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFDCFCE7), selectedLabelColor = Color(0xFF15803D))
                 )
             }
@@ -239,7 +240,8 @@ fun StudyCentreScreen(
             ) {
                 Button(
                     onClick = { onOpenLabForChapter(currentChapter.id) },
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 5.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D9488)),
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
                     modifier = Modifier
                         .weight(1f)
                         .minimumInteractiveComponentSize()
@@ -247,7 +249,7 @@ fun StudyCentreScreen(
                 ) {
                     Icon(Icons.Default.Science, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಪ್ರಯೋಗಾಲಯ ಮತ್ತು ಚಿತ್ರಗಳು" else "Lab & Diagrams")
+                    Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಪ್ರಯೋಗಾಲಯ ಮತ್ತು ಚಿತ್ರಗಳು" else "Lab & Diagrams", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
                 }
             }
         }
