@@ -77,7 +77,6 @@ import com.example.model.TextbookMedium
 import com.example.model.SubjectFilter
 import com.example.model.SyllabusChapter
 import com.example.ui.components.OfflinePdfReaderDialog
-import com.example.ui.components.KtbsCatalogueDialog
 import com.example.ui.components.UnifiedCurriculumControls
 import com.example.ui.components.YouTubePlayerDialog
 import com.example.viewmodel.CurriculumUiState
@@ -96,7 +95,6 @@ fun StudyCentreScreen(
     onToggleTopicCompleted: (SyllabusChapter, String) -> Unit,
     onSaveChapterNotesOffline: (SyllabusChapter) -> Unit,
     onDownloadBook: (String) -> Unit,
-    onDownloadSelectedPdf: (bookId: String, url: String) -> Unit,
     onUpdateBookReading: (bookId: String, page: Int, bookmarks: List<Int>) -> Unit,
     onRefreshVerification: () -> Unit,
     onAskAiTeacher: (chapterId: String, prefill: String) -> Unit,
@@ -107,7 +105,6 @@ fun StudyCentreScreen(
     val context = LocalContext.current
     var showVerificationDialog by remember { mutableStateOf(false) }
     var activeBookForReader by remember { mutableStateOf<OfficialTextbook?>(null) }
-    var activeBookForCatalogue by remember { mutableStateOf<OfficialTextbook?>(null) }
     var activeVideo by remember { mutableStateOf<ScienceVideo?>(null) }
 
     val availableChapters = uiState.availableChapters
@@ -159,7 +156,7 @@ fun StudyCentreScreen(
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
-                                text = if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಕರ್ನಾಟಕ SSLC ವಿಜ್ಞಾನ • 13 ಅಧ್ಯಾಯಗಳು" else "Karnataka SSLC Science • 13-chapter catalogue",
+                                text = if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಕರ್ನಾಟಕ SSLC ವಿಜ್ಞಾನ • 13 ಅಧ್ಯಾಯಗಳು" else "Karnataka SSLC Science • 13 chapters",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = Color(0xFF99F6E4)
                             )
@@ -393,17 +390,6 @@ fun StudyCentreScreen(
         )
     }
 
-    activeBookForCatalogue?.let { book ->
-        KtbsCatalogueDialog(
-            book = book,
-            onDownloadPdf = { url ->
-                onDownloadSelectedPdf(book.id, url)
-                activeBookForCatalogue = null
-            },
-            onDismiss = { activeBookForCatalogue = null }
-        )
-    }
-
     activeBookForReader?.let { book ->
         OfflinePdfReaderDialog(
             book = book,
@@ -422,110 +408,3 @@ fun StudyCentreScreen(
     }
 }
 
-@Composable
-private fun TextbookRowCard(
-    book: OfficialTextbook,
-    onDownload: () -> Unit,
-    onOpenReader: () -> Unit,
-    onOpenCatalogue: () -> Unit,
-    onOpenPortal: () -> Unit
-) {
-    Surface(
-        shape = RoundedCornerShape(14.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(book.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-                    Text(book.kannadaTitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text("${book.chapterRangeLabel} • ${book.estimatedSizeMb}", style = MaterialTheme.typography.labelSmall)
-                }
-                AssistChip(
-                    onClick = {},
-                    label = { Text(book.status.name.replace('_', ' ')) }
-                )
-            }
-
-            if (book.status == DownloadStatus.DOWNLOADING) {
-                LinearProgressIndicator(
-                    progress = { (book.progressPercent / 100f).coerceIn(0.05f, 1f) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            if (book.statusNote.isNotBlank()) {
-                Text(book.statusNote, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                when (book.status) {
-                    DownloadStatus.DOWNLOADED -> {
-                        Button(
-                            onClick = onOpenReader,
-                            modifier = Modifier
-                                .weight(1f)
-                                .minimumInteractiveComponentSize()
-                                .testTag("open_reader_${book.id}")
-                        ) {
-                            Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("Open Offline PDF")
-                        }
-                    }
-                    DownloadStatus.DOWNLOADING -> {
-                        OutlinedButton(
-                            onClick = {},
-                            enabled = false,
-                            modifier = Modifier.weight(1f).minimumInteractiveComponentSize()
-                        ) {
-                            Text("Downloading ${book.progressPercent}%...")
-                        }
-                    }
-                    DownloadStatus.NOT_DOWNLOADED, DownloadStatus.FAILED -> {
-                        if (book.directPdfVerified) {
-                            Button(
-                                onClick = onDownload,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .minimumInteractiveComponentSize()
-                                    .testTag("download_book_${book.id}")
-                            ) {
-                                Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(18.dp))
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(if (book.status == DownloadStatus.FAILED) "Retry PDF" else "Download PDF")
-                            }
-                        } else {
-                            Button(
-                                onClick = onOpenCatalogue,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .minimumInteractiveComponentSize()
-                                    .testTag("open_catalogue_${book.id}")
-                            ) {
-                                Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text("Find on KTBS")
-                            }
-                        }
-                    }
-                }
-                OutlinedButton(
-                    onClick = onOpenPortal,
-                    modifier = Modifier.minimumInteractiveComponentSize()
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open KTBS Portal", modifier = Modifier.size(18.dp))
-                }
-            }
-        }
-    }
-}
