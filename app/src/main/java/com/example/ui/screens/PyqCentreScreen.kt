@@ -134,7 +134,7 @@ fun PyqCentreScreen(
                             onClick = onRefreshPyqDiscovery,
                             modifier = Modifier.minimumInteractiveComponentSize()
                         ) {
-                            Icon(Icons.Default.Refresh, contentDescription = "Refresh KSEAB check", modifier = Modifier.size(18.dp))
+                            Icon(Icons.Default.Refresh, contentDescription = "Refresh paper archive check", modifier = Modifier.size(18.dp))
                         }
                     }
 
