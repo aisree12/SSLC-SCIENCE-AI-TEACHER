@@ -177,6 +177,7 @@ fun UnifiedCurriculumControls(
                     value = when (selectedLanguage) {
                         StudyLanguage.ENGLISH -> "English"
                         StudyLanguage.KANNADA -> "ಕನ್ನಡ"
+                        StudyLanguage.BILINGUAL -> "English"
                     },
                     onValueChange = {},
                     readOnly = true,
@@ -200,7 +201,7 @@ fun UnifiedCurriculumControls(
                     expanded = languageExpanded,
                     onDismissRequest = { languageExpanded = false }
                 ) {
-                    StudyLanguage.entries.forEach { lang ->
+                    StudyLanguage.entries.filter { it != StudyLanguage.BILINGUAL }.forEach { lang ->
                         DropdownMenuItem(
                             text = { Text(lang.label) },
                             onClick = {
@@ -246,20 +247,11 @@ fun UnifiedCurriculumControls(
                 chapters.forEach { ch ->
                     DropdownMenuItem(
                         text = {
-                            Column {
-                                Text(
-                                    text = "Ch ${ch.chapterNumber}: ${ch.titleEn}",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.Medium
-                                )
-                                Text(
-                                    text = "${ch.division.displayName} • ${ch.titleKn}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
+                            Text(
+                                text = if (selectedLanguage == StudyLanguage.KANNADA) "ಅಧ್ಯಾಯ ${ch.chapterNumber}: ${ch.titleKn}" else "Ch ${ch.chapterNumber}: ${ch.titleEn}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium
+                            )
                         },
                         onClick = {
                             chapterExpanded = false
