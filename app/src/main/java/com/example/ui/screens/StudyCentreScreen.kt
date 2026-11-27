@@ -95,7 +95,6 @@ fun StudyCentreScreen(
     onSaveChapterNotesOffline: (SyllabusChapter) -> Unit,
     onDownloadBook: (String) -> Unit,
     onDownloadSelectedPdf: (bookId: String, url: String) -> Unit,
-    onDownloadAllBooks: () -> Unit,
     onUpdateBookReading: (bookId: String, page: Int, bookmarks: List<Int>) -> Unit,
     onRefreshVerification: () -> Unit,
     onAskAiTeacher: (chapterId: String, prefill: String) -> Unit,
@@ -340,7 +339,7 @@ fun StudyCentreScreen(
                             onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TextbookRepository.PORTAL_KTBS))) },
                             modifier = Modifier
                                 .minimumInteractiveComponentSize()
-                                .testTag("download_all_textbooks_button")
+                                .testTag("open_ktbs_catalogue_button")
                         ) {
                             Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(modifier = Modifier.width(4.dp))
