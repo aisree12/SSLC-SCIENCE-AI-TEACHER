@@ -141,7 +141,7 @@ fun UnifiedCurriculumControls(
                     onValueChange = {},
                     readOnly = true,
                     singleLine = true,
-                    label = { Text("Subject") },
+                    label = { Text(if (selectedLanguage == StudyLanguage.KANNADA) "ವಿಷಯ" else "Subject") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = subjectExpanded) },
                     modifier = Modifier
                         .menuAnchor(MenuAnchorType.PrimaryNotEditable)
@@ -182,7 +182,7 @@ fun UnifiedCurriculumControls(
                     onValueChange = {},
                     readOnly = true,
                     singleLine = true,
-                    label = { Text("Medium") },
+                    label = { Text(if (selectedLanguage == StudyLanguage.KANNADA) "ಮಾಧ್ಯಮ" else "Medium") },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Translate,
@@ -232,7 +232,7 @@ fun UnifiedCurriculumControls(
                 onValueChange = {},
                 readOnly = true,
                 singleLine = true,
-                label = { Text("Chapter (${chapters.size} available)") },
+                label = { Text(if (selectedLanguage == StudyLanguage.KANNADA) "ಅಧ್ಯಾಯಗಳು (${chapters.size})" else "Chapter (${chapters.size} available)") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = chapterExpanded) },
                 modifier = Modifier
                     .menuAnchor(MenuAnchorType.PrimaryNotEditable)
@@ -273,13 +273,13 @@ fun UnifiedCurriculumControls(
             ) {
                 val topicLabel = currentTopic?.let {
                     if (selectedLanguage == StudyLanguage.KANNADA) it.kannadaTitle else it.title
-                } ?: "Select Topic"
+                } ?: if (selectedLanguage == StudyLanguage.KANNADA) "ವಿಷಯಾಂಶ ಆಯ್ಕೆಮಾಡಿ" else "Select Topic"
                 OutlinedTextField(
                     value = topicLabel,
                     onValueChange = {},
                     readOnly = true,
                     singleLine = true,
-                    label = { Text("Topic") },
+                    label = { Text(if (selectedLanguage == StudyLanguage.KANNADA) "ವಿಷಯಾಂಶ" else "Topic") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = topicExpanded) },
                     modifier = Modifier
                         .menuAnchor(MenuAnchorType.PrimaryNotEditable)
