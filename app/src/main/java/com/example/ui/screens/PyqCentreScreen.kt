@@ -163,6 +163,7 @@ fun PyqCentreScreen(
                             label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ಆಯ್ದ ಅಧ್ಯಾಯ ಮಾತ್ರ" else "Only Selected Chapter") },
                             modifier = Modifier.testTag("pyq_filter_chapter_chip")
                         )
+                        if (curriculumState.selectedLanguage == StudyLanguage.ENGLISH) {
                         FilterChip(
                             selected = showAnalytics,
                             onClick = { showAnalytics = !showAnalytics },
@@ -170,6 +171,7 @@ fun PyqCentreScreen(
                             label = { Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ವಿಶ್ಲೇಷಣೆ" else "Analytics & Predictions") },
                             modifier = Modifier.testTag("pyq_analytics_chip")
                         )
+                        }
                         FilterChip(
                             selected = showPaperArchive,
                             onClick = { showPaperArchive = !showPaperArchive },
@@ -297,7 +299,7 @@ fun PyqCentreScreen(
             }
         }
 
-        if (showAnalytics) {
+        if (showAnalytics && curriculumState.selectedLanguage == StudyLanguage.ENGLISH) {
             item {
                 Card(
                     shape = RoundedCornerShape(18.dp),
