@@ -280,7 +280,6 @@ fun ScienceTeacherApp(
                                 onSaveChapterNotesOffline = curriculumVm::saveChapterNotesOffline,
                                 onDownloadBook = curriculumVm::downloadTextbook,
                                 onDownloadSelectedPdf = curriculumVm::downloadSelectedOfficialPdf,
-                                onDownloadAllBooks = curriculumVm::downloadAllTextbooks,
                                 onUpdateBookReading = curriculumVm::updateBookReadingState,
                                 onRefreshVerification = curriculumVm::verifyOfficialSyllabusAndPyqs,
                                 onAskAiTeacher = ::routeToAiWithPrompt,
