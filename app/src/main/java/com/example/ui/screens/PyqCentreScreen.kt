@@ -260,7 +260,7 @@ fun PyqCentreScreen(
                     ) {
                         Text("KSEAB Science Paper Archive", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Text(
-                            "These archive pages link to KSEAB-issued PDFs. 2026 includes official model answers in English and Kannada; 2024 and 2025 list question papers without official keys.",
+                            "Archive indexes and mirrors are clearly labelled per collection. 2026 includes KSEAB model answers in English and Kannada. Older mirror PDFs are not official answer keys; check the paper code, year and medium before using them.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
