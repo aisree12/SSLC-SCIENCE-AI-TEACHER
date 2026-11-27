@@ -273,7 +273,7 @@ class TextbookRepository(
         withContext(Dispatchers.IO) {
             val book = officialCatalogue.firstOrNull { it.id == bookId }
                 ?: return@withContext Result.failure(IllegalArgumentException("Unknown textbook ID"))
-            if (!TextbookUrlPolicy.isTrustedPdfUrl(selectedUrl)) {
+            if (!TextbookUrlPolicy.isTrustedHttpsPortalUrl(selectedUrl)) {
                 return@withContext Result.failure(
                     SecurityException("Choose an HTTPS PDF link hosted on the official Karnataka textbook portal.")
                 )
