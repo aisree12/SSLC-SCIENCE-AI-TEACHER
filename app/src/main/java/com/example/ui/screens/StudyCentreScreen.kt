@@ -159,19 +159,19 @@ fun StudyCentreScreen(
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
-                                text = "Karnataka SSLC Science • Local 13-chapter catalogue",
+                                text = if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಕರ್ನಾಟಕ SSLC ವಿಜ್ಞಾನ • 13 ಅಧ್ಯಾಯಗಳು" else "Karnataka SSLC Science • 13-chapter catalogue",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = Color(0xFF99F6E4)
                             )
                         }
                         Text(
-                            text = "SSLC Science Study Centre",
+                            text = if (uiState.selectedLanguage == StudyLanguage.KANNADA) "SSLC ವಿಜ್ಞಾನ ಅಧ್ಯಯನ ಕೇಂದ್ರ" else "SSLC Science Study Centre",
                             style = MaterialTheme.typography.headlineSmall,
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = uiState.verificationInfo.lastVerifiedDate,
+                            text = if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಅಧ್ಯಯನಕ್ಕಾಗಿ ಅಧ್ಯಾಯಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ" else uiState.verificationInfo.lastVerifiedDate,
                             style = MaterialTheme.typography.bodySmall,
                             color = Color(0xFFE2E8F0)
                         )
@@ -249,7 +249,7 @@ fun StudyCentreScreen(
                 ) {
                     Icon(Icons.Default.Science, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Lab & Diagrams")
+                    Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಪ್ರಯೋಗಾಲಯ ಮತ್ತು ಚಿತ್ರಗಳು" else "Lab & Diagrams")
                 }
             }
         }
@@ -264,7 +264,7 @@ fun StudyCentreScreen(
                         value = uiState.searchQuery,
                         onValueChange = onUpdateSearch,
                         singleLine = true,
-                        label = { Text("Search chapters, laws, formulas or topics") },
+                        label = { Text(if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಅಧ್ಯಾಯಗಳು, ನಿಯಮಗಳು ಮತ್ತು ಸೂತ್ರಗಳನ್ನು ಹುಡುಕಿ" else "Search chapters, laws, formulas or topics") },
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
                         trailingIcon = {
                             if (uiState.searchQuery.isNotBlank()) {
