@@ -325,12 +325,12 @@ fun StudyCentreScreen(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Official KTBS Textbooks (Parts 1 & 2)",
+                                text = "Science Textbook Catalogue (verification pending)",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "English & Kannada • Parts 1 & 2 • Current edition catalogue",
+                                text = "English & Kannada • provisional part labels • confirm the current edition on KTBS",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
