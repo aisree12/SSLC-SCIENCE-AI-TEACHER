@@ -113,7 +113,7 @@ fun StudyCentreScreen(
     val availableChapters = uiState.availableChapters
     val currentChapter = uiState.selectedChapter
     val chapterBook = textbooks.firstOrNull { book ->
-        book.medium == if (uiState.selectedLanguage == StudyLanguage.KANNADA) TextbookMedium.KANNADA else TextbookMedium.ENGLISH && book.part == currentChapter.textbookPart
+        book.medium == (if (uiState.selectedLanguage == StudyLanguage.KANNADA) TextbookMedium.KANNADA else TextbookMedium.ENGLISH) && book.part == currentChapter.textbookPart
     }
 
     LazyColumn(
