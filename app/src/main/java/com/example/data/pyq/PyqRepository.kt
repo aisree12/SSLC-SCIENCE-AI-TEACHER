@@ -150,7 +150,7 @@ object PyqRepository {
             subtitle = "English medium 83-E • Historical model paper, not a board exam",
             paperArchiveUrl = "https://docs.aglasem.com/view/7e94720c-8ee3-11eb-97f9-02f21f5619c4",
             answerKeyArchiveUrl = null,
-            sourceNote = "Historical KSEB model paper. It may include content outside the current syllabus; use only for general practice."
+            sourceNote = "Third-party mirror of a historical KSEB model paper. It may include content outside the current syllabus; use only for general practice."
         ),
         PyqPaperArchiveEntry(
             id = "archive_2026_27_model",
