@@ -23,8 +23,8 @@ class TextbookRepository(
     private val dao: TextbookDownloadDao
 ) {
     companion object {
-        const val CURRENT_ACADEMIC_YEAR = "2025–2026"
-        const val CATALOGUE_EDITION = "KTBS Rationalized Ed. 2025.1"
+        const val CURRENT_ACADEMIC_YEAR = "2026–2027"
+        const val CATALOGUE_EDITION = "2026–27 catalogue — direct Science PDF links pending official verification"
         const val PORTAL_KTBS = "https://textbooks.karnataka.gov.in/"
         const val PORTAL_PATHYAPUSTAKA = "https://pathyapustaka.in/"
 
@@ -37,7 +37,7 @@ class TextbookRepository(
                 part = 1,
                 academicYear = CURRENT_ACADEMIC_YEAR,
                 edition = CATALOGUE_EDITION,
-                officialUrl = "https://textbooks.karnataka.gov.in/en/10th-science-part-1.pdf",
+                officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
                 chapterRangeLabel = "Chapters 1–7 (Chemistry & Biology)",
@@ -51,7 +51,7 @@ class TextbookRepository(
                 part = 2,
                 academicYear = CURRENT_ACADEMIC_YEAR,
                 edition = CATALOGUE_EDITION,
-                officialUrl = "https://textbooks.karnataka.gov.in/en/10th-science-part-2.pdf",
+                officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
                 chapterRangeLabel = "Chapters 8–13 (Heredity, Physics & Environment)",
@@ -65,7 +65,7 @@ class TextbookRepository(
                 part = 1,
                 academicYear = CURRENT_ACADEMIC_YEAR,
                 edition = CATALOGUE_EDITION,
-                officialUrl = "https://textbooks.karnataka.gov.in/kn/10th-science-part-1.pdf",
+                officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
                 chapterRangeLabel = "ಅಧ್ಯಾಯ 1–7 (ರಸಾಯನಶಾಸ್ತ್ರ ಮತ್ತು ಜೀವಶಾಸ್ತ್ರ)",
@@ -79,7 +79,7 @@ class TextbookRepository(
                 part = 2,
                 academicYear = CURRENT_ACADEMIC_YEAR,
                 edition = CATALOGUE_EDITION,
-                officialUrl = "https://textbooks.karnataka.gov.in/kn/10th-science-part-2.pdf",
+                officialUrl = PORTAL_KTBS,
                 portalUrl = PORTAL_KTBS,
                 sourceAuthority = "Karnataka Textbook Society (KTBS)",
                 chapterRangeLabel = "ಅಧ್ಯಾಯ 8–13 (ಆನುವಂಶಿಕತೆ, ಭೌತಶಾಸ್ತ್ರ ಮತ್ತು ಪರಿಸರ)",
@@ -114,7 +114,7 @@ class TextbookRepository(
                         sha256Checksum = null,
                         lastReadPage = 0,
                         bookmarkedPagesCsv = "",
-                        statusNote = "Ready to download from KTBS",
+                        statusNote = "Open the official KTBS catalogue. A direct Class 10 Science PDF URL has not yet been verified for this edition.",
                         updatedAtMillis = System.currentTimeMillis()
                     )
                 )
@@ -165,6 +165,11 @@ class TextbookRepository(
             ?: return@withContext Result.failure(IllegalArgumentException("Unknown textbook ID"))
 
         val existing = dao.getById(bookId)
+        if (!book.directPdfVerified) {
+            val note = "Direct PDF link is not verified yet. Open the official KTBS catalogue and choose the current Class 10 Science edition."
+            if (existing != null) dao.upsert(existing.copy(status = DownloadStatus.NOT_DOWNLOADED.name, statusNote = note, updatedAtMillis = System.currentTimeMillis()))
+            return@withContext Result.failure(IllegalStateException(note))
+        }
         if (existing?.status == DownloadStatus.DOWNLOADED.name &&
             existing.localFilePath?.let { File(it).exists() } == true
         ) {
