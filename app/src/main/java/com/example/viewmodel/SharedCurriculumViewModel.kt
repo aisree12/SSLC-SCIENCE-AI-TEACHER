@@ -334,14 +334,6 @@ class SharedCurriculumViewModel(
         }
     }
 
-    fun downloadAllTextbooks() {
-        viewModelScope.launch {
-            TextbookRepository.officialCatalogue.forEach { book ->
-                launch { textbookRepository.startDownload(book.id) }
-            }
-        }
-    }
-
     fun updateBookReadingState(bookId: String, page: Int, bookmarks: List<Int>) {
         viewModelScope.launch {
             textbookRepository.updateReadingProgress(bookId, page, bookmarks)
