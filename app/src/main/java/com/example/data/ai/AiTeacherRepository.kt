@@ -10,6 +10,7 @@ import com.example.model.ScienceDivision
 import com.example.model.StudyLanguage
 import com.example.model.TeachingMode
 import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.Schema
 import com.google.firebase.ai.type.generationConfig
@@ -108,8 +109,19 @@ class AiTeacherRepository(private val context: Context) : ScienceAiProvider {
         }
     }
 
+    private fun isFirebaseAiConfigured(): Boolean {
+        return runCatching {
+            FirebaseApp.getInstance().options.apiKey.isNotBlank() &&
+                FirebaseApp.getInstance().options.projectId?.isNotBlank() == true
+        }.getOrDefault(false)
+    }
+
     fun currentProviderStatus(): AiProviderStatus {
-        return if (isNetworkAvailable()) AiProviderStatus.GeminiCloudReady else AiProviderStatus.OfflineKnowledgeOnly
+        return if (isNetworkAvailable() && isFirebaseAiConfigured()) {
+            AiProviderStatus.GeminiCloudReady
+        } else {
+            AiProviderStatus.OfflineKnowledgeOnly
+        }
     }
 
     override fun streamScienceAnswer(
@@ -139,7 +151,7 @@ class AiTeacherRepository(private val context: Context) : ScienceAiProvider {
             return@flow
         }
 
-        if (!isNetworkAvailable()) {
+        if (!isNetworkAvailable() || !isFirebaseAiConfigured()) {
             val offlineAnswer = ScienceKnowledgeEngine.generateOfflineFallbackAnswer(
                 query = question,
                 language = language,
