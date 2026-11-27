@@ -17,6 +17,8 @@ class TextbookUrlPolicyTest {
     fun rejectsNonHttpsAndNonPdfResources() {
         assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("http://textbooks.karnataka.gov.in/science.pdf"))
         assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("https://textbooks.karnataka.gov.in/science.html"))
+        assertTrue(TextbookUrlPolicy.isTrustedHttpsPortalUrl("https://textbooks.karnataka.gov.in/download?id=123"))
+        assertFalse(TextbookUrlPolicy.isTrustedHttpsPortalUrl("http://textbooks.karnataka.gov.in/download?id=123"))
     }
 
     @Test
