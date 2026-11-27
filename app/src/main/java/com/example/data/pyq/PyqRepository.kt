@@ -25,12 +25,100 @@ data class PyqAnalyticsSummary(
 
 data class PyqDiscoveryStatus(
     val lastSyncedLabel: String,
-    val kseabReachable: Boolean,
-    val papersDiscoveredCount: Int,
+    val archiveIndexReachable: Boolean,
+    val archiveCollectionsCount: Int,
     val message: String
 )
 
+data class PyqPaperArchiveEntry(
+    val id: String,
+    val title: String,
+    val subtitle: String,
+    val paperArchiveUrl: String,
+    val answerKeyArchiveUrl: String?,
+    val sourceNote: String
+)
+
 object PyqRepository {
+    /**
+     * Archive indexes link to the original KSEAB-issued PDF files.
+     * These are index pages, not direct PDF URLs. 2024/2025 have papers only;
+     * 2026 has Exam-1/Exam-2 model answers, and 2026-27 model papers have keys.
+     */
+    val paperArchive: List<PyqPaperArchiveEntry> = listOf(
+        PyqPaperArchiveEntry(
+            id = "archive_2026_exam1",
+            title = "2026 SSLC Science — Exam 1",
+            subtitle = "English 83-E + Kannada 83-K • Question papers and model answers",
+            paperArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/2026/",
+            answerKeyArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/answer-key/",
+            sourceNote = "Archive index links the original KSEAB PDFs; answer keys are available for both mediums."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2026_exam2",
+            title = "2026 SSLC Science — Exam 2",
+            subtitle = "English 83-E + Kannada 83-K • Question papers and model answers",
+            paperArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/2026/",
+            answerKeyArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/answer-key/",
+            sourceNote = "Archive index links the original KSEAB PDFs; answer keys are available for both mediums."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2025_exam1",
+            title = "2025 SSLC Science — Exam 1",
+            subtitle = "English medium 83-E • Question paper",
+            paperArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/2025/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "KSEAB question paper listed in the archive. No official key is listed for 2025."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2025_exam2",
+            title = "2025 SSLC Science — Exam 2",
+            subtitle = "English medium 83-E • Question paper",
+            paperArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/2025/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "KSEAB question paper listed in the archive. No official key is listed for 2025."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2025_exam3",
+            title = "2025 SSLC Science — Exam 3",
+            subtitle = "English medium 83-E • Question paper",
+            paperArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/2025/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "KSEAB question paper listed in the archive. No official key is listed for 2025."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2024_exam1",
+            title = "2024 SSLC Science — Exam 1",
+            subtitle = "English medium 83-E • Question paper",
+            paperArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/2024/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "KSEAB question paper listed in the archive. No official key is listed for 2024."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2024_exam2",
+            title = "2024 SSLC Science — Exam 2",
+            subtitle = "English medium 83-E • Question paper",
+            paperArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/2024/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "KSEAB question paper listed in the archive. No official key is listed for 2024."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2024_exam3",
+            title = "2024 SSLC Science — Exam 3",
+            subtitle = "English medium 83-E • Question paper",
+            paperArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/2024/",
+            answerKeyArchiveUrl = null,
+            sourceNote = "KSEAB question paper listed in the archive. No official key is listed for 2024."
+        ),
+        PyqPaperArchiveEntry(
+            id = "archive_2026_27_model",
+            title = "2026–27 SSLC Science — Model Papers 1 to 4",
+            subtitle = "English medium 83-E • Four model papers and matching key answers",
+            paperArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/model-papers/",
+            answerKeyArchiveUrl = "https://previousyearquestions.app/karnataka-sslc/model-papers/",
+            sourceNote = "These are current model papers for practice, not past board examination papers."
+        )
+    )
 
     // These entries are a starter study bank, not source-verified transcriptions of official papers.
     // Keep them flagged until each question and its paper/key URL is matched to an actual KSEAB document.
@@ -454,31 +542,31 @@ object PyqRepository {
     }
 
     suspend fun discoverOfficialPapersLive(): PyqDiscoveryStatus = withContext(Dispatchers.IO) {
+        val archiveCount = paperArchive.size
         try {
-            val req = Request.Builder().url("https://kseab.karnataka.gov.in/").head().build()
+            val req = Request.Builder()
+                .url("https://previousyearquestions.app/karnataka-sslc/2026/")
+                .head()
+                .build()
             httpClient.newCall(req).execute().use { resp ->
-                if (resp.isSuccessful || resp.code in 200..399) {
-                    PyqDiscoveryStatus(
-                        lastSyncedLabel = "KSEAB portal reachable",
-                        kseabReachable = true,
-                        papersDiscoveredCount = 0,
-                        message = "KSEAB portal is reachable. ${allQuestions.size} starter practice questions are available offline; their original paper PDFs and official keys still need source verification."
-                    )
-                } else {
-                    PyqDiscoveryStatus(
-                        lastSyncedLabel = "Using local practice archive",
-                        kseabReachable = false,
-                        papersDiscoveredCount = 0,
-                        message = "KSEAB portal returned HTTP ${resp.code}; ${allQuestions.size} starter practice questions remain available offline. No official paper PDFs were discovered."
-                    )
-                }
+                val reachable = resp.isSuccessful || resp.code in 200..399
+                PyqDiscoveryStatus(
+                    lastSyncedLabel = if (reachable) "PYQ archive index reachable" else "Offline archive catalogue available",
+                    archiveIndexReachable = reachable,
+                    archiveCollectionsCount = archiveCount,
+                    message = if (reachable) {
+                        "$archiveCount paper collections are indexed: KSEAB SSLC Science papers for 2024–2026 and 2026–27 model papers. 2026 includes English/Kannada papers with model answers; 2024/2025 paper indexes do not list official keys."
+                    } else {
+                        "$archiveCount paper collections are saved in the app. The online archive index returned HTTP ${resp.code}; open a collection when connected."
+                    }
+                )
             }
         } catch (_: Exception) {
             PyqDiscoveryStatus(
-                lastSyncedLabel = "Offline practice bank active",
-                kseabReachable = false,
-                papersDiscoveredCount = 0,
-                message = "Offline mode: ${allQuestions.size} starter practice questions are available. Source paper PDFs and official answer keys have not yet been verified."
+                lastSyncedLabel = "Offline archive catalogue available",
+                archiveIndexReachable = false,
+                archiveCollectionsCount = archiveCount,
+                message = "$archiveCount paper collections are saved in the app. Connect to the internet to open the linked paper PDFs and answer keys."
             )
         }
     }
