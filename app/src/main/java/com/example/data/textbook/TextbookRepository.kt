@@ -277,7 +277,7 @@ class TextbookRepository(
                 ?: return@withContext Result.failure(IllegalArgumentException("Unknown textbook ID"))
             if (!TextbookUrlPolicy.isTrustedHttpsPortalUrl(selectedUrl)) {
                 return@withContext Result.failure(
-                    SecurityException("Choose an HTTPS PDF link hosted on the official Karnataka textbook portal.")
+                    SecurityException("Choose an HTTPS PDF link hosted on the official KTBS or NCERT textbook domain.")
                 )
             }
             val uri = Uri.parse(selectedUrl)
