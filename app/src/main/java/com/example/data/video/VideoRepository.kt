@@ -207,7 +207,7 @@ object VideoRepository {
     ).map { video ->
         // Catalogue URLs have not yet been individually checked on-device and against
         // current syllabus coverage; do not present seeded links as verified.
-        video.copy(reviewStatus = VideoReviewStatus.NEEDS_REVIEW)
+        video.copy(reviewStatus = VideoReviewStatus.NEEDS_REVIEW, lastVerifiedDate = "Not verified")
     }
 
     fun videosForChapter(chapterId: String, category: VideoCategory? = null): List<ScienceVideo> {
