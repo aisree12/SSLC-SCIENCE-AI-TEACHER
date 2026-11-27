@@ -140,7 +140,11 @@ fun KtbsCatalogueDialog(
                         ) {
                             Text("A PDF link was found", style = MaterialTheme.typography.titleSmall)
                             Text(
-                                "Confirm that this is ${book.title}. The app will download it only from an official Karnataka government textbook domain and verify that the saved file is a PDF.",
+                                "File: ${url.substringBefore('?').substringAfterLast('/')}",
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                            Text(
+                                "Only continue if this filename is the correct ${book.title}. The app checks the official source domain and verifies the downloaded file is a PDF, but it cannot identify the textbook edition from the PDF itself.",
                                 style = MaterialTheme.typography.bodySmall
                             )
                             Button(
