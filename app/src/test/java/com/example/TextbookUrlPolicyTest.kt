@@ -25,6 +25,7 @@ class TextbookUrlPolicyTest {
     fun rejectsLookalikeAndUntrustedHosts() {
         assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("https://textbooks.karnataka.gov.in.attacker.example/science.pdf"))
         assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("https://example.com/science.pdf"))
+        assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("https://planning.karnataka.gov.in/science.pdf"))
         assertFalse(TextbookUrlPolicy.isTrustedPdfUrl("https://karnataka.gov.in.example.com/science.pdf"))
     }
 }
