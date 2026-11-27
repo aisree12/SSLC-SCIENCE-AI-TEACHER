@@ -404,8 +404,8 @@ private fun PyqCardItem(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
-            modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            modifier = Modifier.padding(horizontal = 9.dp, vertical = 7.dp),
+            verticalArrangement = Arrangement.spacedBy(3.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -415,8 +415,18 @@ private fun PyqCardItem(
                 if (language == StudyLanguage.KANNADA) Text(pyq.division.kannadaName, style = MaterialTheme.typography.labelMedium) else DivisionBadge(division = pyq.division)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     AssistChip(onClick = {}, label = { Text(if (language == StudyLanguage.KANNADA) "${pyq.year} • ಪರೀಕ್ಷೆ" else "${pyq.year} • ${pyq.examType.label}", fontWeight = FontWeight.Bold) })
-                    AssistChip(onClick = {}, label = { Text("${pyq.marks}M", fontWeight = FontWeight.Bold) })
-                    if (pyq.flaggedForReview) AssistChip(onClick = {}, label = { Text(if (language == StudyLanguage.KANNADA) "ಅಭ್ಯಾಸ ಪ್ರಶ್ನೆ" else "Practice • Source pending", fontWeight = FontWeight.Bold) })
+                    AssistChip(onClick = {}, label = { Text("${pyq.marks}M", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelSmall) })
+                    if (pyq.flaggedForReview) {
+                        Surface(shape = RoundedCornerShape(7.dp), color = Color(0xFFFFF1D6)) {
+                            Text(
+                                if (language == StudyLanguage.KANNADA) "ಅಭ್ಯಾಸ" else "Practice · Source pending",
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
+                                color = Color(0xFF92400E),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
                 }
             }
 
@@ -428,7 +438,7 @@ private fun PyqCardItem(
 
             Text(
                 text = if (language == StudyLanguage.KANNADA) pyq.kannadaQuestionText else pyq.questionText,
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold
             )
 
@@ -501,7 +511,7 @@ private fun PyqCardItem(
                 ) {
                     Icon(Icons.Default.AutoAwesome, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(if (language == StudyLanguage.KANNADA) "AI ಪರಿಹಾರ" else "AI Solution")
+                    Text(if (language == StudyLanguage.KANNADA) "AI ಪರಿಹಾರ" else "AI Solution", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
                 }
                 OutlinedButton(
                     onClick = onOpenOfficialSource,
@@ -509,7 +519,7 @@ private fun PyqCardItem(
                     modifier = Modifier.minimumInteractiveComponentSize()
                 ) {
                     Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open source paper reference", modifier = Modifier.size(18.dp))
-                    Text(if (language == StudyLanguage.KANNADA) "ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" else "KSEAB")
+                    Text(if (language == StudyLanguage.KANNADA) "ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" else "KSEAB", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
                 }
             }
         }
