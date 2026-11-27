@@ -47,7 +47,7 @@ object YouTubeUrlParser {
             val usePlaylist = preferPlaylistMode && queryPlaylistId != null
             return ParsedYouTubeTarget(
                 videoId = if (usePlaylist) null else shortId,
-                playlistId = if (usePlaylist) queryPlaylistId else queryPlaylistId,
+                playlistId = if (usePlaylist) queryPlaylistId else null,
                 resourceType = if (usePlaylist) YouTubeResourceType.PLAYLIST else YouTubeResourceType.VIDEO,
                 isPlayableInEmbed = true
             )
@@ -60,7 +60,7 @@ object YouTubeUrlParser {
             firstSeg == "shorts" && secondSeg != null && idPattern.matches(secondSeg) -> {
                 ParsedYouTubeTarget(
                     videoId = secondSeg,
-                    playlistId = queryPlaylistId,
+                    playlistId = null,
                     resourceType = YouTubeResourceType.SHORTS,
                     isPlayableInEmbed = true
                 )
@@ -68,7 +68,7 @@ object YouTubeUrlParser {
             firstSeg == "live" && secondSeg != null && idPattern.matches(secondSeg) -> {
                 ParsedYouTubeTarget(
                     videoId = secondSeg,
-                    playlistId = queryPlaylistId,
+                    playlistId = null,
                     resourceType = YouTubeResourceType.LIVE,
                     isPlayableInEmbed = true
                 )
@@ -76,7 +76,7 @@ object YouTubeUrlParser {
             firstSeg == "embed" && secondSeg != null && idPattern.matches(secondSeg) -> {
                 ParsedYouTubeTarget(
                     videoId = secondSeg,
-                    playlistId = queryPlaylistId,
+                    playlistId = null,
                     resourceType = YouTubeResourceType.EMBED,
                     isPlayableInEmbed = true
                 )
@@ -98,7 +98,7 @@ object YouTubeUrlParser {
                 }
                 ParsedYouTubeTarget(
                     videoId = if (type == YouTubeResourceType.PLAYLIST) null else queryVideoId,
-                    playlistId = queryPlaylistId,
+                    playlistId = if (type == YouTubeResourceType.PLAYLIST) queryPlaylistId else null,
                     resourceType = type,
                     isPlayableInEmbed = true
                 )
