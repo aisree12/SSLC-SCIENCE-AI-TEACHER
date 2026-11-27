@@ -162,8 +162,8 @@ object PyqRepository {
         )
     )
 
-    // These entries are a starter study bank, not source-verified transcriptions of official papers.
-    // Keep them flagged until each question and its paper/key URL is matched to an actual KSEAB document.
+    // The bank combines starter practice items with question stems transcribed from cited paper mirrors.
+    // Keep every item flagged until the original KSEAB paper and any official key are independently matched.
     val allQuestions: List<PyqQuestion> = listOf(
         PyqQuestion(
             id = "pyq_2025_m_c1_1",
