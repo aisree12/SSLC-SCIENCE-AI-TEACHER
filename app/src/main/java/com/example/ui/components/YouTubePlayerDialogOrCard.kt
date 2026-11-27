@@ -249,7 +249,7 @@ fun YouTubePlayerDialog(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "${video.channel} • ${video.category.label}",
+                            text = if (video.reviewStatus == VideoReviewStatus.NEEDS_REVIEW) "Source not yet checked • ${video.category.label}" else "${video.channel} • ${video.category.label}",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
