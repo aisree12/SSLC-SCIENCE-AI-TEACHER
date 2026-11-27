@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -155,7 +156,20 @@ fun ChapterWorkspacePanel(
             }
         }
 
-        ScrollableTabRow(
+        val tabAccentColors = listOf(
+        androidx.compose.ui.graphics.Color(0xFF2563EB),
+        androidx.compose.ui.graphics.Color(0xFF7C3AED),
+        androidx.compose.ui.graphics.Color(0xFF0891B2),
+        androidx.compose.ui.graphics.Color(0xFFDB2777),
+        androidx.compose.ui.graphics.Color(0xFF16A34A),
+        androidx.compose.ui.graphics.Color(0xFFD97706)
+    )
+    val animatedTabAccent by animateColorAsState(
+        targetValue = tabAccentColors[activeTabIndex],
+        label = "workspaceTabAccent"
+    )
+
+    ScrollableTabRow(
             selectedTabIndex = activeTabIndex,
             edgePadding = 0.dp
         ) {
@@ -163,14 +177,7 @@ fun ChapterWorkspacePanel(
                 Tab(
                     selected = activeTabIndex == idx,
                     onClick = { activeTabIndex = idx },
-                    selectedContentColor = listOf(
-                        androidx.compose.ui.graphics.Color(0xFF2563EB),
-                        androidx.compose.ui.graphics.Color(0xFF7C3AED),
-                        androidx.compose.ui.graphics.Color(0xFF0891B2),
-                        androidx.compose.ui.graphics.Color(0xFFDB2777),
-                        androidx.compose.ui.graphics.Color(0xFF16A34A),
-                        androidx.compose.ui.graphics.Color(0xFFD97706)
-                    )[idx],
+                    selectedContentColor = animatedTabAccent,
                     unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     text = { Text(label, fontWeight = FontWeight.Bold, fontSize = 11.sp, maxLines = 1) },
                     modifier = Modifier.testTag("workspace_tab_$idx")
