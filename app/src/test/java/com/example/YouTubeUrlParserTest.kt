@@ -29,6 +29,7 @@ class YouTubeUrlParserTest {
         assertNotNull(singleVideo)
         assertEquals("HsLLq6Rm5tU", singleVideo?.videoId)
         assertEquals(YouTubeResourceType.VIDEO, singleVideo?.resourceType)
+        assertNull("Video mode must not pass the playlist ID to the player", singleVideo?.playlistId)
 
         val playlist = YouTubeUrlParser.parse(url, preferPlaylistMode = true)
         assertNotNull(playlist)
