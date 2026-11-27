@@ -203,17 +203,6 @@ fun StudyCentreScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedButton(
-                    onClick = { showVerificationDialog = true },
-                    modifier = Modifier
-                        .weight(1f)
-                        .minimumInteractiveComponentSize()
-                        .testTag("syllabus_verification_button")
-                ) {
-                    Icon(Icons.Default.Verified, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("Syllabus & Deletions")
-                }
                 Button(
                     onClick = { onOpenLabForChapter(currentChapter.id) },
                     modifier = Modifier
@@ -312,72 +301,7 @@ fun StudyCentreScreen(
             )
         }
 
-        item {
-            Card(shape = RoundedCornerShape(18.dp)) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "Science Textbook Catalogue (verification pending)",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = "English & Kannada • provisional part labels • confirm the current edition on KTBS",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        OutlinedButton(
-                            onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TextbookRepository.PORTAL_KTBS))) },
-                            modifier = Modifier
-                                .minimumInteractiveComponentSize()
-                                .testTag("open_ktbs_catalogue_button")
-                        ) {
-                            Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("Find")
-                        }
-                    }
 
-                    Text(
-                        "Choose the correct medium and part using Find on KTBS. When you select a PDF from the official portal, the app checks its source domain and verifies the downloaded PDF before making it available offline.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    textbooks.forEach { book ->
-                        TextbookRowCard(
-                            book = book,
-                            onDownload = { onDownloadBook(book.id) },
-                            onOpenReader = { activeBookForReader = book },
-                            onOpenCatalogue = { activeBookForCatalogue = book },
-                            onOpenPortal = {
-                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(book.portalUrl)))
-                            }
-                        )
-                    }
-
-                    OutlinedButton(
-                        onClick = {
-                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TextbookRepository.PORTAL_KTBS)))
-                        },
-                        modifier = Modifier.fillMaxWidth().minimumInteractiveComponentSize()
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Open Official KTBS Portal (textbooks.karnataka.gov.in)")
-                    }
-                }
-            }
-        }
     }
 
     if (showVerificationDialog) {
