@@ -21,22 +21,22 @@ object SyllabusRepository {
         RationalizedDeletion(
             oldChapterTitle = "Periodic Classification of Elements",
             oldChapterNumber = 5,
-            status = "Deleted in KSEAB Rationalized Syllabus",
-            notes = "Removed from Class 10 Board Exam evaluation; shifted to higher secondary curriculum.",
+            status = "Historical rationalized exclusion — 2026–27 confirmation pending",
+            notes = "Listed in the local historical rationalized reference. Do not treat as a confirmed 2026–27 board exclusion until the current KSEAB syllabus or blueprint is checked.",
             sourceUrl = "https://kseab.karnataka.gov.in/"
         ),
         RationalizedDeletion(
             oldChapterTitle = "Sources of Energy",
             oldChapterNumber = 14,
-            status = "Deleted in KSEAB Rationalized Syllabus",
-            notes = "Excluded from current Karnataka SSLC Class 10 Science board exam blueprint.",
+            status = "Historical rationalized exclusion — 2026–27 confirmation pending",
+            notes = "Listed in the local historical rationalized reference. Current-year board-exam exclusion has not been confirmed from a 2026–27 KSEAB document.",
             sourceUrl = "https://kseab.karnataka.gov.in/"
         ),
         RationalizedDeletion(
             oldChapterTitle = "Sustainable Management of Natural Resources",
             oldChapterNumber = 16,
-            status = "Excluded from Board Exam",
-            notes = "Deleted as an examined chapter in current rationalized KTBS/KSEAB Science syllabus.",
+            status = "Historical rationalized exclusion — 2026–27 confirmation pending",
+            notes = "Listed in the local historical rationalized reference. Verify against the current 2026–27 KSEAB syllabus before using for exam planning.",
             sourceUrl = "https://textbooks.karnataka.gov.in/"
         )
     )
@@ -108,7 +108,7 @@ object SyllabusRepository {
             baselineVerification.copy(
                 lastVerifiedDate = "Official portal connectivity checked (${reachable.size}/2 reachable) — syllabus content not verified",
                 statusMessage = "At least one official portal responded. This confirms connectivity only, not the current syllabus, chapter list, or rationalized deletions. The local 13-chapter catalogue remains provisional.",
-                liveCheckSucceeded = true
+                liveCheckSucceeded = false
             )
         } else {
             baselineVerification.copy(
