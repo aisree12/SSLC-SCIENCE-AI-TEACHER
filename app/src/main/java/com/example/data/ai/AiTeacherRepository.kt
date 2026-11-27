@@ -188,7 +188,7 @@ class AiTeacherRepository(private val context: Context) : ScienceAiProvider {
                 retrieval = retrieval
             )
             val interruptionNote = if (accumulated.isNotBlank()) {
-                "\\n\\nCloud generation was interrupted. The answer below uses the local Science study notes."
+                "\n\nCloud generation was interrupted. The answer below uses the local Science study notes."
             } else {
                 ""
             }
