@@ -168,6 +168,7 @@ data class OfficialTextbook(
     val sourceAuthority: String,
     val chapterRangeLabel: String,
     val estimatedSizeMb: String,
+    val directPdfVerified: Boolean = false,
     val status: DownloadStatus = DownloadStatus.NOT_DOWNLOADED,
     val progressPercent: Int = 0,
     val localFilePath: String? = null,
