@@ -42,10 +42,10 @@ data class CurriculumUiState(
     val dailyTargetMinutes: Int = 45,
     val verificationInfo: SyllabusVerificationInfo = SyllabusRepository.baselineVerification,
     val pyqDiscoveryStatus: PyqDiscoveryStatus = PyqDiscoveryStatus(
-        lastSyncedLabel = "Local verified archive",
+        lastSyncedLabel = "Local starter practice bank",
         kseabReachable = false,
-        papersDiscoveredCount = PyqRepository.allQuestions.size,
-        message = "Verified KSEAB Science PYQ bank ready."
+        papersDiscoveredCount = 0,
+        message = "${PyqRepository.allQuestions.size} starter practice questions are available. Official paper PDFs and answer keys are not yet fully source-verified."
     ),
     val syncErrorMessage: String? = null,
     val statusBannerMessage: String? = null
