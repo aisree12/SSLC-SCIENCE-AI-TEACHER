@@ -273,22 +273,12 @@ class TextbookRepository(
         withContext(Dispatchers.IO) {
             val book = officialCatalogue.firstOrNull { it.id == bookId }
                 ?: return@withContext Result.failure(IllegalArgumentException("Unknown textbook ID"))
-            val uri = runCatching { Uri.parse(selectedUrl) }.getOrNull()
-                ?: return@withContext Result.failure(IllegalArgumentException("Invalid PDF URL"))
-            val host = uri.host?.lowercase().orEmpty()
-            val trustedHost = host == "karnataka.gov.in" ||
-                host.endsWith(".karnataka.gov.in") ||
-                host == "ktbs.kar.nic.in" ||
-                host.endsWith(".ktbs.kar.nic.in")
-            val isHttps = uri.scheme.equals("https", ignoreCase = true)
-            val looksLikePdf = uri.path.orEmpty().lowercase().endsWith(".pdf") ||
-                uri.query.orEmpty().lowercase().let { it.contains("format=pdf") || it.contains("type=pdf") }
-
-            if (!isHttps || !trustedHost || !looksLikePdf) {
+            if (!TextbookUrlPolicy.isTrustedPdfUrl(selectedUrl)) {
                 return@withContext Result.failure(
-                    SecurityException("Choose a PDF link hosted on the official Karnataka textbook portal.")
+                    SecurityException("Choose an HTTPS PDF link hosted on the official Karnataka textbook portal.")
                 )
             }
+            val uri = Uri.parse(selectedUrl)
 
             val existing = dao.getById(bookId)
             if (existing?.status == DownloadStatus.DOWNLOADED.name &&
