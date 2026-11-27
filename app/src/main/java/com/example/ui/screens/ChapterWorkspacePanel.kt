@@ -66,7 +66,7 @@ fun ChapterWorkspacePanel(
     onWatchVideo: (ScienceVideo) -> Unit
 ) {
     var activeTabIndex by remember { mutableIntStateOf(0) }
-    val tabTitles = listOf("Topics", "Notes & Formulas", "Videos", "PYQs", "Lab & Diagrams", "Quick Quiz")
+    val tabTitles = if (language == StudyLanguage.KANNADA) listOf("ವಿಷಯಗಳು", "ಟಿಪ್ಪಣಿಗಳು", "ವೀಡಿಯೊಗಳು", "ಹಿಂದಿನ ಪ್ರಶ್ನೆಗಳು", "ಪ್ರಯೋಗಗಳು", "ಪರೀಕ್ಷೆ") else listOf("Topics", "Notes & Formulas", "Videos", "PYQs", "Lab & Diagrams", "Quick Quiz")
     val completedIds = chapterProgress?.completedTopicIds?.toSet() ?: emptySet()
 
     Column(
@@ -86,9 +86,9 @@ fun ChapterWorkspacePanel(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    DivisionBadge(division = chapter.division, showKannada = true)
+                    if (language == StudyLanguage.KANNADA) Text(chapter.division.kannadaName, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold) else DivisionBadge(division = chapter.division)
                     Text(
-                        text = "Part ${chapter.textbookPart} • Ch ${chapter.chapterNumber}",
+                        text = if (language == StudyLanguage.KANNADA) "ಭಾಗ ${chapter.textbookPart} • ಅಧ್ಯಾಯ ${chapter.chapterNumber}" else "Part ${chapter.textbookPart} • Ch ${chapter.chapterNumber}",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -128,7 +128,7 @@ fun ChapterWorkspacePanel(
                     ) {
                         Icon(Icons.Default.BookmarkAdded, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Save Notes")
+                        Text(if (language == StudyLanguage.KANNADA) "ಟಿಪ್ಪಣಿಗಳನ್ನು ಉಳಿಸಿ" else "Save Notes")
                     }
                     Button(
                         onClick = {
@@ -144,7 +144,7 @@ fun ChapterWorkspacePanel(
                     ) {
                         Icon(Icons.Default.QuestionAnswer, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Ask AI Teacher")
+                        Text(if (language == StudyLanguage.KANNADA) "AI ಶಿಕ್ಷಕರನ್ನು ಕೇಳಿ" else "Ask AI Teacher")
                     }
                 }
             }
@@ -218,7 +218,7 @@ private fun TopicsSection(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = topic.title,
+                                text = if (language == StudyLanguage.KANNADA) topic.kannadaTitle else topic.title,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -263,14 +263,14 @@ private fun TopicsSection(
                         )
                     }
 
-                    if (topic.observations.isNotEmpty()) {
+                    if (language == StudyLanguage.ENGLISH && topic.observations.isNotEmpty()) {
                         Text(
                             text = "Key Observations: ${topic.observations.joinToString(" • ")}",
                             style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.Medium
                         )
                     }
-                    if (topic.dailyLifeApplications.isNotEmpty()) {
+                    if (language == StudyLanguage.ENGLISH && topic.dailyLifeApplications.isNotEmpty()) {
                         Text(
                             text = "Daily Life: ${topic.dailyLifeApplications.joinToString(", ")}",
                             style = MaterialTheme.typography.bodySmall,
