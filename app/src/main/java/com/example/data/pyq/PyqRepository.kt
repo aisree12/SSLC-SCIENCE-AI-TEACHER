@@ -328,9 +328,7 @@ object PyqRepository {
             officialSource = "KSEAB SSLC Main 2023 Key Answer",
             officialPdfUrl = "",
             extractionConfidence = 1.0f
-        )
-
-        ,
+        ),
         // Transcribed from the 2025 SSLC Science paper mirror. Kept under review until
         // each question is checked against the original KSEAB-hosted PDF and scheme.
         PyqQuestion(
