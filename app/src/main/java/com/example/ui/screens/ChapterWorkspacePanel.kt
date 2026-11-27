@@ -219,11 +219,6 @@ private fun TopicsSection(
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
-                            Text(
-                                text = if (language == StudyLanguage.KANNADA) topic.kannadaTitle else topic.title,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
                         }
                         IconButton(
                             onClick = { onToggleCompleted(topic.id) },
