@@ -219,7 +219,8 @@ data class PyqQuestion(
     val officialSource: String,
     val officialPdfUrl: String,
     val extractionConfidence: Float,
-    val flaggedForReview: Boolean = false
+    val flaggedForReview: Boolean = false,
+    val paperReferenceUrl: String? = null
 )
 
 enum class VideoCategory(val label: String) {
