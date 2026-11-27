@@ -73,6 +73,7 @@ import com.example.model.DownloadStatus
 import com.example.model.OfficialTextbook
 import com.example.model.ScienceVideo
 import com.example.model.StudyLanguage
+import com.example.model.TextbookMedium
 import com.example.model.SubjectFilter
 import com.example.model.SyllabusChapter
 import com.example.ui.components.OfflinePdfReaderDialog
@@ -111,6 +112,9 @@ fun StudyCentreScreen(
 
     val availableChapters = uiState.availableChapters
     val currentChapter = uiState.selectedChapter
+    val chapterBook = textbooks.firstOrNull { book ->
+        book.medium == if (uiState.selectedLanguage == StudyLanguage.KANNADA) TextbookMedium.KANNADA else TextbookMedium.ENGLISH && book.part == currentChapter.textbookPart
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -330,7 +334,17 @@ fun StudyCentreScreen(
                 onAskAiTeacher = onAskAiTeacher,
                 onOpenLabForChapter = onOpenLabForChapter,
                 onOpenPyqTab = onOpenPyqTab,
-                onWatchVideo = { activeVideo = it }
+                onWatchVideo = { activeVideo = it },
+                textbookActionLabel = when {
+                    chapterBook?.status == DownloadStatus.DOWNLOADED -> if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಪಠ್ಯಪುಸ್ತಕ ತೆರೆಯಿರಿ" else "Open Textbook PDF"
+                    chapterBook?.status == DownloadStatus.DOWNLOADING -> if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ…" else "Textbook downloading…"
+                    else -> if (uiState.selectedLanguage == StudyLanguage.KANNADA) "ಪಠ್ಯಪುಸ್ತಕ ಡೌನ್‌ಲೋಡ್" else "Download Textbook"
+                },
+                onOpenTextbook = {
+                    chapterBook?.let { book ->
+                        if (book.status == DownloadStatus.DOWNLOADED) activeBookForReader = book else onDownloadBook(book.id)
+                    }
+                }
             )
         }
 
