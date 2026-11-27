@@ -10,10 +10,12 @@ import java.util.Locale
 object TextbookUrlPolicy {
     fun isTrustedPortalHost(host: String?): Boolean {
         val normalized = host?.lowercase(Locale.ROOT) ?: return false
-        return normalized == "karnataka.gov.in" ||
-            normalized.endsWith(".karnataka.gov.in") ||
+        return normalized == "textbooks.karnataka.gov.in" ||
+            normalized.endsWith(".textbooks.karnataka.gov.in") ||
             normalized == "ktbs.kar.nic.in" ||
-            normalized.endsWith(".ktbs.kar.nic.in")
+            normalized.endsWith(".ktbs.kar.nic.in") ||
+            normalized == "ncert.nic.in" ||
+            normalized.endsWith(".ncert.nic.in")
     }
 
     fun isPdfUrl(rawUrl: String): Boolean {
