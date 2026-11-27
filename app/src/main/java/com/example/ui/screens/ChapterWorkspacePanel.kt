@@ -19,12 +19,14 @@ import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.Science
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedButtonDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
@@ -42,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.data.lab.SimulationAndDiagramCatalog
 import com.example.data.pyq.PyqRepository
 import com.example.data.video.VideoRepository
@@ -106,11 +109,13 @@ fun ChapterWorkspacePanel(
                     Text("Source: ${chapter.textbookSourceRef}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                 }
 
-                OutlinedButton(
+                Button(
                     onClick = onOpenTextbook,
+                    colors = ButtonDefaults.buttonColors(containerColor = androidx.compose.ui.graphics.Color(0xFF0F766E)),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp, vertical = 5.dp),
                     modifier = Modifier.fillMaxWidth().minimumInteractiveComponentSize()
                 ) {
-                    Text(textbookActionLabel)
+                    Text(textbookActionLabel, fontWeight = FontWeight.Bold)
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -118,6 +123,7 @@ fun ChapterWorkspacePanel(
                 ) {
                     OutlinedButton(
                         onClick = { onSaveNotesOffline(chapter) },
+                        colors = OutlinedButtonDefaults.outlinedButtonColors(contentColor = androidx.compose.ui.graphics.Color(0xFF6D28D9)),
                         modifier = Modifier
                             .weight(1f)
                             .minimumInteractiveComponentSize()
@@ -125,7 +131,7 @@ fun ChapterWorkspacePanel(
                     ) {
                         Icon(Icons.Default.BookmarkAdded, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(if (language == StudyLanguage.KANNADA) "ಟಿಪ್ಪಣಿಗಳನ್ನು ಉಳಿಸಿ" else "Save Notes")
+                        Text(if (language == StudyLanguage.KANNADA) "ಟಿಪ್ಪಣಿಗಳನ್ನು ಉಳಿಸಿ" else "Save Notes", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
                     }
                     Button(
                         onClick = {
@@ -134,6 +140,8 @@ fun ChapterWorkspacePanel(
                                 "Explain Chapter ${chapter.chapterNumber} (${chapter.titleEn}) in ${language.label}"
                             )
                         },
+                        colors = ButtonDefaults.buttonColors(containerColor = androidx.compose.ui.graphics.Color(0xFF2563EB)),
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp, vertical = 5.dp),
                         modifier = Modifier
                             .weight(1f)
                             .minimumInteractiveComponentSize()
@@ -141,7 +149,7 @@ fun ChapterWorkspacePanel(
                     ) {
                         Icon(Icons.Default.QuestionAnswer, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(if (language == StudyLanguage.KANNADA) "AI ಶಿಕ್ಷಕರನ್ನು ಕೇಳಿ" else "Ask AI Teacher")
+                        Text(if (language == StudyLanguage.KANNADA) "AI ಶಿಕ್ಷಕರನ್ನು ಕೇಳಿ" else "Ask AI Teacher", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -164,7 +172,7 @@ fun ChapterWorkspacePanel(
                         androidx.compose.ui.graphics.Color(0xFFD97706)
                     )[idx],
                     unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    text = { Text(label, fontWeight = if (activeTabIndex == idx) FontWeight.Bold else FontWeight.Medium) },
+                    text = { Text(label, fontWeight = FontWeight.Bold, fontSize = 11.sp, maxLines = 1) },
                     modifier = Modifier.testTag("workspace_tab_$idx")
                 )
             }
