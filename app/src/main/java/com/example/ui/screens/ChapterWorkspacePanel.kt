@@ -98,22 +98,10 @@ fun ChapterWorkspacePanel(
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-                if (language != StudyLanguage.KANNADA) {
-                    Text(
-                        text = chapter.titleKn,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                if (language == StudyLanguage.ENGLISH) {
+                    Text(chapter.introduction, style = MaterialTheme.typography.bodyMedium)
+                    Text("Source: ${chapter.textbookSourceRef}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                 }
-                Text(
-                    text = chapter.introduction,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = "Source: ${chapter.textbookSourceRef}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary
-                )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -244,24 +232,6 @@ private fun TopicsSection(
                         text = if (language == StudyLanguage.KANNADA) topic.kannadaSummary else topic.simpleExplanation,
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    if (language == StudyLanguage.BILINGUAL) {
-                        Surface(
-                            shape = RoundedCornerShape(10.dp),
-                            color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
-                        ) {
-                            Text(
-                                text = "ಕನ್ನಡ ಸಾರಾಂಶ: ${topic.kannadaSummary}",
-                                style = MaterialTheme.typography.bodySmall,
-                                modifier = Modifier.padding(10.dp)
-                            )
-                        }
-                    } else if (language == StudyLanguage.ENGLISH) {
-                        Text(
-                            text = topic.detailedExplanation,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
 
                     if (language == StudyLanguage.ENGLISH && topic.observations.isNotEmpty()) {
                         Text(
