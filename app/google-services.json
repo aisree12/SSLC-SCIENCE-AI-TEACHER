@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "754245795929-k9kgc6gots79gpv9u9ou6p142gnngjml.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aistudio.sslcscienceai.kaxrmp",
+            "certificate_hash": "443b12d36349fe667d178594682091bb5ee394e4"
+          }
+        },
+        {
           "client_id": "754245795929-mif45m3io6v9fn5g8ec9t90n93tifc2n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
