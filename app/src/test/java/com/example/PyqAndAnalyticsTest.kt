@@ -29,6 +29,18 @@ class PyqAndAnalyticsTest {
     }
 
     @Test
+    fun `paper archive distinguishes past exams from current model papers and answer keys`() {
+        val archive = PyqRepository.paperArchive
+        assertEquals(9, archive.size)
+        assertTrue(archive.any { it.id == "archive_2026_exam1" && it.answerKeyArchiveUrl != null })
+        assertTrue(archive.any { it.id == "archive_2026_exam2" && it.answerKeyArchiveUrl != null })
+        assertTrue(archive.filter { it.id.startsWith("archive_2024") || it.id.startsWith("archive_2025") }
+            .all { it.answerKeyArchiveUrl == null })
+        assertTrue(archive.any { it.id == "archive_2026_27_model" })
+        assertTrue(archive.all { it.paperArchiveUrl.startsWith("https://") })
+    }
+
+    @Test
     fun `pyq analytics summarizes all three science divisions and honest predictions`() {
         val summary = PyqRepository.computeAnalytics()
         assertEquals(PyqRepository.allQuestions.size, summary.totalQuestions)
