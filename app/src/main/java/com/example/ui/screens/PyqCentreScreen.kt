@@ -256,7 +256,7 @@ fun PyqCentreScreen(
                     ) {
                         Text("PYQ Trends & Study Focus", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Text(
-                            text = "Indexed: ${analytics.totalQuestions} questions • Verified Official Keys: ${analytics.verifiedOfficialKeyCount}",
+                            text = "Starter bank: ${analytics.totalQuestions} practice questions • Source-verified official keys: ${analytics.verifiedOfficialKeyCount}",
                             style = MaterialTheme.typography.bodySmall
                         )
                         Text("Top Repeated Diagrams:", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
@@ -380,7 +380,7 @@ private fun PyqCardItem(
                             Icon(Icons.Default.Verified, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.secondary)
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Verified Official KSEAB Key Available",
+                                text = if (pyq.flaggedForReview) "Practice answer — official source verification pending" else "Verified Official KSEAB Key Available",
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -388,7 +388,7 @@ private fun PyqCardItem(
                         if (showOfficialKey) {
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(pyq.officialKeyAnswer, style = MaterialTheme.typography.bodySmall)
-                            Text("Source: ${pyq.officialSource}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(if (pyq.flaggedForReview) "Reference label (not yet verified): ${pyq.officialSource}" else "Source: ${pyq.officialSource}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
@@ -398,7 +398,7 @@ private fun PyqCardItem(
                     color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Text(
-                        text = "Official Key not published (${pyq.officialSource}). Use AI Teacher Solution for practice.",
+                        text = if (pyq.flaggedForReview) "Practice solution not yet matched to an official source. Use AI Teacher Solution for further practice." else "Official Key not published (${pyq.officialSource}). Use AI Teacher Solution for practice.",
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.fillMaxWidth().padding(10.dp)
                     )
