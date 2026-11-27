@@ -23,10 +23,11 @@ object TextbookUrlPolicy {
         return path.endsWith(".pdf") || query.contains("format=pdf") || query.contains("type=pdf")
     }
 
-    fun isTrustedPdfUrl(rawUrl: String): Boolean {
+    fun isTrustedHttpsPortalUrl(rawUrl: String): Boolean {
         val uri = runCatching { URI(rawUrl) }.getOrNull() ?: return false
-        return uri.scheme.equals("https", ignoreCase = true) &&
-            isTrustedPortalHost(uri.host) &&
-            isPdfUrl(rawUrl)
+        return uri.scheme.equals("https", ignoreCase = true) && isTrustedPortalHost(uri.host)
     }
+
+    fun isTrustedPdfUrl(rawUrl: String): Boolean =
+        isTrustedHttpsPortalUrl(rawUrl) && isPdfUrl(rawUrl)
 }
