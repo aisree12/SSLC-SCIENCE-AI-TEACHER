@@ -842,7 +842,7 @@ object PyqRepository {
             officialSource = "2022 SSLC Science 83-E paper mirror; answer key not matched",
             officialPdfUrl = "", extractionConfidence = 0.97f,
             paperReferenceUrl = "https://docs.aglasem.com/view/447726fc-5f41-11ed-8152-0a5e36bc6706"
-        ),
+        )
     ).map { it.copy(flaggedForReview = true) }
 
     private val httpClient: OkHttpClient by lazy {
