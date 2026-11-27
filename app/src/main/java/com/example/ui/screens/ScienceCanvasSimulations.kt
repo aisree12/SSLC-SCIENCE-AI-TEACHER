@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
@@ -61,7 +64,7 @@ fun InteractiveSimulationCanvas(
         "sim_phy_electromagnet" -> SolenoidLab(animPhase, showLabels, isKannada)
         "sim_phy_eye" -> HumanEyeLab(showLabels, isKannada)
         "sim_chem_ph" -> PhScaleLab(showLabels, isKannada)
-        "sim_chem_balancer" -> EquationBalancerLab(stepIndex)
+        "sim_chem_balancer" -> EquationBalancerLab(stepIndex, isKannada)
         "sim_chem_reactivity" -> ReactivityDisplacementLab(stepIndex, isKannada)
         "sim_chem_carbon" -> CarbonFunctionalLab(isKannada)
         "sim_bio_heart" -> HeartCirculationLab(animPhase, stepIndex, showLabels, isKannada)
@@ -385,12 +388,16 @@ private fun PhScaleLab(showLabels: Boolean, isKannada: Boolean) {
 }
 
 @Composable
-private fun EquationBalancerLab(stepIndex: Int) {
-    var coeffFe by remember { mutableIntStateOf(2) }
-    var coeffFe2O3 by remember { mutableIntStateOf(1) }
-    var coeffSO2 by remember { mutableIntStateOf(1) }
-    var coeffSO3 by remember { mutableIntStateOf(1) }
+private fun EquationBalancerLab(stepIndex: Int, isKannada: Boolean) {
+    var coeffFeText by remember { mutableStateOf("2") }
+    var coeffFe2O3Text by remember { mutableStateOf("1") }
+    var coeffSO2Text by remember { mutableStateOf("1") }
+    var coeffSO3Text by remember { mutableStateOf("1") }
 
+    val coeffFe = coeffFeText.toIntOrNull()?.coerceIn(1, 20) ?: 1
+    val coeffFe2O3 = coeffFe2O3Text.toIntOrNull()?.coerceIn(1, 20) ?: 1
+    val coeffSO2 = coeffSO2Text.toIntOrNull()?.coerceIn(1, 20) ?: 1
+    val coeffSO3 = coeffSO3Text.toIntOrNull()?.coerceIn(1, 20) ?: 1
     val lhsFe = coeffFe
     val rhsFe = coeffFe2O3 * 2
     val lhsS = coeffFe
@@ -399,28 +406,66 @@ private fun EquationBalancerLab(stepIndex: Int) {
     val rhsO = coeffFe2O3 * 3 + coeffSO2 * 2 + coeffSO3 * 3
     val isBalanced = lhsFe == rhsFe && lhsS == rhsS && lhsO == rhsO
 
+    @Composable
+    fun CoefficientControl(label: String, value: String, onValueChange: (String) -> Unit) {
+        Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+            Text(label, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                androidx.compose.material3.IconButton(onClick = {
+                    onValueChange(((value.toIntOrNull() ?: 1) - 1).coerceIn(1, 20).toString())
+                }) { Text("−", fontWeight = FontWeight.Bold) }
+                OutlinedTextField(
+                    value = value,
+                    onValueChange = { raw -> onValueChange(raw.filter(Char::isDigit).take(2)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.width(58.dp),
+                    textStyle = MaterialTheme.typography.titleSmall
+                )
+                androidx.compose.material3.IconButton(onClick = {
+                    onValueChange(((value.toIntOrNull() ?: 1) + 1).coerceIn(1, 20).toString())
+                }) { Text("+", fontWeight = FontWeight.Bold) }
+            }
+        }
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            text = "${coeffFe}FeSO4(s) -> ${coeffFe2O3}Fe2O3(s) + ${coeffSO2}SO2(g) + ${coeffSO3}SO3(g)",
+            text = "${coeffFe}FeSO4(s) → ${coeffFe2O3}Fe2O3(s) + ${coeffSO2}SO2(g) + ${coeffSO3}SO3(g)",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = if (isBalanced) Color(0xFF16A34A) else MaterialTheme.colorScheme.primary
         )
         Text(
-            text = "LHS: Fe=$lhsFe, S=$lhsS, O=$lhsO  |  RHS: Fe=$rhsFe, S=$rhsS, O=$rhsO  (Step ${stepIndex + 1})",
+            text = "LHS: Fe=$lhsFe, S=$lhsS, O=$lhsO   |   RHS: Fe=$rhsFe, S=$rhsS, O=$rhsO",
             style = MaterialTheme.typography.bodySmall
         )
         Text(
-            text = if (isBalanced) "BALANCED! Law of Conservation of Mass verified." else "Adjust coefficients until LHS == RHS for every atom.",
+            text = if (isKannada) {
+                if (isBalanced) "ಸಮತೋಲನವಾಗಿದೆ! ದ್ರವ್ಯರಾಶಿ ಸಂರಕ್ಷಣೆಯ ನಿಯಮ ಸರಿಯಾಗಿದೆ." else "ಪ್ರತಿ ಮೂಲಧಾತುವಿನ ಎಡ ಮತ್ತು ಬಲ ಪರಮಾಣುಗಳ ಸಂಖ್ಯೆಯನ್ನು ಸಮಗೊಳಿಸಿ."
+            } else {
+                if (isBalanced) "BALANCED! Law of Conservation of Mass verified." else "Adjust coefficients until every atom count matches."
+            },
             style = MaterialTheme.typography.labelLarge,
             color = if (isBalanced) Color(0xFF16A34A) else Color(0xFFD97706)
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(selected = coeffFe == 2, onClick = { coeffFe = if (coeffFe == 1) 2 else 1 }, label = { Text("FeSO4: $coeffFe") })
-            FilterChip(selected = coeffFe2O3 == 1, onClick = { coeffFe2O3 = if (coeffFe2O3 == 1) 2 else 1 }, label = { Text("Fe2O3: $coeffFe2O3") })
-            FilterChip(selected = coeffSO2 == 1, onClick = { coeffSO2 = if (coeffSO2 == 1) 2 else 1 }, label = { Text("SO2: $coeffSO2") })
-            FilterChip(selected = coeffSO3 == 1, onClick = { coeffSO3 = if (coeffSO3 == 1) 2 else 1 }, label = { Text("SO3: $coeffSO3") })
+        Text(
+            if (isKannada) "ಸಂಖ್ಯೆಯನ್ನು ಟೈಪ್ ಮಾಡಿ ಅಥವಾ + / − ಒತ್ತಿ." else "Type a coefficient or tap + / − to change it.",
+            style = MaterialTheme.typography.bodySmall
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+            CoefficientControl("FeSO₄", coeffFeText) { coeffFeText = it }
+            CoefficientControl("Fe₂O₃", coeffFe2O3Text) { coeffFe2O3Text = it }
         }
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+            CoefficientControl("SO₂", coeffSO2Text) { coeffSO2Text = it }
+            CoefficientControl("SO₃", coeffSO3Text) { coeffSO3Text = it }
+        }
+        Text(
+            if (isKannada) "ಹಂತ ${stepIndex + 1}" else "Practice step ${stepIndex + 1}",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
