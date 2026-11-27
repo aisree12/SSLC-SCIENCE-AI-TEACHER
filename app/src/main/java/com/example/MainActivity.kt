@@ -24,6 +24,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -107,11 +113,25 @@ private fun ScienceStartupScreen() {
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(28.dp)
         ) {
+            val introMotion = rememberInfiniteTransition(label = "science_intro")
+            val logoScale by introMotion.animateFloat(
+                initialValue = 0.96f,
+                targetValue = 1.04f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(1100),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "science_logo_pulse"
+            )
             Text(
                 text = "SSLC",
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.ExtraBold
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier.graphicsLayer {
+                    scaleX = logoScale
+                    scaleY = logoScale
+                }
             )
             Text(
                 text = "SCIENCE TEACHER",
@@ -131,6 +151,18 @@ private fun ScienceStartupScreen() {
             Text(
                 text = "Preparing your classroom…",
                 style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "SVANAM SOFTS",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Developed with care for Karnataka SSLC students",
+                style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
