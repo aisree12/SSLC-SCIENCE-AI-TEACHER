@@ -11,6 +11,8 @@ import com.example.model.DownloadStatus
 import com.example.model.OfficialTextbook
 import com.example.model.TextbookMedium
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -436,9 +438,48 @@ class TextbookRepository(
                     }
                 } else {
                     active = false
+                    val current = dao.getById(book.id)
+                    if (current != null && current.status == DownloadStatus.DOWNLOADING.name) {
+                        dao.upsert(current.copy(
+                            status = DownloadStatus.FAILED.name,
+                            progressPercent = 0,
+                            statusNote = "Download task was not found. Please choose the PDF from the official KTBS catalogue again.",
+                            updatedAtMillis = System.currentTimeMillis()
+                        ))
+                    }
                 }
             } finally {
                 cursor?.close()
+            }
+        }
+    }
+
+    /**
+     * Reattaches progress monitoring to DownloadManager tasks that survived an app restart.
+     * DownloadManager owns the transfer, so the app can safely resume observing its state.
+     */
+    suspend fun reconcileActiveDownloads() = withContext(Dispatchers.IO) {
+        val active = dao.getDownloading()
+        coroutineScope {
+            active.forEach { entry ->
+                launch {
+                    val book = officialCatalogue.firstOrNull { it.id == entry.id }
+                    val downloadId = entry.downloadManagerId
+                    val file = entry.localFilePath?.let(::File)
+                    if (book != null && downloadId != null && file != null) {
+                        monitorDownload(book, downloadId, file)
+                    } else {
+                        val current = dao.getById(entry.id)
+                        if (current != null) {
+                            dao.upsert(current.copy(
+                                status = DownloadStatus.FAILED.name,
+                                progressPercent = 0,
+                                statusNote = "The saved download task could not be recovered. Please select the PDF again from KTBS.",
+                                updatedAtMillis = System.currentTimeMillis()
+                            ))
+                        }
+                    }
+                }
             }
         }
     }
