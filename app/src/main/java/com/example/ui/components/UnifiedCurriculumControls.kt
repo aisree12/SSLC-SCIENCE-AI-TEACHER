@@ -177,7 +177,6 @@ fun UnifiedCurriculumControls(
                     value = when (selectedLanguage) {
                         StudyLanguage.ENGLISH -> "English"
                         StudyLanguage.KANNADA -> "ಕನ್ನಡ"
-                        StudyLanguage.BILINGUAL -> "EN + ಕನ್ನಡ"
                     },
                     onValueChange = {},
                     readOnly = true,
