@@ -426,7 +426,7 @@ private fun PyqCardItem(
                             .minimumInteractiveComponentSize()
                             .testTag("toggle_official_key_${pyq.id}")
                     ) {
-                        Text(if (showOfficialKey) "Hide Official Key" else "Official Key")
+                        Text(if (showOfficialKey) "Hide Answer" else if (pyq.flaggedForReview) "Practice Answer" else "Official Key")
                     }
                 }
                 Button(
