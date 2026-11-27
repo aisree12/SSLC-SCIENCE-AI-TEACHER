@@ -430,9 +430,9 @@ fun YouTubePlayerDialog(
 
 private fun buildYouTubeIframeHtml(videoId: String?, playlistId: String?): String {
     val playerConfig = if (!playlistId.isNullOrBlank()) {
-        "playerVars: { listType: 'playlist', list: '$playlistId', playsinline: 1, rel: 0, modestbranding: 1, origin: 'https://appassets.androidplatform.net' }"
+        "playerVars: { listType: 'playlist', list: '$playlistId', playsinline: 1, rel: 0, modestbranding: 1, enablejsapi: 1, origin: 'https://appassets.androidplatform.net' }"
     } else {
-        "videoId: '${videoId.orEmpty()}', playerVars: { playsinline: 1, rel: 0, modestbranding: 1 }"
+        "videoId: '${videoId.orEmpty()}', playerVars: { playsinline: 1, rel: 0, modestbranding: 1, enablejsapi: 1, origin: 'https://appassets.androidplatform.net' }"
     }
     return """
         <!DOCTYPE html>
