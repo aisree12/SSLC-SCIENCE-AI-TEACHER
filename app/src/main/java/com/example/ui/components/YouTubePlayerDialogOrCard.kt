@@ -3,6 +3,8 @@ package com.example.ui.components
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
@@ -156,16 +158,36 @@ fun VideoResourceCard(
 private class YouTubeJsBridge(
     private val onReady: () -> Unit,
     private val onPlayerError: (Int) -> Unit,
-    private val onStateChanged: (Int) -> Unit
+    private val onStateChanged: (Int) -> Unit,
+    private val onJsError: (String) -> Unit,
+    private val onAutoplayBlocked: () -> Unit
 ) {
-    @JavascriptInterface
-    fun notifyReady() = onReady()
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     @JavascriptInterface
-    fun notifyError(code: Int) = onPlayerError(code)
+    fun notifyReady() {
+        mainHandler.post { onReady() }
+    }
 
     @JavascriptInterface
-    fun notifyState(state: Int) = onStateChanged(state)
+    fun notifyError(code: Int) {
+        mainHandler.post { onPlayerError(code) }
+    }
+
+    @JavascriptInterface
+    fun notifyState(state: Int) {
+        mainHandler.post { onStateChanged(state) }
+    }
+
+    @JavascriptInterface
+    fun notifyJsError(message: String) {
+        mainHandler.post { onJsError(message.take(180)) }
+    }
+
+    @JavascriptInterface
+    fun notifyAutoplayBlocked() {
+        mainHandler.post { onAutoplayBlocked() }
+    }
 }
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -185,6 +207,7 @@ fun YouTubePlayerDialog(
     var isPlaying by remember { mutableStateOf(false) }
     var isMuted by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var playbackNotice by remember { mutableStateOf<String?>(null) }
     var reloadNonce by remember { mutableIntStateOf(0) }
     var webViewRef by remember { mutableStateOf<WebView?>(null) }
     var customFullscreenView by remember { mutableStateOf<View?>(null) }
@@ -282,6 +305,8 @@ fun YouTubePlayerDialog(
                                     settings.javaScriptEnabled = true
                                     settings.domStorageEnabled = true
                                     settings.mediaPlaybackRequiresUserGesture = false
+                                    settings.javaScriptCanOpenWindowsAutomatically = true
+                                    setLayerType(View.LAYER_TYPE_HARDWARE, null)
                                     settings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
                                     webChromeClient = object : WebChromeClient() {
                                         override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
@@ -308,16 +333,22 @@ fun YouTubePlayerDialog(
                                             onReady = { isReady = true },
                                             onPlayerError = { code ->
                                                 errorMessage = when (code) {
-                                                    101, 150 -> "Channel owner disabled embedded playback (Code $code)."
+                                                    2 -> "YouTube rejected the video ID or player parameters (Code 2)."
+                                                    5 -> "YouTube HTML5 playback failed on this device (Code 5)."
                                                     100 -> "Video unavailable or private (Code 100)."
+                                                    101, 150 -> "Channel owner disabled embedded playback (Code $code)."
+                                                    153 -> "YouTube did not receive a valid referrer or client identity (Code 153)."
                                                     else -> "Playback error (Code $code)."
                                                 }
                                             },
-                                            onStateChanged = { st -> isPlaying = (st == 1) }
+                                            onStateChanged = { st -> isPlaying = (st == 1) },
+                                            onJsError = { message -> errorMessage = "Player script error: $message" },
+                                            onAutoplayBlocked = { playbackNotice = "Autoplay was blocked. Tap Play to start the video." }
                                         ),
                                         "AndroidYouTube"
                                     )
-                                    loadDataWithBaseURL("https://www.youtube.com", html, "text/html", "utf-8", null)
+                                    // Use a stable HTTPS app origin for the YouTube IFrame API.
+                                    loadDataWithBaseURL("https://appassets.androidplatform.net", html, "text/html", "UTF-8", null)
                                     webViewRef = this
                                 }
                             },
@@ -355,6 +386,14 @@ fun YouTubePlayerDialog(
                             }
                         }
                     }
+                }
+
+                if (playbackNotice != null) {
+                    Text(
+                        playbackNotice.orEmpty(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -427,15 +466,16 @@ fun YouTubePlayerDialog(
 
 private fun buildYouTubeIframeHtml(videoId: String?, playlistId: String?): String {
     val playerConfig = if (!playlistId.isNullOrBlank()) {
-        "playerVars: { listType: 'playlist', list: '$playlistId', playsinline: 1, rel: 0, modestbranding: 1 }"
+        "playerVars: { listType: 'playlist', list: '$playlistId', playsinline: 1, rel: 0, modestbranding: 1, enablejsapi: 1, origin: 'https://appassets.androidplatform.net' }"
     } else {
-        "videoId: '${videoId.orEmpty()}', playerVars: { playsinline: 1, rel: 0, modestbranding: 1 }"
+        "videoId: '${videoId.orEmpty()}', playerVars: { playsinline: 1, rel: 0, modestbranding: 1, enablejsapi: 1, origin: 'https://appassets.androidplatform.net' }"
     }
     return """
         <!DOCTYPE html>
         <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta name="referrer" content="origin">
           <style>
             html, body, #player { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #000000; overflow: hidden; }
           </style>
@@ -445,6 +485,9 @@ private fun buildYouTubeIframeHtml(videoId: String?, playlistId: String?): Strin
           <script src="https://www.youtube.com/iframe_api"></script>
           <script>
             var player;
+            window.onerror = function(message) {
+              try { AndroidYouTube.notifyJsError(String(message)); } catch (ignored) {}
+            };
             function onYouTubeIframeAPIReady() {
               player = new YT.Player('player', {
                 width: '100%',
@@ -453,7 +496,8 @@ private fun buildYouTubeIframeHtml(videoId: String?, playlistId: String?): Strin
                 events: {
                   'onReady': function() { AndroidYouTube.notifyReady(); },
                   'onError': function(e) { AndroidYouTube.notifyError(e.data); },
-                  'onStateChange': function(e) { AndroidYouTube.notifyState(e.data); }
+                  'onStateChange': function(e) { AndroidYouTube.notifyState(e.data); },
+                  'onAutoplayBlocked': function() { AndroidYouTube.notifyAutoplayBlocked(); }
                 }
               });
             }
