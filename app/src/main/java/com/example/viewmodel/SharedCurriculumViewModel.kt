@@ -45,7 +45,7 @@ data class CurriculumUiState(
         lastSyncedLabel = "Local paper archive and practice bank",
         archiveIndexReachable = false,
         archiveCollectionsCount = PyqRepository.paperArchive.size,
-        message = "${PyqRepository.paperArchive.size} paper archive entries cover 2020–2026 and historical/current model papers."
+        message = "${PyqRepository.paperArchive.size} paper archive entries cover 2015–2026 and historical/current model papers."
     ),
     val syncErrorMessage: String? = null,
     val statusBannerMessage: String? = null
