@@ -296,21 +296,26 @@ class SharedCurriculumViewModel(
 
     fun saveChapterNotesOffline(chapter: SyllabusChapter) {
         viewModelScope.launch {
+            val selectedLanguage = _uiState.value.selectedLanguage
+            val isKannada = selectedLanguage == StudyLanguage.KANNADA
+            val noteTitle = if (isKannada) "ಅಧ್ಯಾಯ ${chapter.chapterNumber}: ${chapter.titleKn}" else "Chapter ${chapter.chapterNumber}: ${chapter.titleEn}"
             val content = buildString {
-                appendLine("${chapter.titleEn} (${chapter.titleKn})")
-                appendLine("Source: ${chapter.textbookSourceRef}")
+                appendLine(noteTitle)
+                if (!isKannada) appendLine("Source: ${chapter.textbookSourceRef}")
                 appendLine()
-                chapter.revisionNotes.forEach { appendLine("• $it") }
+                if (!isKannada) chapter.revisionNotes.forEach { appendLine("• $it") }
                 if (chapter.formulas.isNotEmpty()) {
-                    appendLine("\nFormulas:")
-                    chapter.formulas.forEach { appendLine("- ${it.name}: ${it.formula} [${it.siUnit}]") }
+                    appendLine(if (isKannada) "\nಸೂತ್ರಗಳು:" else "\nFormulas:")
+                    chapter.formulas.forEach { formula ->
+                        if (isKannada) appendLine("- ${formula.formula}")
+                        else appendLine("- ${formula.name}: ${formula.formula} [${formula.siUnit}]")
+                    }
                 }
             }
-            val mediumStr = if (_uiState.value.selectedLanguage == StudyLanguage.KANNADA) "KANNADA" else "ENGLISH"
             offlineNoteDao.insert(
                 OfflineNoteEntity(
                     chapterId = chapter.id,
-                    title = "Revision Pack: ${chapter.titleEn}",
+                    title = if (isKannada) "ಅಧ್ಯಾಯ ಟಿಪ್ಪಣಿಗಳು: ${chapter.titleKn}" else "Revision Pack: ${chapter.titleEn}",
                     content = content,
                     sourceType = "OFFICIAL_TEXTBOOK",
                     medium = mediumStr,
