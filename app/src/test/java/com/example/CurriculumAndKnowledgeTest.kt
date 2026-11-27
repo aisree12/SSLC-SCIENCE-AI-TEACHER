@@ -30,6 +30,7 @@ class CurriculumAndKnowledgeTest {
         assertTrue(ScienceKnowledgeEngine.isLikelyOffTopic("What is the capital of France?"))
         assertFalse(ScienceKnowledgeEngine.isLikelyOffTopic("Explain this"))
         assertFalse(ScienceKnowledgeEngine.isLikelyOffTopic("Ohm's law andre enu? State its formula"))
+        assertFalse(ScienceKnowledgeEngine.isLikelyOffTopic("Vidyut pravaha andre enu?"))
         assertFalse(ScienceKnowledgeEngine.isLikelyOffTopic("ವಿದ್ಯುತ್ ಪ್ರವಾಹದ SI ಏಕಮಾನ ಯಾವುದು?"))
 
         val kanglishRetrieval = ScienceKnowledgeEngine.retrieve(
