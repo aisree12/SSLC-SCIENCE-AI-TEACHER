@@ -42,12 +42,13 @@ class PyqAndAnalyticsTest {
     @Test
     fun `paper archive distinguishes past exams from current model papers and answer keys`() {
         val archive = PyqRepository.paperArchive
-        assertEquals(13, archive.size)
+        assertEquals(14, archive.size)
         assertTrue(archive.any { it.id == "archive_2026_exam1" && it.answerKeyArchiveUrl != null })
         assertTrue(archive.any { it.id == "archive_2026_exam2" && it.answerKeyArchiveUrl != null })
         assertTrue(archive.filter { it.id.startsWith("archive_2024") || it.id.startsWith("archive_2025") }
             .all { it.answerKeyArchiveUrl == null })
         assertTrue(archive.any { it.id == "archive_2026_27_model" })
+        assertTrue(archive.any { it.id == "archive_2021_exam1" && it.answerKeyArchiveUrl == null })
         assertTrue(archive.all { it.paperArchiveUrl.startsWith("https://") })
     }
 
