@@ -42,18 +42,17 @@ object SyllabusRepository {
     )
 
     val baselineVerification = SyllabusVerificationInfo(
-        academicYear = "2025–2026 / 2026–2027",
+        academicYear = "2026–2027",
         boardName = "KSEAB (Karnataka School Examination and Assessment Board)",
-        editionLabel = "KTBS Rationalized 13-Chapter Science Curriculum (Parts 1 & 2)",
-        lastVerifiedDate = "Verified Offline Baseline (13 Active Chapters + 3 Rationalized Deletions)",
+        editionLabel = "Local 13-chapter Science catalogue — current KSEAB notification cross-check pending",
+        lastVerifiedDate = "Local catalogue loaded — not yet verified against the 2026–27 KSEAB notification",
         officialSources = listOf(
             "https://kseab.karnataka.gov.in/",
             "https://textbooks.karnataka.gov.in/",
-            "https://pathyapustaka.in/",
             "https://diksha.gov.in/"
         ),
         activeChapterCount = chapters.size,
-        statusMessage = "Using verified KSEAB 13-chapter Science syllabus (Part 1 & Part 2).",
+        statusMessage = "A 13-chapter local study catalogue is available. Its exact alignment with the 2026–27 KSEAB syllabus and deletions still needs official-document verification.",
         liveCheckSucceeded = false
     )
 
@@ -107,14 +106,14 @@ object SyllabusRepository {
         }
         if (reachable.isNotEmpty()) {
             baselineVerification.copy(
-                lastVerifiedDate = "Live Portal Ping OK (${reachable.size}/2 portals reachable)",
-                statusMessage = "Official KSEAB/KTBS source reachable. Rationalized 13-chapter syllabus active.",
+                lastVerifiedDate = "Official portal connectivity checked (${reachable.size}/2 reachable) — syllabus content not verified",
+                statusMessage = "At least one official portal responded. This confirms connectivity only, not the current syllabus, chapter list, or rationalized deletions. The local 13-chapter catalogue remains provisional.",
                 liveCheckSucceeded = true
             )
         } else {
             baselineVerification.copy(
-                lastVerifiedDate = "Using Verified Local KSEAB Baseline",
-                statusMessage = "Official portal currently unreachable/offline; displaying last verified 13-chapter KSEAB syllabus.",
+                lastVerifiedDate = "Official portal connectivity check failed — local catalogue only",
+                statusMessage = "Official portal could not be reached. Displaying the local 13-chapter study catalogue; current KSEAB alignment has not been verified.",
                 liveCheckSucceeded = false
             )
         }
