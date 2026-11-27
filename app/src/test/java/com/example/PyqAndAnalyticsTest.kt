@@ -14,8 +14,8 @@ class PyqAndAnalyticsTest {
     @Test
     fun `pyq bank separates official keys from unkeyed preparatory papers`() {
         val all = PyqRepository.allQuestions
-        assertTrue(all.size >= 19)
-        assertTrue(all.count { it.paperReferenceUrl != null } >= 5)
+        assertTrue(all.size >= 38)
+        assertTrue(all.count { it.paperReferenceUrl != null } >= 24)
         assertTrue(all.all { it.flaggedForReview })
         val unkeyed = all.filter { !it.hasOfficialKey }
         assertTrue(unkeyed.isNotEmpty())
