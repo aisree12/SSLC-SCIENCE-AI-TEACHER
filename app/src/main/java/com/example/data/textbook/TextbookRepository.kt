@@ -176,8 +176,8 @@ class TextbookRepository(
             ?: return@withContext Result.failure(IllegalArgumentException("Unknown textbook ID"))
 
         val existing = dao.getById(bookId)
-        if (!book.directPdfVerified) {
-            val note = "Direct PDF link is not verified yet. Open the official KTBS catalogue and choose the current Class 10 Science edition."
+        if (!book.directPdfVerified || !TextbookUrlPolicy.isTrustedHttpsPortalUrl(book.officialUrl)) {
+            val note = "Direct PDF link is not verified or is outside the approved KTBS/NCERT domains. Open the official catalogue and choose the current Class 10 Science edition."
             if (existing != null) dao.upsert(existing.copy(status = DownloadStatus.NOT_DOWNLOADED.name, statusNote = note, updatedAtMillis = System.currentTimeMillis()))
             return@withContext Result.failure(IllegalStateException(note))
         }
