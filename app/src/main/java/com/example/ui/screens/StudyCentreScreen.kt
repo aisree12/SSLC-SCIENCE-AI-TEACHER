@@ -75,6 +75,7 @@ import com.example.model.StudyLanguage
 import com.example.model.SubjectFilter
 import com.example.model.SyllabusChapter
 import com.example.ui.components.OfflinePdfReaderDialog
+import com.example.ui.components.KtbsCatalogueDialog
 import com.example.ui.components.UnifiedCurriculumControls
 import com.example.ui.components.YouTubePlayerDialog
 import com.example.viewmodel.CurriculumUiState
@@ -93,6 +94,7 @@ fun StudyCentreScreen(
     onToggleTopicCompleted: (SyllabusChapter, String) -> Unit,
     onSaveChapterNotesOffline: (SyllabusChapter) -> Unit,
     onDownloadBook: (String) -> Unit,
+    onDownloadSelectedPdf: (bookId: String, url: String) -> Unit,
     onDownloadAllBooks: () -> Unit,
     onUpdateBookReading: (bookId: String, page: Int, bookmarks: List<Int>) -> Unit,
     onRefreshVerification: () -> Unit,
@@ -104,6 +106,7 @@ fun StudyCentreScreen(
     val context = LocalContext.current
     var showVerificationDialog by remember { mutableStateOf(false) }
     var activeBookForReader by remember { mutableStateOf<OfficialTextbook?>(null) }
+    var activeBookForCatalogue by remember { mutableStateOf<OfficialTextbook?>(null) }
     var activeVideo by remember { mutableStateOf<ScienceVideo?>(null) }
 
     val availableChapters = uiState.availableChapters
@@ -346,7 +349,7 @@ fun StudyCentreScreen(
                     }
 
                     Text(
-                        "Direct PDF links for the 2026–27 Class 10 Science books are not yet verified. Open KTBS to select the correct medium and part; in-app offline download will be enabled when an official direct PDF is confirmed.",
+                        "Choose the correct medium and part using Find on KTBS. When you select a PDF from the official portal, the app checks its source domain and verifies the downloaded PDF before making it available offline.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -356,6 +359,7 @@ fun StudyCentreScreen(
                             book = book,
                             onDownload = { onDownloadBook(book.id) },
                             onOpenReader = { activeBookForReader = book },
+                            onOpenCatalogue = { activeBookForCatalogue = book },
                             onOpenPortal = {
                                 context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(book.portalUrl)))
                             }
@@ -419,6 +423,17 @@ fun StudyCentreScreen(
         )
     }
 
+    activeBookForCatalogue?.let { book ->
+        KtbsCatalogueDialog(
+            book = book,
+            onDownloadPdf = { url ->
+                onDownloadSelectedPdf(book.id, url)
+                activeBookForCatalogue = null
+            },
+            onDismiss = { activeBookForCatalogue = null }
+        )
+    }
+
     activeBookForReader?.let { book ->
         OfflinePdfReaderDialog(
             book = book,
@@ -442,6 +457,7 @@ private fun TextbookRowCard(
     book: OfficialTextbook,
     onDownload: () -> Unit,
     onOpenReader: () -> Unit,
+    onOpenCatalogue: () -> Unit,
     onOpenPortal: () -> Unit
 ) {
     Surface(
@@ -520,7 +536,7 @@ private fun TextbookRowCard(
                             }
                         } else {
                             Button(
-                                onClick = onOpenPortal,
+                                onClick = onOpenCatalogue,
                                 modifier = Modifier
                                     .weight(1f)
                                     .minimumInteractiveComponentSize()
