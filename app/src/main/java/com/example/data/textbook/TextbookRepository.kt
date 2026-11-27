@@ -26,7 +26,7 @@ class TextbookRepository(
 ) {
     companion object {
         const val CURRENT_ACADEMIC_YEAR = "2026–2027"
-        const val CATALOGUE_EDITION = "2026–27 catalogue — direct Science PDF links pending official verification"
+        const val CATALOGUE_EDITION = "Official KTBS 2026–27 Science PDF edition"
         const val PORTAL_KTBS = "https://textbooks.karnataka.gov.in/"
 
         val officialCatalogue: List<OfficialTextbook> = listOf(
@@ -38,10 +38,11 @@ class TextbookRepository(
                 part = 1,
                 academicYear = CURRENT_ACADEMIC_YEAR,
                 edition = CATALOGUE_EDITION,
-                officialUrl = PORTAL_KTBS,
+                officialUrl = "https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/10th%20English%20Science%20Part%20-%201%202026-27.pdf",
                 portalUrl = PORTAL_KTBS,
-                sourceAuthority = "KTBS portal — individual 2026–27 Science PDF not yet verified",
-                chapterRangeLabel = "Expected chapters 1–7 (provisional)",
+                sourceAuthority = "Karnataka Textbook Society (KTBS), 2026–27 official PDF",
+                chapterRangeLabel = "Chapters 1–7",
+                directPdfVerified = true,
                 estimatedSizeMb = "Size not verified"
             ),
             OfficialTextbook(
@@ -52,10 +53,11 @@ class TextbookRepository(
                 part = 2,
                 academicYear = CURRENT_ACADEMIC_YEAR,
                 edition = CATALOGUE_EDITION,
-                officialUrl = PORTAL_KTBS,
+                officialUrl = "https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/10th%20English%20Science%20Part%20-2%202026-27.pdf",
                 portalUrl = PORTAL_KTBS,
-                sourceAuthority = "KTBS portal — individual 2026–27 Science PDF not yet verified",
-                chapterRangeLabel = "Expected chapters 8–13 (provisional)",
+                sourceAuthority = "Karnataka Textbook Society (KTBS), 2026–27 official PDF",
+                chapterRangeLabel = "Chapters 8–13",
+                directPdfVerified = true,
                 estimatedSizeMb = "Size not verified"
             ),
             OfficialTextbook(
@@ -66,10 +68,11 @@ class TextbookRepository(
                 part = 1,
                 academicYear = CURRENT_ACADEMIC_YEAR,
                 edition = CATALOGUE_EDITION,
-                officialUrl = PORTAL_KTBS,
+                officialUrl = "https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/KANNADA%20MEDIUM%20TEXTBOOKS/10th%20Kannada%20Science%20Part-1%202026-27.pdf",
                 portalUrl = PORTAL_KTBS,
-                sourceAuthority = "KTBS portal — individual 2026–27 Science PDF not yet verified",
-                chapterRangeLabel = "ಅಧ್ಯಾಯ 1–7 (ತಾತ್ಕಾಲಿಕ; ಪರಿಶೀಲನೆ ಬಾಕಿ)",
+                sourceAuthority = "ಕರ್ನಾಟಕ ಪಠ್ಯಪುಸ್ತಕ ಸಂಘ (KTBS), 2026–27 ಅಧಿಕೃತ PDF",
+                chapterRangeLabel = "ಅಧ್ಯಾಯ 1–7",
+                directPdfVerified = true,
                 estimatedSizeMb = "Size not verified"
             ),
             OfficialTextbook(
@@ -80,10 +83,11 @@ class TextbookRepository(
                 part = 2,
                 academicYear = CURRENT_ACADEMIC_YEAR,
                 edition = CATALOGUE_EDITION,
-                officialUrl = PORTAL_KTBS,
+                officialUrl = "https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/KANNADA%20MEDIUM%20TEXTBOOKS/10th%20Kannada%20Science%20Part-2%202026-27.pdf",
                 portalUrl = PORTAL_KTBS,
-                sourceAuthority = "KTBS portal — individual 2026–27 Science PDF not yet verified",
-                chapterRangeLabel = "ಅಧ್ಯಾಯ 8–13 (ತಾತ್ಕಾಲಿಕ; ಪರಿಶೀಲನೆ ಬಾಕಿ)",
+                sourceAuthority = "ಕರ್ನಾಟಕ ಪಠ್ಯಪುಸ್ತಕ ಸಂಘ (KTBS), 2026–27 ಅಧಿಕೃತ PDF",
+                chapterRangeLabel = "ಅಧ್ಯಾಯ 8–13",
+                directPdfVerified = true,
                 estimatedSizeMb = "Size not verified"
             )
         )
@@ -115,7 +119,7 @@ class TextbookRepository(
                         sha256Checksum = null,
                         lastReadPage = 0,
                         bookmarkedPagesCsv = "",
-                        statusNote = "Open the official KTBS catalogue. A direct Class 10 Science PDF URL has not yet been verified for this edition.",
+                        statusNote = "Tap Download PDF to save this official 2026–27 textbook for offline study.",
                         updatedAtMillis = System.currentTimeMillis()
                     )
                 )
@@ -123,9 +127,9 @@ class TextbookRepository(
                 existing.academicYear != book.academicYear
             ) {
                 val note = if (existing.status == DownloadStatus.DOWNLOADED.name) {
-                    "A previously downloaded edition is kept offline. Check the official KTBS catalogue for the current ${book.academicYear} edition."
+                    "A previously downloaded edition is kept offline. The current official ${book.academicYear} PDF is available to download."
                 } else {
-                    "Open the official KTBS catalogue. A direct Class 10 Science PDF URL has not yet been verified for this edition."
+                    "Tap Download PDF to save this official ${book.academicYear} textbook for offline study."
                 }
                 toUpsert.add(
                     existing.copy(
