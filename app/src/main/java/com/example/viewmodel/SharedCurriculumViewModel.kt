@@ -42,7 +42,7 @@ data class CurriculumUiState(
     val dailyTargetMinutes: Int = 45,
     val verificationInfo: SyllabusVerificationInfo = SyllabusRepository.baselineVerification,
     val pyqDiscoveryStatus: PyqDiscoveryStatus = PyqDiscoveryStatus(
-        lastSyncedLabel = "Local starter practice bank",
+        lastSyncedLabel = "Local paper archive and practice bank",
         archiveIndexReachable = false,
         archiveCollectionsCount = PyqRepository.paperArchive.size,
         message = "${PyqRepository.paperArchive.size} paper archive collections are available for 2024–2026 and 2026–27 model papers."
