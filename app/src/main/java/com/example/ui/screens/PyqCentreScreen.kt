@@ -104,13 +104,13 @@ fun PyqCentreScreen(
         modifier = Modifier
             .fillMaxSize()
             .testTag("pyq_centre_screen"),
-        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         item {
             Card(shape = RoundedCornerShape(18.dp)) {
                 Column(
-                    modifier = Modifier.padding(14.dp),
+                    modifier = Modifier.padding(10.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Row(
@@ -273,7 +273,7 @@ fun PyqCentreScreen(
                 Card(shape = RoundedCornerShape(16.dp)) {
                     Column(
                         modifier = Modifier.padding(14.dp),
-                        verticalArrangement = Arrangement.spacedBy(7.dp)
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "${entry.title.take(4)} SSLC ವಿಜ್ಞಾನ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" else entry.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
                         Text(if (curriculumState.selectedLanguage == StudyLanguage.KANNADA) "ವರ್ಷ ${entry.title.take(4)} • ಹಿಂದಿನ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ" else entry.subtitle, style = MaterialTheme.typography.bodySmall)
