@@ -307,14 +307,14 @@ fun PyqCentreScreen(
                         modifier = Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("PYQ Trends & Study Focus", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text("Question-bank Patterns (Limited Sample)", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Text(
                             text = "Question bank: ${analytics.totalQuestions} practice questions • Source-verified official keys: ${analytics.verifiedOfficialKeyCount}",
                             style = MaterialTheme.typography.bodySmall
                         )
-                        Text("Top Repeated Diagrams:", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
+                        Text("Diagram Questions in This Bank:", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
                         analytics.topDiagrams.forEach { Text("• $it", style = MaterialTheme.typography.bodySmall) }
-                        Text("Top Repeated Reactions & Numericals:", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
+                        Text("Chemical-equation and Numerical Questions:", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
                         analytics.topReactions.take(2).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall) }
                         analytics.topNumericals.take(2).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall) }
                         Surface(
@@ -323,7 +323,7 @@ fun PyqCentreScreen(
                         ) {
                             Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 Text(
-                                    text = "Exam Focus Predictions (Not Guaranteed — Statistical Trends Only):",
+                                    text = "Possible Revision Focus (Not Guaranteed — Small Question-Bank Sample):",
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = FontWeight.Bold
                                 )
