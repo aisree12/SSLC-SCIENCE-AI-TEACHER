@@ -115,12 +115,12 @@ fun ScienceLabAndDiagramScreen(
                     }
                     Column {
                         Text(
-                            text = "Science Lab & Diagram Studio",
+                            text = if (isKannadaLabels) "ವಿಜ್ಞಾನ ಪ್ರಯೋಗಾಲಯ ಮತ್ತು ಚಿತ್ರ ಸ್ಟುಡಿಯೋ" else "Science Lab & Diagram Studio",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Interactive Simulations & KSEAB Diagram Practice",
+                            text = if (isKannadaLabels) "ಸಂವಾದಾತ್ಮಕ ಪ್ರಯೋಗಗಳು ಮತ್ತು KSEAB ಚಿತ್ರ ಅಭ್ಯಾಸ" else "Interactive Simulations & KSEAB Diagram Practice",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -139,13 +139,13 @@ fun ScienceLabAndDiagramScreen(
                     FilterChip(
                         selected = activeStudioMode == 0,
                         onClick = { activeStudioMode = 0 },
-                        label = { Text("Interactive Lab") },
+                        label = { Text(if (isKannadaLabels) "ಸಂವಾದಾತ್ಮಕ ಪ್ರಯೋಗ" else "Interactive Lab") },
                         modifier = Modifier.testTag("lab_mode_simulations")
                     )
                     FilterChip(
                         selected = activeStudioMode == 1,
                         onClick = { activeStudioMode = 1 },
-                        label = { Text("Diagram Studio") },
+                        label = { Text(if (isKannadaLabels) "ಚಿತ್ರ ಸ್ಟುಡಿಯೋ" else "Diagram Studio") },
                         modifier = Modifier.testTag("lab_mode_diagrams")
                     )
                 }
@@ -210,12 +210,12 @@ fun ScienceLabAndDiagramScreen(
                             OutlinedButton(onClick = { isRunning = !isRunning }) {
                                 Icon(if (isRunning) Icons.Default.Pause else Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text(if (isRunning) "Pause" else "Start")
+                                Text(if (isKannadaLabels) { if (isRunning) "ವಿರಾಮ" else "ಪ್ರಾರಂಭ" } else { if (isRunning) "Pause" else "Start" })
                             }
                             OutlinedButton(onClick = { stepIndex++ }) {
                                 Icon(Icons.Default.SkipNext, contentDescription = null, modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Step")
+                                Text(if (isKannadaLabels) "ಹಂತ" else "Step")
                             }
                             OutlinedButton(onClick = {
                                 stepIndex = 0
@@ -224,7 +224,7 @@ fun ScienceLabAndDiagramScreen(
                                 Icon(Icons.Default.Refresh, contentDescription = "Reset", modifier = Modifier.size(16.dp))
                             }
                             Spacer(modifier = Modifier.weight(1f))
-                            Text("Labels", style = MaterialTheme.typography.labelSmall)
+                            Text(if (isKannadaLabels) "ಗುರುತುಗಳು" else "Labels", style = MaterialTheme.typography.labelSmall)
                             Switch(checked = showLabels, onCheckedChange = { showLabels = it })
                         }
 
@@ -250,7 +250,7 @@ fun ScienceLabAndDiagramScreen(
                         ) {
                             Icon(Icons.Default.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Ask AI Teacher About This Experiment")
+                            Text(if (isKannadaLabels) "ಈ ಪ್ರಯೋಗದ ಬಗ್ಗೆ AI ಶಿಕ್ಷಕರನ್ನು ಕೇಳಿ" else "Ask AI Teacher About This Experiment")
                         }
                     }
                 }
