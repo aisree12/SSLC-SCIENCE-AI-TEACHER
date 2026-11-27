@@ -55,7 +55,7 @@ object ScienceKnowledgeEngine {
     }
 
     fun isLikelyOffTopic(query: String): Boolean {
-        val q = query.lowercase().trim()
+        val q = normalizeQueryForRetrieval(query).lowercase().trim()
         if (q.length < 3) return false
         val hasOffTopic = offTopicKeywords.any { q.contains(it) }
         val hasScienceCue = SyllabusRepository.chapters.any { ch ->
