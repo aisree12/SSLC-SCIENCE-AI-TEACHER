@@ -43,9 +43,9 @@ data class CurriculumUiState(
     val verificationInfo: SyllabusVerificationInfo = SyllabusRepository.baselineVerification,
     val pyqDiscoveryStatus: PyqDiscoveryStatus = PyqDiscoveryStatus(
         lastSyncedLabel = "Local starter practice bank",
-        kseabReachable = false,
-        papersDiscoveredCount = 0,
-        message = "${PyqRepository.allQuestions.size} starter practice questions are available. Official paper PDFs and answer keys are not yet fully source-verified."
+        archiveIndexReachable = false,
+        archiveCollectionsCount = PyqRepository.paperArchive.size,
+        message = "${PyqRepository.paperArchive.size} paper archive collections are available for 2024–2026 and 2026–27 model papers."
     ),
     val syncErrorMessage: String? = null,
     val statusBannerMessage: String? = null
