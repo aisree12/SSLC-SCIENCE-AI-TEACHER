@@ -37,7 +37,7 @@ class ExampleRobolectricTest {
     }
 
     @Test
-    fun `textbook repository seeds all 4 official KTBS PDFs into Room`() = runTest {
+    fun `textbook repository seeds four catalogue entries without claiming unverified PDFs`() = runTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .allowMainThreadQueries()
@@ -49,6 +49,8 @@ class ExampleRobolectricTest {
             assertEquals(4, books.size)
             assertTrue(books.any { it.id == "ktbs_10_sci_en_p1" })
             assertTrue(books.any { it.id == "ktbs_10_sci_kn_p2" })
+            assertTrue(books.all { !it.directPdfVerified })
+            assertTrue(books.all { it.officialUrl == TextbookRepository.PORTAL_KTBS })
         } finally {
             db.close()
         }
