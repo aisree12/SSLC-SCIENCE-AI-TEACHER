@@ -180,7 +180,7 @@ fun StudyCentreScreen(
         item {
             Row(
                 modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(7.dp)
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 FilterChip(
                     selected = uiState.selectedSubject == SubjectFilter.ALL,
@@ -235,7 +235,7 @@ fun StudyCentreScreen(
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 Button(
                     onClick = { onOpenLabForChapter(currentChapter.id) },
@@ -255,7 +255,7 @@ fun StudyCentreScreen(
             Card(shape = RoundedCornerShape(18.dp)) {
                 Column(
                     modifier = Modifier.padding(14.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     OutlinedTextField(
                         value = uiState.searchQuery,
