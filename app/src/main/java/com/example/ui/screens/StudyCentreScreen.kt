@@ -117,14 +117,14 @@ fun StudyCentreScreen(
         modifier = Modifier
             .fillMaxSize()
             .testTag("study_centre_screen"),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         item {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(144.dp)
+                    .height(128.dp)
                     .clip(RoundedCornerShape(22.dp))
             ) {
                 Image(
