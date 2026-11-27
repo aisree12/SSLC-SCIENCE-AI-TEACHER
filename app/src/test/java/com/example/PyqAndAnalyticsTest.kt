@@ -15,6 +15,7 @@ class PyqAndAnalyticsTest {
     fun `pyq bank separates official keys from unkeyed preparatory papers`() {
         val all = PyqRepository.allQuestions
         assertTrue(all.size >= 12)
+        assertTrue(all.all { it.flaggedForReview })
         val unkeyed = all.filter { !it.hasOfficialKey }
         assertTrue(unkeyed.isNotEmpty())
         unkeyed.forEach { q ->
@@ -30,6 +31,7 @@ class PyqAndAnalyticsTest {
     fun `pyq analytics summarizes all three science divisions and honest predictions`() {
         val summary = PyqRepository.computeAnalytics()
         assertEquals(PyqRepository.allQuestions.size, summary.totalQuestions)
+        assertEquals(0, summary.verifiedOfficialKeyCount)
         assertTrue((summary.divisionCounts[ScienceDivision.PHYSICS] ?: 0) > 0)
         assertTrue((summary.divisionCounts[ScienceDivision.CHEMISTRY] ?: 0) > 0)
         assertTrue((summary.divisionCounts[ScienceDivision.BIOLOGY] ?: 0) > 0)
