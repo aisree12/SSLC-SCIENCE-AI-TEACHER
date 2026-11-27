@@ -313,7 +313,7 @@ fun PyqCentreScreen(
                         )
                     },
                     onOpenOfficialSource = {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(pyq.officialPdfUrl)))
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(pyq.officialPdfUrl.ifBlank { "https://kseab.karnataka.gov.in/" })))
                     }
                 )
             }
@@ -347,6 +347,7 @@ private fun PyqCardItem(
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     AssistChip(onClick = {}, label = { Text("${pyq.year} • ${pyq.examType.label}") })
                     AssistChip(onClick = {}, label = { Text("${pyq.marks}M") })
+                    if (pyq.flaggedForReview) AssistChip(onClick = {}, label = { Text("Practice • Source pending") })
                 }
             }
 
@@ -436,6 +437,7 @@ private fun PyqCardItem(
                     modifier = Modifier.minimumInteractiveComponentSize()
                 ) {
                     Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open KSEAB portal", modifier = Modifier.size(18.dp))
+                    Text("KSEAB")
                 }
             }
         }
