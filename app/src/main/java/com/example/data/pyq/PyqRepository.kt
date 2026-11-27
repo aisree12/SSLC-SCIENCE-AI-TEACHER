@@ -522,7 +522,7 @@ object PyqRepository {
         PyqQuestion(
             id = "pyq_2024_main_phy_q2",
             year = 2024,
-            examType = PyqExamType.MAIN,
+            examType = PyqExamType.EXAM_1,
             paperCode = "83-E",
             medium = TextbookMedium.ENGLISH,
             division = ScienceDivision.PHYSICS,
@@ -544,7 +544,7 @@ object PyqRepository {
         PyqQuestion(
             id = "pyq_2024_main_phy_q3",
             year = 2024,
-            examType = PyqExamType.MAIN,
+            examType = PyqExamType.EXAM_1,
             paperCode = "83-E",
             medium = TextbookMedium.ENGLISH,
             division = ScienceDivision.PHYSICS,
