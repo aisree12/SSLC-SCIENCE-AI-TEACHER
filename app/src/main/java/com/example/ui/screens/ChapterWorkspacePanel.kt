@@ -155,7 +155,16 @@ fun ChapterWorkspacePanel(
                 Tab(
                     selected = activeTabIndex == idx,
                     onClick = { activeTabIndex = idx },
-                    text = { Text(label) },
+                    selectedContentColor = listOf(
+                        androidx.compose.ui.graphics.Color(0xFF2563EB),
+                        androidx.compose.ui.graphics.Color(0xFF7C3AED),
+                        androidx.compose.ui.graphics.Color(0xFF0891B2),
+                        androidx.compose.ui.graphics.Color(0xFFDB2777),
+                        androidx.compose.ui.graphics.Color(0xFF16A34A),
+                        androidx.compose.ui.graphics.Color(0xFFD97706)
+                    )[idx],
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = { Text(label, fontWeight = if (activeTabIndex == idx) FontWeight.Bold else FontWeight.Medium) },
                     modifier = Modifier.testTag("workspace_tab_$idx")
                 )
             }
