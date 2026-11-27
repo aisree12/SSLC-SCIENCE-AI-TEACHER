@@ -328,22 +328,28 @@ fun StudyCentreScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "Auto-download for offline reading (English & Kannada Medium)",
+                                text = "English & Kannada • Parts 1 & 2 • Current edition catalogue",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                         OutlinedButton(
-                            onClick = onDownloadAllBooks,
+                            onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TextbookRepository.PORTAL_KTBS))) },
                             modifier = Modifier
                                 .minimumInteractiveComponentSize()
                                 .testTag("download_all_textbooks_button")
                         ) {
                             Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("All")
+                            Text("Find")
                         }
                     }
+
+                    Text(
+                        "Direct PDF links for the 2026–27 Class 10 Science books are not yet verified. Open KTBS to select the correct medium and part; in-app offline download will be enabled when an official direct PDF is confirmed.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
                     textbooks.forEach { book ->
                         TextbookRowCard(
@@ -500,16 +506,30 @@ private fun TextbookRowCard(
                         }
                     }
                     DownloadStatus.NOT_DOWNLOADED, DownloadStatus.FAILED -> {
-                        Button(
-                            onClick = onDownload,
-                            modifier = Modifier
-                                .weight(1f)
-                                .minimumInteractiveComponentSize()
-                                .testTag("download_book_${book.id}")
-                        ) {
-                            Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(if (book.status == DownloadStatus.FAILED) "Retry PDF" else "Download PDF")
+                        if (book.directPdfVerified) {
+                            Button(
+                                onClick = onDownload,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .minimumInteractiveComponentSize()
+                                    .testTag("download_book_${book.id}")
+                            ) {
+                                Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(if (book.status == DownloadStatus.FAILED) "Retry PDF" else "Download PDF")
+                            }
+                        } else {
+                            Button(
+                                onClick = onOpenPortal,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .minimumInteractiveComponentSize()
+                                    .testTag("open_catalogue_${book.id}")
+                            ) {
+                                Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("Find on KTBS")
+                            }
                         }
                     }
                 }
