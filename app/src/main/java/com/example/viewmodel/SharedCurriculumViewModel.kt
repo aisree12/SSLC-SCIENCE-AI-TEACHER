@@ -178,6 +178,7 @@ class SharedCurriculumViewModel(
     init {
         viewModelScope.launch {
             textbookRepository.ensureCatalogueSeeded()
+            autoDownloadBooksForMedium(StudyLanguage.ENGLISH)
             firestoreRepository.ensureAndUpdateUserProfile(
                 userId = currentUserId,
                 displayName = displayName,
@@ -223,8 +224,27 @@ class SharedCurriculumViewModel(
     }
 
     fun selectLanguage(language: StudyLanguage) {
-        _uiState.value = _uiState.value.copy(selectedLanguage = language)
+        val singleLanguage = if (language == StudyLanguage.BILINGUAL) StudyLanguage.ENGLISH else language
+        _uiState.value = _uiState.value.copy(selectedLanguage = singleLanguage)
         syncPreferencesToCloud()
+        autoDownloadBooksForMedium(singleLanguage)
+    }
+
+    private fun autoDownloadBooksForMedium(language: StudyLanguage) {
+        val mediumName = if (language == StudyLanguage.KANNADA) "KANNADA" else "ENGLISH"
+        TextbookRepository.officialCatalogue
+            .filter { it.medium.name == mediumName && it.directPdfVerified }
+            .forEach { book ->
+                viewModelScope.launch {
+                    val result = textbookRepository.startDownload(book.id)
+                    if (result.isFailure) {
+                        _uiState.value = _uiState.value.copy(
+                            statusBannerMessage = result.exceptionOrNull()?.localizedMessage
+                                ?: "A textbook download could not be started."
+                        )
+                    }
+                }
+            }
     }
 
     fun updateSearchQuery(query: String) {
