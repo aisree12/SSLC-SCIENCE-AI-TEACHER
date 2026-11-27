@@ -264,6 +264,114 @@ class TextbookRepository(
         }
     }
 
+    /**
+     * Downloads a PDF URL selected by the student inside the official KTBS catalogue.
+     * The URL is never accepted from an arbitrary host; the completed file must pass
+     * the PDF signature check in monitorDownload before it is marked as downloaded.
+     */
+    suspend fun downloadSelectedOfficialPdf(bookId: String, selectedUrl: String): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            val book = officialCatalogue.firstOrNull { it.id == bookId }
+                ?: return@withContext Result.failure(IllegalArgumentException("Unknown textbook ID"))
+            val uri = runCatching { Uri.parse(selectedUrl) }.getOrNull()
+                ?: return@withContext Result.failure(IllegalArgumentException("Invalid PDF URL"))
+            val host = uri.host?.lowercase().orEmpty()
+            val trustedHost = host == "karnataka.gov.in" ||
+                host.endsWith(".karnataka.gov.in") ||
+                host == "ktbs.kar.nic.in" ||
+                host.endsWith(".ktbs.kar.nic.in")
+            val isHttps = uri.scheme.equals("https", ignoreCase = true)
+            val looksLikePdf = uri.path.orEmpty().lowercase().endsWith(".pdf") ||
+                uri.query.orEmpty().lowercase().let { it.contains("format=pdf") || it.contains("type=pdf") }
+
+            if (!isHttps || !trustedHost || !looksLikePdf) {
+                return@withContext Result.failure(
+                    SecurityException("Choose a PDF link hosted on the official Karnataka textbook portal.")
+                )
+            }
+
+            val existing = dao.getById(bookId)
+            if (existing?.status == DownloadStatus.DOWNLOADED.name &&
+                existing.localFilePath?.let { File(it).exists() } == true
+            ) return@withContext Result.success(Unit)
+            if (existing?.status == DownloadStatus.DOWNLOADING.name) return@withContext Result.success(Unit)
+
+            val targetDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) ?: context.filesDir
+            val destFile = File(targetDir, "${book.id}.pdf")
+            if (destFile.exists()) destFile.delete()
+
+            try {
+                val downloadId = downloadManager.enqueue(
+                    DownloadManager.Request(uri)
+                        .setTitle(book.title)
+                        .setDescription("Downloading selected PDF from the official KTBS catalogue")
+                        .setMimeType("application/pdf")
+                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                        .setAllowedOverMetered(true)
+                        .setAllowedOverRoaming(false)
+                        .setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOCUMENTS, destFile.name)
+                )
+                val entity = existing ?: TextbookDownloadEntity(
+                    id = book.id,
+                    medium = book.medium.name,
+                    part = book.part,
+                    title = book.title,
+                    kannadaTitle = book.kannadaTitle,
+                    academicYear = book.academicYear,
+                    edition = book.edition,
+                    officialUrl = selectedUrl,
+                    localFilePath = destFile.absolutePath,
+                    downloadManagerId = downloadId,
+                    status = DownloadStatus.DOWNLOADING.name,
+                    progressPercent = 0,
+                    sha256Checksum = null,
+                    lastReadPage = 0,
+                    bookmarkedPagesCsv = "",
+                    statusNote = "Downloading the PDF selected from the official KTBS catalogue.",
+                    updatedAtMillis = System.currentTimeMillis()
+                )
+                dao.upsert(
+                    entity.copy(
+                        officialUrl = selectedUrl,
+                        localFilePath = destFile.absolutePath,
+                        downloadManagerId = downloadId,
+                        status = DownloadStatus.DOWNLOADING.name,
+                        progressPercent = 5,
+                        statusNote = "Downloading selected official PDF…",
+                        updatedAtMillis = System.currentTimeMillis()
+                    )
+                )
+                monitorDownload(book, downloadId, destFile)
+                Result.success(Unit)
+            } catch (e: Exception) {
+                val base = existing ?: TextbookDownloadEntity(
+                    id = book.id,
+                    medium = book.medium.name,
+                    part = book.part,
+                    title = book.title,
+                    kannadaTitle = book.kannadaTitle,
+                    academicYear = book.academicYear,
+                    edition = book.edition,
+                    officialUrl = selectedUrl,
+                    localFilePath = null,
+                    downloadManagerId = null,
+                    status = DownloadStatus.FAILED.name,
+                    progressPercent = 0,
+                    sha256Checksum = null,
+                    lastReadPage = 0,
+                    bookmarkedPagesCsv = "",
+                    statusNote = "Download could not be started.",
+                    updatedAtMillis = System.currentTimeMillis()
+                )
+                dao.upsert(base.copy(
+                    status = DownloadStatus.FAILED.name,
+                    statusNote = e.localizedMessage ?: "Download could not be started.",
+                    updatedAtMillis = System.currentTimeMillis()
+                ))
+                Result.failure(e)
+            }
+        }
+
     private suspend fun monitorDownload(
         book: OfficialTextbook,
         downloadId: Long,
