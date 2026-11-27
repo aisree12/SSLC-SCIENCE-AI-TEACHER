@@ -425,7 +425,7 @@ private fun PyqCardItem(
             }
 
 
-            if (pyq.hasOfficialKey && !pyq.officialKeyAnswer.isNullOrBlank()) {
+            if (language == StudyLanguage.ENGLISH && pyq.hasOfficialKey && !pyq.officialKeyAnswer.isNullOrBlank()) {
                 Surface(
                     shape = RoundedCornerShape(10.dp),
                     color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.65f)
@@ -464,7 +464,7 @@ private fun PyqCardItem(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                if (pyq.hasOfficialKey) {
+                if (language == StudyLanguage.ENGLISH && pyq.hasOfficialKey) {
                     OutlinedButton(
                         onClick = { showOfficialKey = !showOfficialKey },
                         modifier = Modifier
