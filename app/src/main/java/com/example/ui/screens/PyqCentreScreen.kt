@@ -74,6 +74,7 @@ fun PyqCentreScreen(
     var selectedMarks by remember { mutableStateOf<Int?>(null) }
     var selectedType by remember { mutableStateOf<QuestionType?>(null) }
     var showAnalytics by remember { mutableStateOf(false) }
+    var showPaperArchive by remember { mutableStateOf(false) }
 
     val filteredPyqs = remember(
         curriculumState.selectedSubject,
@@ -169,6 +170,12 @@ fun PyqCentreScreen(
                             label = { Text("Analytics & Predictions") },
                             modifier = Modifier.testTag("pyq_analytics_chip")
                         )
+                        FilterChip(
+                            selected = showPaperArchive,
+                            onClick = { showPaperArchive = !showPaperArchive },
+                            label = { Text("Past Paper PDFs") },
+                            modifier = Modifier.testTag("pyq_paper_archive_chip")
+                        )
                     }
 
                     Row(
@@ -177,7 +184,7 @@ fun PyqCentreScreen(
                             .horizontalScroll(rememberScrollState()),
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        listOf(null to "All Years", 2025 to "2025", 2024 to "2024", 2023 to "2023", 2022 to "2022").forEach { (yr, label) ->
+                        listOf(null to "All Years", 2026 to "2026", 2025 to "2025", 2024 to "2024", 2023 to "2023", 2022 to "2022").forEach { (yr, label) ->
                             FilterChip(
                                 selected = selectedYear == yr,
                                 onClick = { selectedYear = yr },
@@ -238,6 +245,52 @@ fun PyqCentreScreen(
                                 onClick = { selectedType = if (selectedType == qt) null else qt },
                                 label = { Text(qt.label) }
                             )
+                        }
+                    }
+                }
+            }
+        }
+
+        if (showPaperArchive) {
+            item {
+                Card(shape = RoundedCornerShape(18.dp)) {
+                    Column(
+                        modifier = Modifier.padding(14.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text("KSEAB Science Paper Archive", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text(
+                            "These archive pages link to KSEAB-issued PDFs. 2026 includes official model answers in English and Kannada; 2024 and 2025 list question papers without official keys.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+            items(PyqRepository.paperArchive, key = { it.id }) { entry ->
+                Card(shape = RoundedCornerShape(16.dp)) {
+                    Column(
+                        modifier = Modifier.padding(14.dp),
+                        verticalArrangement = Arrangement.spacedBy(7.dp)
+                    ) {
+                        Text(entry.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                        Text(entry.subtitle, style = MaterialTheme.typography.bodySmall)
+                        Text(entry.sourceNote, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Button(
+                                onClick = {
+                                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(entry.paperArchiveUrl)))
+                                },
+                                modifier = Modifier.weight(1f)
+                            ) { Text("Open Papers") }
+                            if (entry.answerKeyArchiveUrl != null) {
+                                OutlinedButton(
+                                    onClick = {
+                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(entry.answerKeyArchiveUrl)))
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                ) { Text("Open Keys") }
+                            }
                         }
                     }
                 }
