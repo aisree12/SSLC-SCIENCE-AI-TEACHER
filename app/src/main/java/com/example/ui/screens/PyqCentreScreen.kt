@@ -258,7 +258,7 @@ fun PyqCentreScreen(
                         modifier = Modifier.padding(14.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Text("KSEAB Science Paper Archive", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text("Karnataka SSLC Science Paper Archive", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Text(
                             "Archive indexes and mirrors are clearly labelled per collection. 2026 includes KSEAB model answers in English and Kannada. Older mirror PDFs are not official answer keys; check the paper code, year and medium before using them.",
                             style = MaterialTheme.typography.bodySmall,
