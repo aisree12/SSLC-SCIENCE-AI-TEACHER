@@ -340,7 +340,7 @@ private fun NotesFormulasSection(
             }
         }
 
-        Card(shape = RoundedCornerShape(16.dp)) {
+        if (language == StudyLanguage.ENGLISH) Card(shape = RoundedCornerShape(16.dp)) {
             Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("Board Exam Quick Revision Notes", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 chapter.revisionNotes.forEach { note ->
@@ -422,7 +422,7 @@ private fun ChapterPyqsSection(
                 onClick = onOpenPyqTab,
                 modifier = Modifier.fillMaxWidth().minimumInteractiveComponentSize()
             ) {
-                Text("Open Full PYQ Intelligence Centre")
+                Text(if (language == StudyLanguage.KANNADA) "ಪೂರ್ಣ ಹಿಂದಿನ ಪ್ರಶ್ನೆಗಳ ಕೇಂದ್ರ ತೆರೆಯಿರಿ" else "Open Full PYQ Intelligence Centre")
             }
         }
     }
