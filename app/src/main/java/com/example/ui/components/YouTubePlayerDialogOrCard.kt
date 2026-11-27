@@ -282,6 +282,8 @@ fun YouTubePlayerDialog(
                                     settings.javaScriptEnabled = true
                                     settings.domStorageEnabled = true
                                     settings.mediaPlaybackRequiresUserGesture = false
+                                    settings.javaScriptCanOpenWindowsAutomatically = true
+                                    setLayerType(View.LAYER_TYPE_HARDWARE, null)
                                     settings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
                                     webChromeClient = object : WebChromeClient() {
                                         override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
@@ -317,7 +319,8 @@ fun YouTubePlayerDialog(
                                         ),
                                         "AndroidYouTube"
                                     )
-                                    loadDataWithBaseURL("https://www.youtube.com", html, "text/html", "utf-8", null)
+                                    // Use a stable HTTPS app origin for the YouTube IFrame API.
+                                    loadDataWithBaseURL("https://appassets.androidplatform.net", html, "text/html", "UTF-8", null)
                                     webViewRef = this
                                 }
                             },
@@ -427,7 +430,7 @@ fun YouTubePlayerDialog(
 
 private fun buildYouTubeIframeHtml(videoId: String?, playlistId: String?): String {
     val playerConfig = if (!playlistId.isNullOrBlank()) {
-        "playerVars: { listType: 'playlist', list: '$playlistId', playsinline: 1, rel: 0, modestbranding: 1 }"
+        "playerVars: { listType: 'playlist', list: '$playlistId', playsinline: 1, rel: 0, modestbranding: 1, origin: 'https://appassets.androidplatform.net' }"
     } else {
         "videoId: '${videoId.orEmpty()}', playerVars: { playsinline: 1, rel: 0, modestbranding: 1 }"
     }
@@ -436,6 +439,7 @@ private fun buildYouTubeIframeHtml(videoId: String?, playlistId: String?): Strin
         <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta name="referrer" content="origin">
           <style>
             html, body, #player { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #000000; overflow: hidden; }
           </style>
