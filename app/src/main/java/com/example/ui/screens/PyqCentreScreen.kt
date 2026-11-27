@@ -104,8 +104,8 @@ fun PyqCentreScreen(
         modifier = Modifier
             .fillMaxSize()
             .testTag("pyq_centre_screen"),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item {
             Card(shape = RoundedCornerShape(18.dp)) {
@@ -184,7 +184,7 @@ fun PyqCentreScreen(
                             .horizontalScroll(rememberScrollState()),
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        listOf(null to "All Years", 2026 to "2026", 2025 to "2025", 2024 to "2024", 2023 to "2023", 2022 to "2022").forEach { (yr, label) ->
+                        listOf(null to "All", 2026 to "2026", 2025 to "2025", 2024 to "2024", 2023 to "2023", 2022 to "2022", 2021 to "2021", 2020 to "2020", 2019 to "2019", 2018 to "2018", 2017 to "2017", 2016 to "2016", 2015 to "2015").forEach { (yr, label) ->
                             FilterChip(
                                 selected = selectedYear == yr,
                                 onClick = { selectedYear = yr },
@@ -384,12 +384,12 @@ private fun PyqCardItem(
     var showOfficialKey by remember { mutableStateOf(false) }
 
     Card(
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -424,13 +424,6 @@ private fun PyqCardItem(
                 )
             }
 
-            if (language == StudyLanguage.BILINGUAL) {
-                Text(
-                    text = pyq.kannadaQuestionText,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
 
             if (pyq.hasOfficialKey && !pyq.officialKeyAnswer.isNullOrBlank()) {
                 Surface(
