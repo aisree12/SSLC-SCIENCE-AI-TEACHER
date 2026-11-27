@@ -309,7 +309,7 @@ fun PyqCentreScreen(
                     ) {
                         Text("PYQ Trends & Study Focus", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Text(
-                            text = "Starter bank: ${analytics.totalQuestions} practice questions • Source-verified official keys: ${analytics.verifiedOfficialKeyCount}",
+                            text = "Question bank: ${analytics.totalQuestions} practice questions • Source-verified official keys: ${analytics.verifiedOfficialKeyCount}",
                             style = MaterialTheme.typography.bodySmall
                         )
                         Text("Top Repeated Diagrams:", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
