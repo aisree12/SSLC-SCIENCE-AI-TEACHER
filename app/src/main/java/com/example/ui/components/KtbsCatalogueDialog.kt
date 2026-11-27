@@ -39,7 +39,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.model.OfficialTextbook
-import java.util.Locale
+import com.example.data.textbook.TextbookUrlPolicy
 
 @Composable
 fun KtbsCatalogueDialog(
@@ -169,16 +169,8 @@ fun KtbsCatalogueDialog(
     }
 }
 
-private fun isTrustedKtbsHost(host: String?): Boolean {
-    val normalized = host?.lowercase(Locale.ROOT) ?: return false
-    return normalized == "karnataka.gov.in" ||
-        normalized.endsWith(".karnataka.gov.in") ||
-        normalized == "ktbs.kar.nic.in" ||
-        normalized.endsWith(".ktbs.kar.nic.in")
-}
+private fun isTrustedKtbsHost(host: String?): Boolean =
+    TextbookUrlPolicy.isTrustedPortalHost(host)
 
-private fun isPdfUrl(uri: Uri): Boolean {
-    val path = uri.path.orEmpty().lowercase(Locale.ROOT)
-    val query = uri.query.orEmpty().lowercase(Locale.ROOT)
-    return path.endsWith(".pdf") || query.contains("format=pdf") || query.contains("type=pdf")
-}
+private fun isPdfUrl(uri: Uri): Boolean =
+    TextbookUrlPolicy.isPdfUrl(uri.toString())
